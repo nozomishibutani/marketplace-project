@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Profile;
+use Faker\Generator as Faker;
+
+class ProfileFactory extends Factory
+{
+    /**
+   * The name of the factory's corresponding model.
+   *
+   * @var string
+   */
+    protected $model = Profile::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        // Faker 日本語化
+        $faker = \Faker\Factory::create('ja_JP');
+
+        return [
+            'user_id' => null, // ここでは値を入れない
+            'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
+            'address' => $faker->streetAddress(),
+            'building' => $faker->secondaryAddress(),
+            'avatar' => $faker->imageUrl(200, 200, 'people'), // 200x200 px のランダムな人物画像
+            'created_at' => now(),
+            'updated_at' => now()
+        ];
+    }
+}
