@@ -12,7 +12,6 @@ class Item extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id',
         'category_id',
         'name',
         'brand_name',
@@ -42,4 +41,15 @@ class Item extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    /**
+     * 商品状態
+     */
+    public const CONDITIONS = [
+        1 => '良好',
+        2 => '目立った傷や汚れなし',
+        3 => 'やや傷や汚れあり',
+        4 => '状態が悪い',
+    ];
+    
 }

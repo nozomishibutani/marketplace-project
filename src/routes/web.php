@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ItemController::class, 'index'])->name('items.index');
+Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
+Route::get('/purchase/{item_id}', [ItemController::class, 'confirm'])->name('purchase.confirm');
+Route::get('/purchase/address/{item_id}', [ItemController::class, 'editAddress'])->name('purchase.edit');
+Route::post('/purchase/address/update', [ItemController::class, 'updateAddress'])->name('purchase.update');
+Route::post('/purchase/store', [ItemController::class, 'store'])->name('purchase.store');

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
     ];
@@ -52,18 +51,31 @@ class User extends Authenticatable
      *
      * @return void
      */
+    /* 現状ユーザーの削除は実装想定外
     protected static function booted()
     {
         static::deleting(function ($user) {
-            if ($user->profile) {
-                if ($user->isForceDeleting()) {
-                    $user->profile->forceDelete();
-                } else {
-                    $user->profile->delete();
+
+            // 関連モデルの配列
+            $relations = ['profile', 'items', 'favorites', 'orders', 'comments'];
+
+            foreach ($relations as $relation) {
+                if ($user->$relation) {
+
+                    // コレクションか単体かで処理を分ける
+                    if ($user->$relation instanceof \Illuminate\Database\Eloquent\Collection) {
+                        foreach ($user->$relation as $related) {
+                            $user->isForceDeleting() ? $related->forceDelete() : $related->delete();
+                        }
+                    } else {
+                        $user->isForceDeleting() ? $user->$relation->forceDelete() : $user->$relation->delete();
+                    }
                 }
             }
+
         });
     }
+    */
 
     public function profile()
     {

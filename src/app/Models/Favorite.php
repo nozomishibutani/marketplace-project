@@ -11,7 +11,7 @@ class Favorite extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
+    protected $guarded  = [
         'user_id',
         'item_id',
     ];

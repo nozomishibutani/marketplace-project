@@ -28,4 +28,12 @@ class Order extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    /**
+     * 支払い方法
+     */
+    public const PAYMENT_METHODS = [
+        1 => 'コンビニ支払い',
+        2 => 'カード支払い',
+    ];
 }
