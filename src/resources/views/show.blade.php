@@ -18,14 +18,22 @@
             <button class="">検索</button>
         </form>
     </div>
-    {{-- ログイン時の表示 --}}
     <nav class="header__nav">
-        <ul>
-            <li>ログアウト</li>
-            <li>マイページ</li>
-            <li>出品</li>
-        </ul>
-    <nav>
+            <ul>
+                @if (Auth::check())
+                    <form class="form" action="/logout" method="post">
+                    @csrf
+                        <button class="header-nav__button">ログアウト</button>
+                    </form>
+                    <li>マイページ</li>
+                    <li>出品</li>
+                @else
+                    <li><a href="/login" class="link__login">ログイン</a></li>
+                    <li><a href="/login" class="link__login">マイページ</a></li>
+                    <li><a href="/login" class="link__login">出品</a></li>
+                @endif
+            </ul>
+        </nav>
 </header>
 
 
@@ -43,20 +51,34 @@
                         @endif
                         <p>{{ $item->brand_name }}</p>
                         <p>¥{{ $item->price }}(税込)</p>
-                        <div class="button">
-                            {{-- いいね --}}
-                            <a href="{{ route( $favorite['route'], $item->id) }}">
-                                <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
-                            </a>
-                            <span>{{ $favorite['count'] }}</span>
-                            {{-- コメント --}}
-                            <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
-                            <span>{{ $comments['count'] }}</span>
-                        </div>
-                        @if($isSold == true)
-                            <a href="" class="btn">売り切れ</a>
+                        @if (Auth::check())
+                            <div class="button">
+                                {{-- いいね --}}
+                                <a href="{{ route( $favorite['route'], $item->id) }}">
+                                    <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
+                                </a>
+                                <span>{{ $favorite['count'] }}</span>
+                                {{-- コメント --}}
+                                <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
+                                <span>{{ $comments['count'] }}</span>
+                            </div>
+                            @if($isSold == false)
+                                <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
+                            @endif
                         @else
-                            <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
+                            <div class="button">
+                                {{-- いいね --}}
+                                <a href="/login">
+                                    <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
+                                </a>
+                                <span>{{ $favorite['count'] }}</span>
+                                {{-- コメント --}}
+                                <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
+                                <span>{{ $comments['count'] }}</span>
+                            </div>
+                            @if($isSold == false)
+                                <a href="/login" class="btn">購入手続きへ</a>
+                            @endif
                         @endif
 
                         <h2>商品説明</h2>
@@ -90,7 +112,11 @@
                             <p>{{ $value['content'] }}</p>
                         @endforeach
                         <h3>商品へのコメント</h3>
-                        <form action="{{ route('items.comment', $item->id) }}" method="post">
+                        @if (Auth::check())
+                            <form action="{{ route('items.comment', $item->id) }}" method="post">
+                        @else
+                            <form action="{{ route('login') }}" method="get">
+                        @endif
                             @csrf
                             <textarea name="comment" id=""></textarea>
                             <input type="hidden" name="user_id" value="1">

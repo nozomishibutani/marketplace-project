@@ -18,14 +18,21 @@
                 <button class="">検索</button>
             </form>
         </div>
-        {{-- ログイン時のみ表示 --}}
+
         <nav class="header__nav">
             <ul>
-                <li>ログアウト</li>
+                @if (Auth::check())
+                    <form class="form" action="/logout" method="post">
+                    @csrf
+                        <button class="header-nav__button">ログアウト</button>
+                    </form>
+                @else
+                    <a href="/login" class="header-nav__button">ログイン</a>
+                @endif
                 <li>マイページ</li>
                 <li>出品</li>
             </ul>
-        </div>
+        </nav>
     </header>
 
     <nav class="menu">

@@ -21,3 +21,4 @@ docker/mysql/data/*
 Thumbs.db
 storage/*.key
 storage/debugbar/
+*.php-cs-fixer.dist.php
