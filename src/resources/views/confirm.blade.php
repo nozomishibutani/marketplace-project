@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <title>商品購入</title>
 </head>
 <body>
@@ -50,9 +52,9 @@
                             @endif
                         </div>
                     </div>
-                    <div class="payment-info">{{-- JSで連携させる--}}
+                    <div class="payment-info">
                         <h2>支払い方法</h2>
-                        <select name="payment_method">
+                        <select class="payment-method" name="payment_method">
                         <option hidden>選択してください</option>
                             @foreach(\App\Models\Order::PAYMENT_METHODS as $key => $label)
                                 <option value="{{ $key }}">
@@ -98,18 +100,17 @@
                             <label for="">支払い方法</label>
                         </span>
                         <span>
-                            <label for="">JS連携する</label>
+                            <p class="selected-payment"></p>
                         </span>
                     </div>
                     <input type="hidden" name="user_id" value="1">
                     <input type="hidden" name="item_id" value="{{ $item->id }}">
-                    <input type="hidden" name="payment_method" value="1">
                     <input type="hidden" name="status" value="1">{{-- 今は不要 --}}
-                    <button>購入する</button>
+                    <button id>購入する</button>
                 </div>
             </form>
         </div>
     </main>
-
+<script src="{{ asset('js/payment-method.js') }}"></script>
 </body>
 </html>

@@ -119,9 +119,8 @@ class ItemController extends Controller
             'address' => $data['address'],
             'building' => $data['building'],
         ]);
-        Item::updated([
-            'status' => 2,
-        ]);
+
+        Item::where('id', $data['item_id'])->update(['status' => 2]);
 
         return redirect()->route('items.index');
     }

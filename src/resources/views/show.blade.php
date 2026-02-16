@@ -97,7 +97,6 @@
                             <input type="hidden" name="item_id" value="{{ $item->id }}">
                             <button>コメントを送信する</button>{{-- ログインユーザーのみ送信可能 --}}
                         </form>
-
                     </div>
                 </div>
         </main>

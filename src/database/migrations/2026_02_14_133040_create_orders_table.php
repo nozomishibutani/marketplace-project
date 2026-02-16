@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('item_id')->constrained();
             $table->tinyInteger('payment_method')
-                    ->comment('1=コンビニ支払い', '2=カード支払い');
+                    ->comment('1=コンビニ支払い, 2=カード支払い');
             $table->string('postcode', 20);
             $table->string('address');
             $table->string('building')->nullable();
