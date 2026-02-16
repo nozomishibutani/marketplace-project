@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Profile;
 use App\Models\Order;
+use App\Models\Comment;
+use App\Models\Favorite;
 
 class ItemController extends Controller
 {
@@ -33,13 +35,38 @@ class ItemController extends Controller
 
         $item = Item::with('category')->find($item_id);
         // 売り切れた場合
-        $soldFlg = false;
+        $isSold = false;
         if($item->status != 1){
             // sold表示にして購入できないようにする
             // 購入ボタン非活性にする
-            $soldFlg = true;
+            $isSold = true;
         }
-        return view('show',compact('item','soldFlg'));
+        // コメント取得
+        $content = Comment::where('item_id', $item_id)
+                        ->latest()
+                        ->get(['content']);
+
+        $comments['content'] = $content;
+        $comments['count']   = $content->count();
+
+        // いいね取得
+        // 自分がいいねしているか
+        $isFavorite = false;
+        $isFavorite = Favorite::where('item_id', $item_id)
+                        ->where('user_id', 1)
+                        ->exists();
+        if($isFavorite){
+            $favorite['img'] = 'heart_pink.png';
+            $favorite['route'] = 'items.unfavorite';
+        }else{
+            $favorite['img'] = 'heart_default.png';
+            $favorite['route'] = 'items.favorite';
+        }
+        // いいねの数
+        $favorite['count'] = Favorite::where('item_id', $item_id)->count();
+
+
+        return view('show',compact('item','isSold','comments','favorite'));
     }
 
     public function confirm($item_id){
@@ -65,21 +92,23 @@ class ItemController extends Controller
 
     public function updateAddress(Request $request)
     {
+        $data = $request->only(['item_id','postcode', 'address', 'building']);
+        // 変更住所をセッションに登録する
         session([
             'address_edit' => [
-                'postcode' => $request->postcode,
-                'address' => $request->address,
-                'building' => $request->building,
+                'postcode' => $data['postcode'],
+                'address' => $data['address'],
+                'building' => $data['building'],
             ]
         ]);
 
-        return redirect()->route('purchase.confirm', ['item_id' => $request->itemId]);
+        return redirect()->route('purchase.confirm', ['item_id' => $data['item_id']]);
     }
 
     public function store(Request $request){
+
         $data = $request->only(['user_id', 'item_id', 'payment_method', 'status', 'postcode', 'address', 'building']);
 
-        // 注文作成など
         Order::create([
             //'user_id' => auth()->id(),
             'user_id' => $data['user_id'],
@@ -95,5 +124,36 @@ class ItemController extends Controller
         ]);
 
         return redirect()->route('items.index');
+    }
+
+    public function comment(Request $request){
+
+        $data = $request->only(['user_id','item_id','comment',]);
+        Comment::create([
+            //'user_id' => auth()->id(),
+            'user_id' => $data['user_id'],
+            'item_id' => $data['item_id'],
+            'content' => $data['comment'],
+        ]);
+        return redirect()->route('items.show', ['item_id' => $data['item_id']]);
+    }
+
+    public function favorite($item_id){
+
+        Favorite::create([
+            //'user_id' => auth()->id(),
+            'user_id' => 1,
+            'item_id' => $item_id,
+        ]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
+
+    }
+
+    public function unfavorite($item_id){
+
+        Favorite::where('user_id', 1)->where('item_id', $item_id)->delete();
+
+        return redirect()->route('items.show', ['item_id' => $item_id]);
+
     }
 }

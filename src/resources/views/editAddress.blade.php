@@ -38,7 +38,7 @@
     <main>
         <h1>住所の変更</h1>
         <form action="{{ route('purchase.update') }}" method="post">
-            <input type="hidden" name="itemId" value="{{ $item_id }}">
+            <input type="hidden" name="item_id" value="{{ $item_id }}">
             @csrf
             <div>
                 <label for="postcode">郵便番号</label>

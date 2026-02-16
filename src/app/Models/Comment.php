@@ -11,7 +11,11 @@ class Comment extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['comment'];
+    protected $fillable = [
+        'user_id',
+        'item_id',
+        'content',
+        ];
 
     public function user()
     {

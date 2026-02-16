@@ -38,19 +38,23 @@
 
                     <div class="item-info">
                         <h1>{{ $item->name }}</h1>
-                        @if($soldFlg == true)
+                        @if($isSold == true)
                             <p>sold</p>
                         @endif
                         <p>{{ $item->brand_name }}</p>
                         <p>¥{{ $item->price }}(税込)</p>
                         <div class="button">
-                            <button class="like">はーと</button>
-                            <span>3</span>
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
-                            <span>1</span>
+                            {{-- いいね --}}
+                            <a href="{{ route( $favorite['route'], $item->id) }}">
+                                <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
+                            </a>
+                            <span>{{ $favorite['count'] }}</span>
+                            {{-- コメント --}}
+                            <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
+                            <span>{{ $comments['count'] }}</span>
                         </div>
-                        @if($soldFlg == true)
-                            <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">非活性にする</a>
+                        @if($isSold == true)
+                            <a href="" class="btn">売り切れ</a>
                         @else
                             <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
                         @endif
@@ -82,12 +86,16 @@
                                 <label for="">{{ $item->user_name ?? '' }}</label>
                             </span>
                         </div>
-                        <p>{{-- commentテーブルから表示 --}}</p>
+                        @foreach($comments['content'] as $value)
+                            <p>{{ $value['content'] }}</p>
+                        @endforeach
                         <h3>商品へのコメント</h3>
-                        <form action="" method="post">
+                        <form action="{{ route('items.comment', $item->id) }}" method="post">
                             @csrf
-                            <textarea name="" id=""></textarea>
-                            <button>コメントを送信する</button>
+                            <textarea name="comment" id=""></textarea>
+                            <input type="hidden" name="user_id" value="1">
+                            <input type="hidden" name="item_id" value="{{ $item->id }}">
+                            <button>コメントを送信する</button>{{-- ログインユーザーのみ送信可能 --}}
                         </form>
 
                     </div>

@@ -66,7 +66,7 @@
                             <h2>配送先</h2>
                             @if($soldFlg == true)
                                 <a href="{{ route('purchase.edit', $item->id) }}" class="">非活性にする</a>
-                            @elseif
+                            @else
                                 <a href="{{ route('purchase.edit', $item->id) }}" class="">変更する</a>
                             @endif
                         </div>
