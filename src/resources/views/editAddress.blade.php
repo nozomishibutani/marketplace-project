@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <title>商品一覧</title>
 </head>
 <body>
@@ -50,22 +52,37 @@
             <div>
                 <label for="postcode">郵便番号</label>
                 <input type="text" name="postcode" id="postcode" value="{{ old('postcode') }}">
+                @error('postcode')
+                    <div>
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <div>
                 <label for="address">住所</label>
                 <input type="text" name="address" id="address" value="{{ old('address') }}">
+                @error('address')
+                    <div>
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <div>
                 <label for="building">建物名</label>
                 <input type="text" name="building" id="building" value="{{ old('building') }}">
+                @error('building')
+                    <div>
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
 
             <button type="submit">更新する</button>
         </form>
 
     </main>
-
+<script src="{{ asset('js/postcode.js') }}"></script>
 </body>
 </html>

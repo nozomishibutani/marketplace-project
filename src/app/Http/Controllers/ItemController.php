@@ -13,6 +13,11 @@ use App\Exceptions\SoldOutException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Common\Common;
+use App\Http\Requests\CommentRequest;
+use App\Http\Requests\AddressRequest;
+
+use App\Http\Requests\PurchaseRequest;
+
 
 
 
@@ -55,9 +60,9 @@ class ItemController extends Controller
         $isSold = $this->isSold($item->status);
 
         // コメント取得
-        $content = Comment::where('item_id', $item_id)->latest()->get(['content']);
-        $comments['content'] = $content;
-        $comments['count']   = $content->count();
+        $data = Comment::where('item_id', $item_id)->latest()->get(['content']);
+        $content['content'] = $data;
+        $content['count']   = $data->count();
 
         // いいね取得
         $favorite['img'] = 'heart_default.png';
@@ -75,7 +80,7 @@ class ItemController extends Controller
         // いいねの数
         $favorite['count'] = Favorite::where('item_id', $item_id)->count();
 
-        return view('show',compact('item','isSold','comments','favorite'));
+        return view('show',compact('item','isSold','content','favorite'));
     }
 
     public function confirm($item_id){
@@ -95,20 +100,19 @@ class ItemController extends Controller
 
     }
 
-    public function updateAddress(Request $request)
+    public function updateAddress(AddressRequest $request)
     {
         $data = $request->only(['item_id','postcode', 'address', 'building']);
 
         $newAddress = [
             'postcode' => $data['postcode'],
             'address'  => $data['address'],
-            'building' => $data['building'],
+            'building' => $data['building'] ?? '',
         ];
-
         return redirect()->route('purchase.confirm', ['item_id' => $data['item_id']])->withInput($newAddress);
     }
 
-    public function store(Request $request){
+    public function store(PurchaseRequest $request){
 
         $data = $request->only(['item_id', 'payment_method', 'postcode', 'address', 'building']);
         if(Auth::check() === null){
@@ -130,9 +134,9 @@ class ItemController extends Controller
             'item_id' => $data['item_id'],
             'payment_method' => $data['payment_method'],
             'status' => 1, // 要確認
-            'postcode' => $data['postcode'],
+            'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
             'address' => $data['address'],
-            'building' => $data['building'],
+            'building' => $data['building'] ?: null,
             ]);
             // 売り切れに変更
             Item::where('id', $data['item_id'])->update(['status' => 2]);
@@ -151,18 +155,18 @@ class ItemController extends Controller
         }
 }
 
-    public function comment(Request $request){
+    public function comment(CommentRequest $request){
 
         // ユーザーid取得
         if(Auth::check() === null){
             return redirect('/login');
         }
 
-        $data = $request->only(['item_id','comment',]);
+        $data = $request->only(['item_id','content',]);
         Comment::create([
             'user_id' => Auth::id(),
             'item_id' => $data['item_id'],
-            'content' => $data['comment'],
+            'content' => $data['content'],
         ]);
         return redirect()->route('items.show', ['item_id' => $data['item_id']]);
     }

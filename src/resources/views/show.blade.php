@@ -64,7 +64,7 @@
                                 <span>{{ $favorite['count'] }}</span>
                                 {{-- コメント --}}
                                 <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
-                                <span>{{ $comments['count'] }}</span>
+                                <span>{{ $content['count'] }}</span>
                             </div>
                             @if($isSold == false)
                                 <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
@@ -97,18 +97,22 @@
                                 <label for="">{{ $item->user_name ?? '' }}</label>
                             </span>
                         </div>
-                        @foreach($comments['content'] as $value)
+                        @foreach($content['content'] as $value)
                             <p>{{ $value['content'] }}</p>
                         @endforeach
                         <h3>商品へのコメント</h3>
                         @if (Auth::check())
                             <form action="{{ route('items.comment', $item->id) }}" method="post">
+                            <div class="msg">
+                                @error('content')
+                                    {{ $message }}
+                                @enderror
+                            </div>
                         @else
                             <form action="{{ route('login') }}" method="get">
                         @endif
                             @csrf
-                            <textarea name="comment" id=""></textarea>
-                            <input type="hidden" name="user_id" value="1">
+                            <textarea name="content" id=""></textarea>
                             <input type="hidden" name="item_id" value="{{ $item->id }}">
                             <button>コメントを送信する</button>
                         </form>

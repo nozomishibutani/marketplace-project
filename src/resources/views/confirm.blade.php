@@ -64,11 +64,16 @@
                         <select class="payment-method" name="payment_method">
                         <option hidden>選択してください</option>
                             @foreach(\App\Models\Order::PAYMENT_METHODS as $key => $label)
-                                <option value="{{ $key }}">
+                                <option value="{{ $key }}" {{ old('payment_method') == $key ? 'selected' : '' }}>
                                     {{ $label }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('payment_method')
+                            <div>
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="address-info">
                         <div class="address-info__nav">
@@ -82,12 +87,27 @@
                         <ul>
                             <li>
                                 〒<input type="text" name="postcode" value="{{ old('postcode') ?? $profileAddress->postcode }}" readonly>
+                                @error('postcode')
+                                    <div>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </li>
                             <li>
                                 <input type="text" name="address" value="{{ old('address') ?? $profileAddress->address }}" readonly>
+                                @error('address')
+                                    <div>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </li>
                             <li>
                                 <input type="text" name="building" value="{{ old('building') ?? $profileAddress->building }}" readonly>
+                                @error('building')
+                                    <div>
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </li>
                         </ul>
                     </div>
