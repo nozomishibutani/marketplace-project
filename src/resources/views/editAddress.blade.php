@@ -49,17 +49,17 @@
             @csrf
             <div>
                 <label for="postcode">郵便番号</label>
-                <input type="text" name="postcode" id="postcode">
+                <input type="text" name="postcode" id="postcode" value="{{ old('postcode') }}">
             </div>
 
             <div>
                 <label for="address">住所</label>
-                <input type="text" name="address" id="address">
+                <input type="text" name="address" id="address" value="{{ old('address') }}">
             </div>
 
             <div>
                 <label for="building">建物名</label>
-                <input type="text" name="building" id="building">
+                <input type="text" name="building" id="building" value="{{ old('building') }}">
             </div>
 
             <button type="submit">更新する</button>

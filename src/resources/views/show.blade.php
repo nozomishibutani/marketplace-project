@@ -40,6 +40,11 @@
     <body>
         <main>
                 <div class="item-detail">
+                    @if(session('alert'))
+                        <div class="alert">
+                            <p>{{ session('alert') }}</p>
+                        </div>
+                    @endif
                     <div class="item-image">
                         <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
                     </div>
@@ -51,7 +56,6 @@
                         @endif
                         <p>{{ $item->brand_name }}</p>
                         <p>¥{{ $item->price }}(税込)</p>
-                        @if (Auth::check())
                             <div class="button">
                                 {{-- いいね --}}
                                 <a href="{{ route( $favorite['route'], $item->id) }}">
@@ -65,21 +69,6 @@
                             @if($isSold == false)
                                 <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
                             @endif
-                        @else
-                            <div class="button">
-                                {{-- いいね --}}
-                                <a href="/login">
-                                    <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
-                                </a>
-                                <span>{{ $favorite['count'] }}</span>
-                                {{-- コメント --}}
-                                <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
-                                <span>{{ $comments['count'] }}</span>
-                            </div>
-                            @if($isSold == false)
-                                <a href="/login" class="btn">購入手続きへ</a>
-                            @endif
-                        @endif
 
                         <h2>商品説明</h2>
                         <p>{{ $item->description }}</p>
@@ -121,7 +110,7 @@
                             <textarea name="comment" id=""></textarea>
                             <input type="hidden" name="user_id" value="1">
                             <input type="hidden" name="item_id" value="{{ $item->id }}">
-                            <button>コメントを送信する</button>{{-- ログインユーザーのみ送信可能 --}}
+                            <button>コメントを送信する</button>
                         </form>
                     </div>
                 </div>

@@ -54,7 +54,7 @@
                         <div>
                             <h1>{{ $item->name }}</h1>
                             <p>¥{{ $item->price }}</p>
-                            @if($soldFlg == true)
+                            @if($isSold == true)
                                 <p>sold</p>
                             @endif
                         </div>
@@ -73,7 +73,7 @@
                     <div class="address-info">
                         <div class="address-info__nav">
                             <h2>配送先</h2>
-                            @if($soldFlg == true)
+                            @if($isSold == true)
                                 <a href="{{ route('purchase.edit', $item->id) }}" class="">非活性にする</a>
                             @else
                                 <a href="{{ route('purchase.edit', $item->id) }}" class="">変更する</a>
@@ -81,13 +81,13 @@
                         </div>
                         <ul>
                             <li>
-                                〒<input type="text" name="postcode" value="{{ session('address_edit.postcode') ?? $shippingAddress->postcode }}" readonly>
+                                〒<input type="text" name="postcode" value="{{ old('postcode') ?? $profileAddress->postcode }}" readonly>
                             </li>
                             <li>
-                                <input type="text" name="address" value="{{ session('address_edit.address') ?? $shippingAddress->address }}" readonly>
+                                <input type="text" name="address" value="{{ old('address') ?? $profileAddress->address }}" readonly>
                             </li>
                             <li>
-                                <input type="text" name="building" value="{{ session('address_edit.building') ?? $shippingAddress->building }}" readonly>
+                                <input type="text" name="building" value="{{ old('building') ?? $profileAddress->building }}" readonly>
                             </li>
                         </ul>
                     </div>
@@ -110,9 +110,7 @@
                             <p class="selected-payment"></p>
                         </span>
                     </div>
-                    <input type="hidden" name="user_id" value="1">
                     <input type="hidden" name="item_id" value="{{ $item->id }}">
-                    <input type="hidden" name="status" value="1">{{-- 今は不要 --}}
                     <button id>購入する</button>
                 </div>
             </form>
