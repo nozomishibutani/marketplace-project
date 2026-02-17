@@ -12,32 +12,43 @@ use App\Models\Favorite;
 use App\Exceptions\SoldOutException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Common\Common;
+
 
 
 
 class ItemController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
 
-        // セッション削除（暫定対応）
-        session()->forget('address_edit');
-        // 出品されている全商品（自分が出品したもの以外）を一覧表示する
-        $items = Item::select('id', 'name', 'img')
-                ->latest()
-                ->get();
-
-        // ログイン済みならuser_id取得する
-
-        return view('index',compact('items'));
-        // マイリスト（いいねした商品だけ表示される）
-
+        $tab = $request->query('tab');
+        if(Auth::id() !== null){
+            // ログイン済み
+            if ($tab === Common::TAB_MYLIST) {
+                // マイリスト（いいねした商品だけ表示される）
+                $items = Item::whereHas('favorites', function ($query) {
+                            $query->where('user_id', Auth::id());
+                        })
+                        ->notSuspended()
+                        ->latest()
+                        ->get(['id', 'name', 'status', 'img']);
+            } else {
+                // 自分が出品した商品以外
+                $items = Item::where('user_id', '!=', Auth::id())
+                        ->notSuspended()
+                        ->latest()->get(['id', 'name', 'status', 'img']);
+                }
+        }else{
+            if ($tab === Common::TAB_MYLIST) {
+                return redirect('/login');
+            }
+            $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
+        }
         // 商品検索
+        return view('index',compact('items'));
     }
 
     public function show($item_id){
-
-        // セッション削除（暫定対応）
-        session()->forget('address_edit');
 
         $item = Item::with('category')->find($item_id);
         // 売り切れかどうか
@@ -101,7 +112,7 @@ class ItemController extends Controller
 
         $data = $request->only(['item_id', 'payment_method', 'postcode', 'address', 'building']);
         if(Auth::check() === null){
-            return redirect()->route('/login');
+            return redirect('/login');
         }
 
         try {
@@ -144,7 +155,7 @@ class ItemController extends Controller
 
         // ユーザーid取得
         if(Auth::check() === null){
-            return redirect()->route('/login');
+            return redirect('/login');
         }
 
         $data = $request->only(['item_id','comment',]);
@@ -160,7 +171,7 @@ class ItemController extends Controller
 
         // ユーザーid取得
         if (Auth::check() === null) {
-            return redirect()->route('/login');
+            return redirect('/login');
         }
 
         Favorite::create([
@@ -175,7 +186,7 @@ class ItemController extends Controller
 
         // ユーザーid取得
         if (Auth::check() === null) {
-            return redirect()->route('/login');
+            return redirect('/login');
         }
 
         Favorite::where('user_id', Auth::id())->where('item_id', $item_id)->delete();
@@ -189,7 +200,7 @@ class ItemController extends Controller
      */
     public function isSold($status)
     {
-        if($status == 1){
+        if($status == Item::STATUS_ON_SALE){
             // 出品中
             return false;
         }

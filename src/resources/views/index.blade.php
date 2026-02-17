@@ -37,12 +37,17 @@
     <nav class="menu">
         <ul class="menu__nav">
             <li>おすすめ</li>
-            <li>マイリスト</li>
+            <a href="{{ route('items.index', ['tab' => 'mylist']) }}">
+                <li>マイリスト</li>
+            </a>
         </ul>
     </nav>
 
     <main>
         @foreach ($items as $item)
+            @if($item->status == \App\Models\Item::STATUS_SOLD)
+                <p>sold</p>
+            @endif
             <a href="{{ route('items.show', $item->id) }}" class="item">
                 <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
                 <p>{{ $item->name }}</p>

@@ -11,6 +11,17 @@ class Item extends Model
     use HasFactory;
     use SoftDeletes;
 
+    public const STATUS_ON_SALE = 1;
+    public const STATUS_SOLD = 2;
+    public const STATUS_SUSPENDED = 3;
+
+    public const CONDITIONS = [
+        1 => '良好',
+        2 => '目立った傷や汚れなし',
+        3 => 'やや傷や汚れあり',
+        4 => '状態が悪い',
+    ];
+
     protected $fillable = [
         'category_id',
         'name',
@@ -43,13 +54,11 @@ class Item extends Model
     }
 
     /**
-     * 商品状態
+     * 出品停止中
      */
-    public const CONDITIONS = [
-        1 => '良好',
-        2 => '目立った傷や汚れなし',
-        3 => 'やや傷や汚れあり',
-        4 => '状態が悪い',
-    ];
-    
+    public function scopeNotSuspended($query)
+    {
+        return $query->where('status','!=', self::STATUS_SUSPENDED);
+    }
+
 }
