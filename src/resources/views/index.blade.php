@@ -37,7 +37,7 @@
     <nav class="menu">
         <ul class="menu__nav">
             <li>おすすめ</li>
-            <a href="{{ route('items.index', ['tab' => 'mylist']) }}">
+            <a href="{{ route('items.index', ['tab' => \App\Common\Common::TAB_MYLIST]) }}">
                 <li>マイリスト</li>
             </a>
         </ul>
