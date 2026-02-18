@@ -1,49 +1,18 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
-    <!-- jQuery -->
+@extends('layouts.app')
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/confirm.css') }}">
+@endsection
+
+@section('jquery')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <title>商品購入</title>
-</head>
-<body>
-    <header class="">
-        <div class="header__logo">COACTTECH</div>
-        <div class="header__search-form">
-            <form action="" method="get">
-                @csrf
-                <input type="form" class="" value="" placeholder="なにをお探しですか？">
-                <button class="">検索</button>
-            </form>
-        </div>
+@endsection
 
-        <nav class="header__nav">
-            <ul>
-                @if (Auth::check())
-                    <form class="form" action="/logout" method="post">
-                    @csrf
-                        <button class="header-nav__button">ログアウト</button>
-                    </form>
-                @else
-                    <a href="/login" class="header-nav__button">ログイン</a>
-                @endif
-                <li>マイページ</li>
-                <li>出品</li>
-            </ul>
-        </nav>
-    </header>
+@section('title')
+    <title>商品確認</title>
+@endsection
 
-    <nav class="menu">
-        <ul class="menu__nav">
-            <li>おすすめ</li>
-            <li>マイリスト</li>
-        </ul>
-    </nav>
-
+@section('content')
     <main>
         <div class="item-detail">
             <form action="{{ route('purchase.store') }}" method="post">
@@ -135,7 +104,8 @@
                 </div>
             </form>
         </div>
-    </main>
-<script src="{{ asset('js/payment-method.js') }}"></script>
-</body>
-</html>
+@endsection
+
+@section('js')
+    <script src="{{ asset('js/payment-method.js') }}"></script>
+@endsection

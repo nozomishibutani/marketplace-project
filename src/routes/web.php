@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,4 @@ Route::middleware('auth')->group(function () {
 // 未ログイン時でも閲覧可能
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
+Route::get('/search', [SearchController::class, 'index'])->name('search');

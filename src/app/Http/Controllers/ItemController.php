@@ -49,7 +49,6 @@ class ItemController extends Controller
             }
             $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
         }
-        // 商品検索
         return view('index',compact('items'));
     }
 
@@ -91,6 +90,12 @@ class ItemController extends Controller
 
         // プロフィール登録している住所を取得
         $profileAddress = Profile::select('postcode', 'address', 'building')->find($item_id);
+        // 郵便番号にハイフン追加
+        $postcode = $profileAddress['postcode'];
+        if (strlen($postcode) === 7) {
+            $profileAddress['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
+        }
+
         return view('confirm',compact('item','profileAddress','isSold'));
     }
 
