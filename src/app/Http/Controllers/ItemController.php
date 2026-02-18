@@ -27,9 +27,25 @@ class ItemController extends Controller
     public function index(Request $request){
 
         $tab = $request->query('tab');
-        if(Auth::id() !== null){
-            // ログイン済み
+        if ($tab !== Common::TAB_MYLIST) {
+            // 検索セッションを削除
+            session()->forget('keyword');
+        }
+
+        // 未ログイン
+        if(Auth::id() === null){
+
+            // マイリスト押下時
             if ($tab === Common::TAB_MYLIST) {
+                return redirect('/login');
+            }
+            // 全商品表示
+            $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
+            return view('index',compact('items'));
+        }
+
+        // ログインユーザー
+        if ($tab === Common::TAB_MYLIST) {
                 // マイリスト（いいねした商品だけ表示される）
                 $items = Item::whereHas('favorites', function ($query) {
                             $query->where('user_id', Auth::id());
@@ -37,19 +53,17 @@ class ItemController extends Controller
                         ->notSuspended()
                         ->latest()
                         ->get(['id', 'name', 'status', 'img']);
-            } else {
-                // 自分が出品した商品以外
-                $items = Item::where('user_id', '!=', Auth::id())
-                        ->notSuspended()
-                        ->latest()->get(['id', 'name', 'status', 'img']);
-                }
-        }else{
-            if ($tab === Common::TAB_MYLIST) {
-                return redirect('/login');
+
+                return view('index',compact('items'));
             }
-            $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
-        }
+
+        // 自分が出品した商品以外を表示
+        $items = Item::where('user_id', '!=', Auth::id())
+                ->notSuspended()
+                ->latest()->get(['id', 'name', 'status', 'img']);
+
         return view('index',compact('items'));
+
     }
 
     public function show($item_id){

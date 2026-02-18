@@ -16,7 +16,7 @@ class SearchController extends Controller
             $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
         } else {
             $items = Item::where('name', 'LIKE', "%{$keyword}%")->notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
-            session()->flash('keyword', $keyword);
+            session(['keyword' => $keyword]);
         }
         return view('index',compact('items'));
     }
