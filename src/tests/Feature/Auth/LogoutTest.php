@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\User;
 
 class LogoutTest extends TestCase
 {
@@ -13,10 +12,19 @@ class LogoutTest extends TestCase
      *
      * @return void
      */
-    public function test_example()
+    public function testLogout()
     {
-        $response = $this->get('/');
 
-        $response->assertStatus(200);
+        // ユーザーを作成してログイン
+        /** @var \App\Models\User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        // ログアウト
+        $response = $this->post('/logout');
+        // リダイレクト確認
+        $response->assertRedirect(route('items.index'));
+        // 現在のユーザーが認証されていない状態であること
+        $this->assertGuest();
     }
+
 }
