@@ -8,7 +8,7 @@ use App\Models\User;
 class LogoutTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * ログアウト機能
      *
      * @return void
      */

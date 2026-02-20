@@ -22,7 +22,7 @@
         <div class="item-info">
             <h1>{{ $item->name }}</h1>
             @if($isSold == true)
-                <p>sold</p>
+                <p>Sold</p>
             @endif
             <p>{{ $item->brand_name }}</p>
             <p>¥{{ $item->price }}(税込)</p>

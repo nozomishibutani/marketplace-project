@@ -21,12 +21,12 @@
 
 @section('content')
     @foreach ($items as $item)
-        @if($item->status == \App\Models\Item::STATUS_SOLD)
-            <p>sold</p>
-        @endif
-        <a href="{{ route('items.show', $item->id) }}" class="item">
-            <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
+        <a href="{{ route('items.show', $item->id) }}" class="item" data-item-id="{{ $item->id }}" >
+            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}">
             <p>{{ $item->name }}</p>
+            @if($item->status == \App\Models\Item::STATUS_SOLD)
+                <p>Sold</p>
+            @endif
         </a>
     @endforeach
 @endsection

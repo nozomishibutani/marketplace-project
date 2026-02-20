@@ -7,7 +7,7 @@ use Tests\TestCase;
 class RegisterTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * 会員登録機能
      *
      * @return void
      */
@@ -17,8 +17,6 @@ class RegisterTest extends TestCase
         $array = [
             'test' => ['array'],
         ];
-
-        // === 必須課題のテスト ===
 
         // 名前が入力されていない場合、バリデーションメッセージが表示される
         $response = $this->post('/register', [
@@ -91,10 +89,10 @@ class RegisterTest extends TestCase
 
         // $response->assertRedirect(route('items.index'));// プロフィール設定画面に遷移する※未実装
 
+        // ------------------------
+        // [任意] お名前バリデーションテスト
+        // ------------------------
 
-        // === 追加テスト（任意・自己学習） ===
-
-        // === お名前バリデーションテスト ===
         // 既に同じお名前が登録されている場合、バリデーションメッセージが表示される
         $response = $this->post('/register', [
         'username' => 'testuser',
@@ -131,7 +129,10 @@ class RegisterTest extends TestCase
             'username' => 'お名前は文字列で入力してください',
         ]);
 
-        // === メールアドレスバリデーションテスト ===
+        // ------------------------
+        // [任意] メールアドレスバリデーションテスト
+        // ------------------------
+
         // 既に同じメールアドレスが登録されている場合、バリデーションメッセージが表示される
         $response = $this->post('/register', [
         'username' => 'sampleuser',
@@ -168,7 +169,9 @@ class RegisterTest extends TestCase
             'email' => 'メールアドレスはメール形式で入力してください',
         ]);
 
-        // === パスワードバリデーションテスト ===
+        // ------------------------
+        // [任意] パスワードバリデーションテスト
+        // ------------------------
         // パスワードの入力が文字列ではない場合、バリデーションメッセージが表示される
         $response = $this->post('/register', [
         'username' => 'sampleuser',

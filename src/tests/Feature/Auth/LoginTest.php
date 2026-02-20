@@ -9,7 +9,7 @@ use Tests\TestCase;
 class LoginTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * ログイン機能
      *
      * @return void
      */

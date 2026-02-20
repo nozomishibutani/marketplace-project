@@ -15,14 +15,20 @@ class Item extends Model
     public const STATUS_SOLD = 2;
     public const STATUS_SUSPENDED = 3;
 
+    public const CONDITION_GOOD = 1;
+    public const CONDITION_NO_DAMAGE = 2;
+    public const CONDITION_SCRATCH = 3;
+    public const CONDITION_BAD = 4;
+
     public const CONDITIONS = [
-        1 => '良好',
-        2 => '目立った傷や汚れなし',
-        3 => 'やや傷や汚れあり',
-        4 => '状態が悪い',
-    ];
+        self::CONDITION_GOOD => '良好',
+        self::CONDITION_NO_DAMAGE => '目立った傷や汚れなし',
+        self::CONDITION_SCRATCH => 'やや傷や汚れあり',
+        self::CONDITION_BAD => '状態が悪い',
+];
 
     protected $fillable = [
+        'user_id',
         'category_id',
         'name',
         'brand_name',
@@ -30,7 +36,7 @@ class Item extends Model
         'price',
         'condition',
         'status',
-        'image',
+        'img',
     ];
 
     public function user()

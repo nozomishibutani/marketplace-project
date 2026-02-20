@@ -26,7 +26,9 @@ class ItemController extends Controller
 {
     public function index(Request $request){
 
+        $items = array();
         $tab = $request->query('tab');
+
         if(Auth::id() !== null){
             // ログイン済み
             if ($tab === Common::TAB_MYLIST) {
@@ -44,10 +46,9 @@ class ItemController extends Controller
                         ->latest()->get(['id', 'name', 'status', 'img']);
                 }
         }else{
-            if ($tab === Common::TAB_MYLIST) {
-                return redirect('/login');
+            if ($tab !== Common::TAB_MYLIST) {
+                $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
             }
-            $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
         }
         return view('index',compact('items'));
     }
