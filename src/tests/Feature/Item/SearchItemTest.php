@@ -4,6 +4,7 @@ namespace Tests\Feature\Item;
 
 use App\Models\Item;
 use Tests\TestCase;
+use App\Models\Category;
 use App\Common\Common;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -25,6 +26,9 @@ class SearchItemTest extends TestCase
             'status' => Item::STATUS_ON_SALE,
             'name' => 'Banana Watch'
         ]);
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
 
         // 部分一致検索
         $response = $this->get(route('search', ['keyword' => 'Banana']));
@@ -41,10 +45,13 @@ class SearchItemTest extends TestCase
     public function keepKeyWordOnFormOfMyList()
     {
         // 商品を作成
-        Item::factory()->create([
+        $item = Item::factory()->create([
             'status' => Item::STATUS_SOLD,
             'name' => 'Apple Mirror'
         ]);
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
 
         // 部分一致検索
         $response = $this->get(route('search', ['keyword' => 'Apple']));

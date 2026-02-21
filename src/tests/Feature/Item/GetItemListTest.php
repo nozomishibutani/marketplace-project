@@ -5,6 +5,7 @@ namespace Tests\Feature\Item;
 use Tests\TestCase;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetItemListTest extends TestCase
@@ -27,6 +28,9 @@ class GetItemListTest extends TestCase
             $item = Item::factory()->create(['status' => $status]);
             $name[$status] = $item->name;
         }
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
 
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
@@ -50,8 +54,11 @@ class GetItemListTest extends TestCase
      */
     public function purchasedItemDisplaysSold()
     {
+            // 商品を作成
             $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
-
+            // カテゴリを作成
+            $category = Category::factory()->create();
+            $item->categories()->attach($category->pluck('id'));
             $response = $this->get(route('items.index'));
             $response->assertStatus(200);
 
@@ -74,21 +81,24 @@ class GetItemListTest extends TestCase
         // ログインしているユーザーを確認
         $this->assertAuthenticatedAs($user);
 
+        // 商品作成
         foreach(Item::STATUSES as $status){
-            // 商品作成
             $item = Item::factory()->create([
             'user_id' => $user->id,
             'status' => $status,
         ]);
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
 
-            $response = $this->get(route('items.index'));
-            $response->assertStatus(200);
+        $response = $this->get(route('items.index'));
+        $response->assertStatus(200);
 
-            //  商品ステータスに関わらず表示されない
-            $response->assertDontSeeText($item->name);
+        //  商品ステータスに関わらず表示されない
+        $response->assertDontSeeText($item->name);
 
-            // テストデータ削除
-            Item::where('id', $item->id)->delete();
+        // テストデータ削除
+        Item::where('id', $item->id)->delete();
         }
     }
 }
