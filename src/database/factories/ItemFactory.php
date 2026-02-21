@@ -21,7 +21,6 @@ class ItemFactory extends Factory
 
         return [
         'user_id' => User::factory(),
-        'category_id' => Category::factory(),
         'name' =>  $faker->text(5),
         'brand_name' => $faker->text(10),
         'description' =>  $faker->sentence(),

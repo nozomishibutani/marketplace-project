@@ -27,14 +27,14 @@ class ItemDetailTest extends TestCase
 
         // ユーザーを作成
         $user = User::factory()->create();
-        // カテゴリを作成
-        $category = Category::factory()->create();
         // 商品を作成
         $item = Item::factory()->create([
             'status' => Item::STATUS_ON_SALE,
-            'category_id' => $category->id,
             'img' => now()->format('YmdHis') . '.png',
         ]);
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
 
         // いいね数
         $expectedFavoriteCount = Favorite::where('item_id', $item->id)->count();
@@ -62,7 +62,7 @@ class ItemDetailTest extends TestCase
         // 商品説明
         $response->assertSeeText($item->detail);
         // 商品情報(カテゴリ)
-        $response->assertSeeText($item->category['name']); // デザイン修正後確認
+        $response->assertSeeText($category->name); // デザイン修正後確認
         // 商品情報(商品の状態)
         $response->assertSeeText(Item::CONDITIONS[Item::CONDITION_GOOD]);
         // コメント数
@@ -79,6 +79,26 @@ class ItemDetailTest extends TestCase
      */
     public function multipleSelectedCategoriesAreDisplayed()
     {
-        // カテゴリーを複数選択できるように修正
+        // 商品を作成
+        $item = Item::factory()->create([
+            'status' => Item::STATUS_ON_SALE,
+            'img' => now()->format('YmdHis') . '.png',
+        ]);
+        // カテゴリを作成
+        $categories = Category::factory()->count(2)->create();
+        $item->categories()->attach($categories->pluck('id'));
+
+        $response = $this->get(route('items.show', $item->id));
+        $response->assertStatus(200);
+
+        // 商品情報(カテゴリ)
+        foreach ($categories as $category) {
+            $response->assertSeeText($category->name);
+        }
+
+        $this->assertEquals(
+            $categories->count(),
+            $item->categories()->count()
+        );
     }
 }
