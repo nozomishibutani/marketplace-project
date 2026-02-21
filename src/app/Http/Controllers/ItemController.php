@@ -55,7 +55,7 @@ class ItemController extends Controller
 
     public function show($item_id){
 
-        $item = Item::with('category')->find($item_id);
+        $item = Item::with('categories')->findOrFail($item_id);
         // 売り切れかどうか
         $isSold = $this->isSold($item->status);
 
@@ -145,7 +145,7 @@ class ItemController extends Controller
             'building' => $data['building'] ?: null,
             ]);
             // 売り切れに変更
-            Item::where('id', $data['item_id'])->update(['status' => 2]);
+            Item::where('id', $data['item_id'])->update(['status' => item::STATUS_SOLD]);
             });
 
             return redirect()->route('items.index');

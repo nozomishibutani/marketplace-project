@@ -50,7 +50,11 @@
                     <label for="">カテゴリー</label>
                 </span>
                 <span>
-                    <label for="">{{ $item->category->name ?? '' }}</label>{{-- 複数表示させるようにする--}}
+                    <label for="">
+                        @foreach($item->categories as $category)
+                            {{ $category->name }}
+                        @endforeach
+                    </label>
                 </span>
             </div>
             <div class="status">
