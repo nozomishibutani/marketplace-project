@@ -15,6 +15,12 @@ class Item extends Model
     public const STATUS_SOLD = 2;
     public const STATUS_SUSPENDED = 3;
 
+    public const STATUSES = [
+        self::STATUS_ON_SALE,
+        self::STATUS_SOLD,
+        self::STATUS_SUSPENDED,
+    ];
+
     public const CONDITION_GOOD = 1;
     public const CONDITION_NO_DAMAGE = 2;
     public const CONDITION_SCRATCH = 3;

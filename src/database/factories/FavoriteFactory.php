@@ -5,8 +5,6 @@ namespace Database\Factories;
 use App\Models\User;
 use App\Models\Item;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Generator as Faker;
-
 
 class FavoriteFactory extends Factory
 {
@@ -17,9 +15,6 @@ class FavoriteFactory extends Factory
      */
     public function definition()
     {
-        // Faker 日本語化
-        $faker = \Faker\Factory::create('ja_JP');
-
         return [
             'user_id' => User::factory(),
             'item_id' => Item::factory(),

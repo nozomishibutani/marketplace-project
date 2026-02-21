@@ -16,7 +16,8 @@
             </div>
         @endif
         <div class="item-image">
-            <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
+            <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
+            {{--<img src="{{ asset('images/dummy.jpeg') }}" alt="商品画像"> --}}
         </div>
 
         <div class="item-info">

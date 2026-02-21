@@ -22,13 +22,15 @@ class ItemFactory extends Factory
         return [
         'user_id' => User::factory(),
         'category_id' => Category::factory(),
-        'name' =>  $faker->text(5) . rand(1, 100),
-        'brand_name' => $faker->text(10) . rand(1, 100),
+        'name' =>  $faker->text(5),
+        'brand_name' => $faker->text(10),
         'description' =>  $faker->sentence(),
         'price' => rand(100, 99999),
         'condition' => rand(1, 4),
+        // 呼び出し元で値を指定する
+        //1.出品中 2.売り切れ 3.出品停止　
         'status' => null,
-        'img' => 'test.jpg',
+        'img' => $faker->word(8) .'.jpg',
         ];
     }
 }

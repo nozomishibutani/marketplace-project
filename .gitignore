@@ -23,3 +23,8 @@ Thumbs.db
 storage/*.key
 storage/debugbar/
 *.php-cs-fixer.dist.php
+*.Identifier
+
+*.jpeg
+*.jpg
+*.png
