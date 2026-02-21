@@ -22,7 +22,7 @@ class GetMyListTest extends TestCase
      * @test
      * いいねした商品だけが表示される
      */
-    public function onlyFavoriteItemsAreDisplayed()
+    public function onlyFavoriteItemIsDisplayed()
     {
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
@@ -78,7 +78,7 @@ class GetMyListTest extends TestCase
      * @test
      * 未認証の場合は何も表示されない
      */
-    public function guestUserCannotSeeItems()
+    public function guestUserCannotSeeItem()
     {
         // 未ログイン状態
         $this->assertGuest();

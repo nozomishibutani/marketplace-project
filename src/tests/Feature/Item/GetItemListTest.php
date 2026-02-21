@@ -65,7 +65,7 @@ class GetItemListTest extends TestCase
      * @test
      * 自分が出品した商品は表示されない
      */
-    public function ownItemsAreNotDisplayed()
+    public function ownItemIsNotDisplayed()
     {
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */

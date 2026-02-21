@@ -18,7 +18,7 @@ class SearchItemTest extends TestCase
      * @test
      * 「商品名」で部分一致検索ができる
      */
-    public function canSearchItemsByPartialName()
+    public function canSearchItemByPartialName()
     {
         // 商品を作成
         $item = Item::factory()->create([
