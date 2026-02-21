@@ -9,6 +9,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GetItemListTest extends TestCase
 {
+    /**
+     * 商品一覧取得
+     */
     use RefreshDatabase;
 
     /**
