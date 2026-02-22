@@ -161,20 +161,20 @@ class ItemController extends Controller
         }
 }
 
-    public function comment(CommentRequest $request){
+    public function comment(CommentRequest $request, Item $item){
 
         // ユーザーid取得
         if(Auth::check() === null){
             return redirect('/login');
         }
 
-        $data = $request->only(['item_id','content',]);
+        $data = $request->only(['content']);
         Comment::create([
             'user_id' => Auth::id(),
-            'item_id' => $data['item_id'],
+            'item_id' => $item->id,
             'content' => $data['content'],
         ]);
-        return redirect()->route('items.show', ['item_id' => $data['item_id']]);
+        return redirect()->route('items.show', ['item_id' => $item->id]);
     }
 
     public function favorite($item_id){

@@ -76,19 +76,14 @@
                 <p>{{ $value['content'] }}</p>
             @endforeach
             <h3>商品へのコメント</h3>
-            @if (Auth::check())
                 <form action="{{ route('items.comment', $item->id) }}" method="post">
                 <div class="msg">
                     @error('content')
                         {{ $message }}
                     @enderror
                 </div>
-            @else
-                <form action="{{ route('login') }}" method="get">
-            @endif
                 @csrf
                 <textarea name="content" id=""></textarea>
-                <input type="hidden" name="item_id" value="{{ $item->id }}">
                 <button>コメントを送信する</button>
             </form>
         </div>
