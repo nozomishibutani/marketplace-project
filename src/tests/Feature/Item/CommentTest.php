@@ -7,7 +7,6 @@ use Tests\TestCase;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Category;
-use App\Models\Favorite;
 use App\Models\Comment;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,8 +42,7 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => 'テストコメント',
         ]);
-
-        $response->assertRedirect();
+        $response->assertRedirect(route('items.show', $item->id));
 
         // DBにコメントが保存されているか
         $this->assertDatabaseHas('comments', [
@@ -75,10 +73,8 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => 'テストコメント',
         ]);
-
         // ログイン画面にリダイレクトされるか
         $response->assertRedirect(route('login'));
-
         // コメントが保存されていないか
         $this->assertDatabaseCount('comments', 0);
     }
@@ -104,7 +100,6 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => '',
         ]);
-
         $response->assertSessionHasErrors([
             'content' => 'コメントを入力してください',
         ]);
@@ -131,7 +126,6 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => str_repeat('a', 256),
         ]);
-
         $response->assertSessionHasErrors([
             'content' => 'コメントは255文字以内で入力してください',
         ]);
