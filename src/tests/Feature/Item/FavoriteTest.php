@@ -97,11 +97,14 @@ class FavoriteTest extends TestCase
         $category = Category::factory()->create();
         $item->categories()->attach($category->pluck('id'));
 
-        // いいねする
-        $response = $this->get(route('items.favorite', $item->id));
+        // 事前にいいね状態を作る
+        Favorite::factory()->create([
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+        ]);
         // いいね数を確認
         $beforeCount = Favorite::count();
-        $response->assertRedirect(route('items.show', $item->id));
+
         // いいね解除する
         $response = $this->get(route('items.unfavorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
