@@ -21,8 +21,7 @@ class FavoriteTest extends TestCase
      * @test
      * いいねアイコンを押下することによって、いいねした商品として登録することができる。
      */
-    public function canRegisterFavoriteByPushingIcon(){
-
+    public function favoriteIsRegistered(){
 
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
@@ -49,7 +48,7 @@ class FavoriteTest extends TestCase
      * @test
      * 追加済みのアイコンは色が変化する
      */
-    public function pushedFavoriteIconChangesColor(){
+    public function favoriteIconChangesColor(){
 
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
@@ -84,7 +83,7 @@ class FavoriteTest extends TestCase
      * @test
      * 再度いいねアイコンを押下することによって、いいねを解除することができる。
      */
-    public function canCancelFavorite(){
+    public function favoriteIsCanceled(){
 
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */

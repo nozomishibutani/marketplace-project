@@ -19,7 +19,7 @@ class GetItemListTest extends TestCase
      * @test
      * 全商品を取得できる
      */
-    public function canGetAllItems(){
+    public function allItemsAreDisplayed(){
 
         // Itemテーブルに登録がないことを確認
         $this->assertDatabaseCount('items', 0);
@@ -65,7 +65,6 @@ class GetItemListTest extends TestCase
             // 売り切れ
             $response->assertSeeText($item->name);
             $response->assertSeeText('Sold');
-
     }
 
     /**

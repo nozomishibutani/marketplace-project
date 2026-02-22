@@ -109,7 +109,7 @@ class CommentTest extends TestCase
      * @test
      * コメントが256字以上の場合、バリデーションメッセージが表示される
      */
-    public function commentIsOver255Characters(){
+    public function commentCannotExceed255Characters(){
 
         // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
