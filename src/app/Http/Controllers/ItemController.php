@@ -15,12 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Common\Common;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\AddressRequest;
-
 use App\Http\Requests\PurchaseRequest;
-
-
-
-
 
 class ItemController extends Controller
 {
@@ -121,9 +116,6 @@ class ItemController extends Controller
     public function store(PurchaseRequest $request){
 
         $data = $request->only(['item_id', 'payment_method', 'postcode', 'address', 'building']);
-        if(Auth::check() === null){
-            return redirect('/login');
-        }
 
         try {
             DB::transaction(function () use ($data) {
@@ -161,28 +153,18 @@ class ItemController extends Controller
         }
 }
 
-    public function comment(CommentRequest $request, Item $item){
-
-        // ユーザーid取得
-        if(Auth::check() === null){
-            return redirect('/login');
-        }
+    public function comment(CommentRequest $request, $item_id){
 
         $data = $request->only(['content']);
         Comment::create([
             'user_id' => Auth::id(),
-            'item_id' => $item->id,
+            'item_id' => $item_id,
             'content' => $data['content'],
         ]);
-        return redirect()->route('items.show', ['item_id' => $item->id]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
     }
 
     public function favorite($item_id){
-
-        // ユーザーid取得
-        if (Auth::check() === null) {
-            return redirect('/login');
-        }
 
         Favorite::create([
             'user_id' => Auth::id(),
@@ -193,11 +175,6 @@ class ItemController extends Controller
     }
 
     public function unfavorite($item_id){
-
-        // ユーザーid取得
-        if (Auth::check() === null) {
-            return redirect('/login');
-        }
 
         Favorite::where('user_id', Auth::id())->where('item_id', $item_id)->delete();
 

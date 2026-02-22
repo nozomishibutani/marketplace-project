@@ -77,12 +77,12 @@
             @endforeach
             <h3>商品へのコメント</h3>
                 <form action="{{ route('items.comment', $item->id) }}" method="post">
+                @csrf
                 <div class="msg">
                     @error('content')
                         {{ $message }}
                     @enderror
                 </div>
-                @csrf
                 <textarea name="content" id=""></textarea>
                 <button>コメントを送信する</button>
             </form>
