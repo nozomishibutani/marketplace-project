@@ -30,6 +30,12 @@ class Order extends Model
     }
 
     /**
+     * 支払い方法ID
+     */
+    public const PAYMENT_CONVENIENCE = 1;
+    public const PAYMENT_CARD = 2;
+
+    /**
      * 支払い方法
      */
     public const PAYMENT_METHODS = [
