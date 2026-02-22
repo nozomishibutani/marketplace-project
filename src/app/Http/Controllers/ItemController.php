@@ -113,15 +113,15 @@ class ItemController extends Controller
         return redirect()->route('purchase.confirm', ['item_id' => $data['item_id']])->withInput($newAddress);
     }
 
-    public function store(PurchaseRequest $request){
+    public function store(PurchaseRequest $request, $item_id){
 
-        $data = $request->only(['item_id', 'payment_method', 'postcode', 'address', 'building']);
+        $data = $request->only(['payment_method', 'postcode', 'address', 'building']);
 
         try {
-            DB::transaction(function () use ($data) {
+            DB::transaction(function () use ($data, $item_id) {
 
             // 売り切れかどうか
-            $item = Item::select('status')->find($data['item_id']);
+            $item = Item::select('status')->find($item_id);
             $isSold = $this->isSold($item->status);
             if ($isSold) {
                 throw new SoldOutException();
@@ -129,7 +129,7 @@ class ItemController extends Controller
 
             Order::create([
             'user_id' => Auth::id(),
-            'item_id' => $data['item_id'],
+            'item_id' => $item_id,
             'payment_method' => $data['payment_method'],
             'status' => 1, // 要確認
             'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
@@ -137,19 +137,19 @@ class ItemController extends Controller
             'building' => $data['building'] ?: null,
             ]);
             // 売り切れに変更
-            Item::where('id', $data['item_id'])->update(['status' => item::STATUS_SOLD]);
+            Item::where('id', $item_id)->update(['status' => item::STATUS_SOLD]);
             });
 
             return redirect()->route('items.index');
 
         } catch (SoldOutException $e) {
 
-            return redirect()->route('items.show', $data['item_id'])->with('alert', '申し訳ございません。この商品はすでに売り切れました。');
+            return redirect()->route('items.show', $item_id)->with('alert', '申し訳ございません。この商品はすでに売り切れました。');
 
         } catch (\Exception $e) {
 
             Log::error($e);
-            return redirect()->route('items.show', $data['item_id'])->with('alert', 'システムエラーが発生しました。');
+            return redirect()->route('items.show', $item_id)->with('alert', 'システムエラーが発生しました。');
         }
 }
 

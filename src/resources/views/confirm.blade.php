@@ -15,7 +15,7 @@
 @section('content')
     <main>
         <div class="item-detail">
-            <form action="{{ route('purchase.store') }}" method="post">
+            <form action="{{ route('purchase.store', $item->id) }}" method="post">
             @csrf
                 <div class="left-content">
                     <div class="item-info">
@@ -99,7 +99,6 @@
                             <p class="selected-payment"></p>
                         </span>
                     </div>
-                    <input type="hidden" name="item_id" value="{{ $item->id }}">
                     <button id>購入する</button>
                 </div>
             </form>
