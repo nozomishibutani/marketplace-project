@@ -33,16 +33,21 @@
                 @else
                     <a href="/login" class="header-nav__button">ログイン</a>
                 @endif
-                <li>マイページ</li>
+                <li>
+                    <a href="{{ route('profile.index') }}" class="header-nav__button">マイページ</a>
+                </li>
                 <li>出品</li>
             </ul>
         </nav>
     </header>
 
-    {{-- 商品一覧画面のみ表示 --}}
-    @yield('menu')
-
     <main>
+        {{-- マイページ画面のみ表示 --}}
+        @yield('profile')
+
+        {{-- 商品一覧画面、マイページのみ表示 --}}
+        @yield('menu')
+
         @yield('content')
     </main>
 

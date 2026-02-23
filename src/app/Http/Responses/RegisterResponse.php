@@ -13,7 +13,7 @@ class RegisterResponse implements RegisterResponseContract
 
         // プロフィール未登録なら
         if (!$user->profile) {
-            return redirect()->route('profile.index');
+            return redirect()->route('profile.edit');
         }
 
         return redirect()->intended(config('fortify.home'));
