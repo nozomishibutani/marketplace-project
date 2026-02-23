@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\User;
 use App\Common\Common;
-
-
-
+use App\Http\Requests\ProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -52,7 +50,7 @@ class ProfileController extends Controller
         return view('editProfile',compact('username','profile'));
     }
 
-    public function store(Request $request){
+    public function store(ProfileRequest $request){
 
         $data = $request->only(['username', 'postcode', 'address', 'building']);
 
