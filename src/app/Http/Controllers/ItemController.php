@@ -80,8 +80,7 @@ class ItemController extends Controller
         $isSold = $this->isSold($item->status);
 
         // プロフィール登録している住所を取得
-        $profileAddress = auth()->user()
-            ->profile()
+        $profileAddress = Profile::where('user_id', Auth::id())
             ->select('postcode', 'address', 'building')
             ->first();
 
