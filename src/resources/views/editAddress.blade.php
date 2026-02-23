@@ -15,8 +15,7 @@
 
 @section('content')
     <h1>住所の変更</h1>
-    <form action="{{ route('purchase.update') }}" method="post">
-        <input type="hidden" name="item_id" value="{{ $item_id }}">
+    <form action="{{ route('purchase.update', $item_id) }}" method="post">
         @csrf
         <div>
             <label for="postcode">郵便番号</label>

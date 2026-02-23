@@ -28,11 +28,25 @@
             <p>{{ $item->brand_name }}</p>
             <p>¥{{ $item->price }}(税込)</p>
                 <div class="button">
-                    {{-- いいね --}}
-                    <a href="{{ route( $favorite['route'], $item->id) }}">
-                        <img src="{{ asset('images/'. $favorite['img']) }}" alt="いいねマーク">
-                    </a>
-                    <span>{{ $favorite['count'] }}</span>
+                    @if($isFavorite)
+                        {{-- いいね解除 --}}
+                        <form action="{{ route('items.unfavorite', $item->id) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                            <button type="submit" style="border:none; background:none; padding:0;">
+                                <img src="{{ asset('images/heart_pink.png') }}" alt="いいねマーク">
+                            </button>
+                        </form>
+                    @else
+                        {{-- いいねする --}}
+                        <form action="{{ route('items.favorite', $item->id) }}" method="post">
+                        @csrf
+                            <button type="submit" style="border:none; background:none; padding:0;">
+                                <img src="{{ asset('images/heart_default.png') }}" alt="いいねマーク">
+                            </button>
+                        </form>
+                    @endif
+                    <span>{{ $favoriteCount }}</span>
                     {{-- コメント --}}
                     <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
                     <span>{{ $content['count'] }}</span>

@@ -60,22 +60,17 @@ class ItemController extends Controller
         $content['count']   = $data->count();
 
         // いいね取得
-        $favorite['img'] = 'heart_default.png';
-        $favorite['route'] = 'items.favorite';
+        $isFavorite = null;
         if(Auth::check() === true){
             // 自分がいいねしているか
             $isFavorite = Favorite::where('item_id', $item_id)
                             ->where('user_id', Auth::id())
                             ->exists();
-            if($isFavorite){
-                $favorite['img'] = 'heart_pink.png';
-                $favorite['route'] = 'items.unfavorite';
-            }
         }
         // いいねの数
-        $favorite['count'] = Favorite::where('item_id', $item_id)->count();
+        $favoriteCount = Favorite::where('item_id', $item_id)->count();
 
-        return view('show',compact('item','isSold','content','favorite'));
+        return view('show',compact('item','isSold','content','isFavorite','favoriteCount'));
     }
 
     public function confirm($item_id){
@@ -85,7 +80,11 @@ class ItemController extends Controller
         $isSold = $this->isSold($item->status);
 
         // プロフィール登録している住所を取得
-        $profileAddress = Profile::select('postcode', 'address', 'building')->find($item_id);
+        $profileAddress = auth()->user()
+            ->profile()
+            ->select('postcode', 'address', 'building')
+            ->first();
+
         // 郵便番号にハイフン追加
         $postcode = $profileAddress['postcode'];
         if (strlen($postcode) === 7) {
@@ -101,16 +100,16 @@ class ItemController extends Controller
 
     }
 
-    public function updateAddress(AddressRequest $request)
+    public function updateAddress(AddressRequest $request, $item_id)
     {
-        $data = $request->only(['item_id','postcode', 'address', 'building']);
+        $data = $request->only(['postcode', 'address', 'building']);
 
         $newAddress = [
             'postcode' => $data['postcode'],
             'address'  => $data['address'],
             'building' => $data['building'] ?? '',
         ];
-        return redirect()->route('purchase.confirm', ['item_id' => $data['item_id']])->withInput($newAddress);
+        return redirect()->route('purchase.confirm', ['item_id' => $item_id])->withInput($newAddress);
     }
 
     public function store(PurchaseRequest $request, $item_id){
