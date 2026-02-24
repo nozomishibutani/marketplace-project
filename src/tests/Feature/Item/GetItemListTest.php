@@ -54,17 +54,17 @@ class GetItemListTest extends TestCase
      */
     public function purchasedItemDisplaysSold()
     {
-            // 商品を作成
-            $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
-            // カテゴリを作成
-            $category = Category::factory()->create();
-            $item->categories()->attach($category->pluck('id'));
-            $response = $this->get(route('items.index'));
-            $response->assertStatus(200);
+        // 商品を作成
+        $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
+        // カテゴリを作成
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->pluck('id'));
+        $response = $this->get(route('items.index'));
+        $response->assertStatus(200);
 
-            // 売り切れ
-            $response->assertSeeText($item->name);
-            $response->assertSeeText('Sold');
+        // 売り切れ
+        $response->assertSeeText($item->name);
+        $response->assertSeeText('Sold');
     }
 
     /**
