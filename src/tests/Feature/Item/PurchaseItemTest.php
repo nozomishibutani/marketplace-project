@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Item;
 
-
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Order;
@@ -48,7 +47,7 @@ class PurchaseItemTest extends TestCase
 
         // 購入
         $response = $this->post(route('purchase.store', $item->id),[
-            'payment_method' => order::PAYMENT_CONVENIENCE,
+            'payment_method' => Order::PAYMENT_CONVENIENCE,
             'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
@@ -61,7 +60,7 @@ class PurchaseItemTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
             'item_id' => $item->id,
-            'payment_method' => order::PAYMENT_CONVENIENCE,
+            'payment_method' => Order::PAYMENT_CONVENIENCE,
             'status' => 1, // 要確認
             'postcode' => $profile->postcode, // ハイフンなし
             'address' => $profile->address,
@@ -101,7 +100,7 @@ class PurchaseItemTest extends TestCase
 
         // 購入
         $response = $this->post(route('purchase.store', $item->id), [
-            'payment_method' => order::PAYMENT_CONVENIENCE,
+            'payment_method' => Order::PAYMENT_CONVENIENCE,
             'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
@@ -141,8 +140,8 @@ class PurchaseItemTest extends TestCase
         $response->assertStatus(200);
 
         // 購入
-        $response = $this->post(route('purchase.store', $item->id), [
-            'payment_method' => order::PAYMENT_CONVENIENCE,
+        $this->post(route('purchase.store', $item->id), [
+            'payment_method' => Order::PAYMENT_CONVENIENCE,
             'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
