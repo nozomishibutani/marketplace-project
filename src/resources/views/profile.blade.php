@@ -35,7 +35,7 @@
 @section('content')
     @foreach ($items as $item)
         <a href="{{ route('items.show', $item->id) }}" class="item" >
-            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}">
+            <img src="{{ asset('storage/' . $item->img) }}" alt="{{ $item->name }}">
             <p>{{ $item->name }}</p>
             @if($item->status == \App\Models\Item::STATUS_SOLD)
                 <p>Sold</p>
