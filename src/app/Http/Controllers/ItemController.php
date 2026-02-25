@@ -23,30 +23,40 @@ class ItemController extends Controller
 
         $items = array();
         $tab = $request->query('tab');
+        $user = Auth::user();
 
-        if(Auth::id() !== null){
-            // ログイン済み
-            if ($tab === Common::TAB_MYLIST) {
-                // マイリスト（いいねした商品だけ表示される）
-                $items = Item::whereHas('favorites', function ($query) {
-                            $query->where('user_id', Auth::id());
-                        })
-                        ->notSuspended()
-                        ->latest()
-                        ->get(['id', 'name', 'status', 'img']);
-            } else {
-                // 自分が出品した商品以外
-                $items = Item::where('user_id', '!=', Auth::id())
-                        ->notSuspended()
-                        ->latest()->get(['id', 'name', 'status', 'img']);
-                }
-        }else{
-            if ($tab !== Common::TAB_MYLIST) {
-                $items = Item::notSuspended()->latest()->get(['id', 'name', 'status', 'img']);
-            }
+        // 未ログイン
+        if (!$user) {
+            // 全商品
+            $items = Item::notSuspended()
+                ->latest()
+                ->get(['id', 'name', 'status', 'img']);
+
+            return view('index', compact('items'));
         }
-        return view('index',compact('items'));
+
+        // ログイン済み
+        // マイリスト
+        if ($tab === Common::TAB_MYLIST) {
+            $items = Item::whereHas('favorites', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+                })
+                ->notSuspended()
+                ->latest()
+                ->get(['id', 'name', 'status', 'img']);
+
+            return view('index', compact('items'));
+        }
+
+        // 自分が出品した商品以外
+        $items = Item::where('user_id', '!=', $user->id)
+            ->notSuspended()
+            ->latest()
+            ->get(['id', 'name', 'status', 'img']);
+
+        return view('index', compact('items'));
     }
+
 
     public function show($item_id){
 
