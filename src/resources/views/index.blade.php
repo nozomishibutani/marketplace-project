@@ -12,7 +12,11 @@
     <nav class="menu">
         <ul class="menu__nav">
             <li>おすすめ</li>
-            <a href="{{ route('items.index', ['tab' => \App\Common\Common::TAB_MYLIST]) }}">
+            <a href="{{ route('items.index',
+                array_merge(
+                    ['tab' => \App\Common\Common::TAB_MYLIST],request()->only('keyword')
+                )
+            ) }}">
                 <li>マイリスト</li>
             </a>
         </ul>

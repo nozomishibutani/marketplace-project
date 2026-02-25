@@ -23,6 +23,7 @@ class ItemController extends Controller
 
         $items = array();
         $tab = $request->query('tab');
+        $keyword = $request->query('keyword');
         $user = Auth::user();
 
         // 未ログイン
@@ -36,7 +37,12 @@ class ItemController extends Controller
         }
 
         // ログイン済み
-        // マイリスト
+        // 検索状態をマイリストでも保持
+        if (str_contains(url()->previous(), 'search')) {
+            // search経由
+            return $this->search($request);
+        }
+
         if ($tab === Common::TAB_MYLIST) {
             $items = Item::whereHas('favorites', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -201,5 +207,32 @@ class ItemController extends Controller
         }
         // 売り切れ
         return true;
+    }
+
+    /**
+     * 商品検索
+     */
+    public function search(Request $request)
+    {
+        $keyword = $request->query('keyword');
+        $tab = $request->input('tab');
+
+        $query = Item::query()->notSuspended();
+
+        // マイリスト
+        if ($tab === Common::TAB_MYLIST) {
+            $query->whereHas('favorites', function ($q) {
+                $q->where('user_id', Auth::id());
+            });
+        }
+
+        // キーワード
+        if (!empty($keyword)) {
+            $query->where('name', 'LIKE', "%{$keyword}%");
+        }
+
+        $items = $query->latest()->get(['id', 'name', 'status', 'img']);
+
+        return view('index',compact('items', 'tab'));
     }
 }

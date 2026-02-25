@@ -19,7 +19,10 @@
         </div>
         <div class="header__search-form">
             <form action="{{ route('search')}}" method="get">
-                <input type="form" class="" name="keyword" value="{{ session('keyword') ?? null }}" placeholder="なにをお探しですか？">
+                @if(request('tab'))
+                    <input type="hidden" name="tab" value="{{ request('tab') }}">
+                @endif
+                <input type="text" class="" name="keyword" value="{{ request('keyword') ?? null }}" placeholder="なにをお探しですか？">
                 <button class="">検索</button>
             </form>
         </div>
