@@ -76,10 +76,10 @@ class EditAddressTest extends TestCase
 
         // 住所変更
         $this->post(route('purchase.update', $item->id),[
-                    'postcode' => '987-9876',
-                    'address' => '変更先住所',
-                    'building' => '変更先建物名',
-                ]);
+            'postcode' => '987-9876',
+            'address' => '変更先住所',
+            'building' => '変更先建物名',
+        ]);
 
         // 変更内容取得
         $postcode = session('_old_input.postcode');
