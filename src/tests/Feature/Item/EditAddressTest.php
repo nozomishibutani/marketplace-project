@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Profile;
 use App\Models\Category;
-use App\Common\Common;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -48,10 +47,10 @@ class EditAddressTest extends TestCase
                 ]);
 
         // 購入画面に遷移
-        $response->assertRedirect(route('purchase.confirm', $item->id));
-        $response->assertSessionHasInput('postcode','123-1234');
-        $response->assertSessionHasInput('address','変更先住所');
-        $response->assertSessionHasInput('building','変更先建物名');
+        $response->assertStatus(200);
+        $response->assertSee('postcode','123-1234', false);
+        $response->assertSee('address','変更先住所', false);
+        $response->assertSee('building','変更先建物名', false);
     }
 
     /**
@@ -75,16 +74,14 @@ class EditAddressTest extends TestCase
         $item->categories()->attach($category->pluck('id'));
 
         // 住所変更
+        $postcode ='987-9876';
+        $address = '変更先住所';
+        $building = '変更先建物名';
         $this->post(route('purchase.update', $item->id),[
-            'postcode' => '987-9876',
-            'address' => '変更先住所',
-            'building' => '変更先建物名',
+            'postcode' => $postcode,
+            'address' => $address,
+            'building' => $building,
         ]);
-
-        // 変更内容取得
-        $postcode = session('_old_input.postcode');
-        $address = session('_old_input.address');
-        $building = session('_old_input.building');
 
         // 購入
         $this->post(route('purchase.store', $item->id), [

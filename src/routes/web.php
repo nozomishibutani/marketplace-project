@@ -16,9 +16,11 @@ use App\Http\Controllers\ProfileController;
 |
 */
 Route::middleware('auth')->group(function () {
-    // ログイン時のみ遷移可能
     Route::get('/purchase/{item_id}', [ItemController::class, 'confirm'])->name('purchase.confirm');
-    Route::post('/purchase/{item_id}', [ItemController::class, 'payment'])->name('purchase.payment');
+    Route::post('/purchase/{item_id}', [ItemController::class, 'confirm'])->name('purchase.confirm');
+    //Route::post('/purchase/payment/{item_id}', [ItemController::class, 'updatePaymentMethod'])->name('purchase.payment');
+    Route::post('/purchase/address/{item_id}', [ItemController::class, 'editAddress'])->name('purchase.edit');
+    // バリデーション該当時はgetで遷移する
     Route::get('/purchase/address/{item_id}', [ItemController::class, 'editAddress'])->name('purchase.edit');
     Route::post('/purchase/address/{item_id}/update', [ItemController::class, 'updateAddress'])->name('purchase.update');
     Route::post('/purchase/{item_id}/store', [ItemController::class, 'store'])->name('purchase.store');

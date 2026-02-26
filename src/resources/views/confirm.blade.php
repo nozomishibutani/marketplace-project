@@ -4,10 +4,6 @@
     <link rel="stylesheet" href="{{ asset('css/confirm.css') }}">
 @endsection
 
-@section('jquery')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-@endsection
-
 @section('title')
     <title>商品確認</title>
 @endsection
@@ -27,7 +23,7 @@
                         </div>
                     </div>
                     <div class="payment-info">
-                    <form method="post" action="{{ route('purchase.payment', $item->id) }}">
+                    <form method="post" action="{{ route('purchase.confirm', $item->id) }}">
                         @csrf
                         <h2>支払い方法</h2>
 
@@ -35,23 +31,16 @@
                             <option hidden>
                                 {{ \App\Models\Order::PAYMENT_HIDDEN }}
                             </option>
-
                             @foreach(\App\Models\Order::PAYMENT_METHODS as $key => $label)
                                 <option value="{{ $key }}"
-                                    {{ request('payment_method') == $key ? 'selected' : '' }}>
+                                    {{ $paymentMethod == $key ? 'selected' : '' }}>
                                     {{ $label }}
                                 </option>
                             @endforeach
                         </select>
-
-                        <input type="hidden" name="postcode"
-                            value="{{ request('postcode') ?? $profileAddress->postcode }}">
-
-                        <input type="hidden" name="address"
-                            value="{{ request('address') ?? $profileAddress->address }}">
-
-                        <input type="hidden" name="building"
-                            value="{{ request('building') ?? $profileAddress->building }}">
+                        <input type="hidden" name="postcode" value="{{ $address['postcode'] }}">
+                        <input type="hidden" name="address" value="{{ $address['address'] }}">
+                        <input type="hidden" name="building" value="{{ $address['building'] }}">
                     </form>
                         @error('payment_method')
                             <div>
@@ -60,20 +49,24 @@
                         @enderror
                     </div>
 
-                    <form action="{{ route('purchase.store', $item->id) }}" method="post">
-                    @csrf
                     <div class="address-info">
                         <div class="address-info__nav">
                             <h2>配送先</h2>
-                            @if($isSold == true)
-                                <a href="{{ route('purchase.edit', $item->id) }}" class="">非活性にする</a>
-                            @else
-                                <a href="{{ route('purchase.edit', $item->id) }}" class="">変更する</a>
+                            @if($isSold == false)
+                                <form method="post" action="{{ route('purchase.edit', $item->id) }}">
+                                @csrf
+                                <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
+                                <button type="submit" class="link-button">
+                                    変更する
+                                </button>
+                            </form>
                             @endif
                         </div>
+                        <form action="{{ route('purchase.store', $item->id) }}" method="post">
+                        @csrf
                         <ul>
                             <li>
-                                〒<input type="text" name="postcode" value="{{ old('postcode') ?? $profileAddress->postcode }}" readonly>
+                                〒<input type="text" name="postcode" value="{{ old('postcode') ?? $address['postcode'] }}" readonly>
                                 @error('postcode')
                                     <div>
                                         {{ $message }}
@@ -81,7 +74,7 @@
                                 @enderror
                             </li>
                             <li>
-                                <input type="text" name="address" value="{{ old('address') ?? $profileAddress->address }}" readonly>
+                                <input type="text" name="address" value="{{ old('address') ?? $address['address'] }}" readonly>
                                 @error('address')
                                     <div>
                                         {{ $message }}
@@ -89,7 +82,7 @@
                                 @enderror
                             </li>
                             <li>
-                                <input type="text" name="building" value="{{ old('building') ?? $profileAddress->building }}" readonly>
+                                <input type="text" name="building" value="{{ old('building') ?? $address['building'] }}" readonly>
                                 @error('building')
                                     <div>
                                         {{ $message }}
@@ -115,15 +108,11 @@
                         </span>
                         <span>
                             <p>{{ \App\Models\Order::PAYMENT_METHODS[$paymentMethod] ?? \App\Models\Order::PAYMENT_HIDDEN }}</p>
-                            <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
+                            <input type="hidden" name="payment_method" value="{{ $paymentMethod ?? null }}">
                         </span>
                     </div>
                     <button id>購入する</button>
                 </div>
             </form>
         </div>
-@endsection
-
-@section('js')
-    {{--<script src="{{ asset('js/payment-method.js') }}"></script>--}}
 @endsection

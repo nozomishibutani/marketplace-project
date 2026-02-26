@@ -94,23 +94,19 @@ class ItemController extends Controller
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
         // 売り切れかどうか
         $isSold = $this->isSold($item->status);
-        // お支払方法
-        $paymentMethod = $request->input('payment_method');
 
-        if (!$paymentMethod) {
-            // 最初のアクセス
-            $address = Profile::where('user_id', Auth::id())
-                ->select('postcode', 'address', 'building')
-                ->first();
-            // 郵便番号にハイフン追加
-            $postcode = $address['postcode'];
-            if (strlen($postcode) === 7) {
-                $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-            }
-        } else {
-            // フォームに入力のある住所
-            $address = $request->only(['postcode', 'address', 'building']);
+        $paymentMethod = null;
+        // プロフィール登録している住所を取得
+        $address = Profile::where('user_id', Auth::id())
+            ->select('postcode', 'address', 'building')
+            ->first();
+
+        // 郵便番号にハイフン追加
+        $postcode = $address['postcode'];
+        if (strlen($postcode) === 7) {
+            $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
         }
+
         return view('confirm',compact('item','address','isSold' ,'paymentMethod'));
     }
 
@@ -130,7 +126,20 @@ class ItemController extends Controller
         $isSold = $this->isSold($item->status);
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
+        // 住所
+        $address = $request->only(['postcode', 'address', 'building']);
 
+        return view('confirm',compact('item','address','isSold' ,'paymentMethod'));
+    }
+
+    public function updatePaymentMethod(Request $request, $item_id){
+
+        $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
+        // 売り切れかどうか
+        $isSold = $this->isSold($item->status);
+        // 支払い方法
+        $paymentMethod = $request->input('payment_method');
+        // 住所
         $address = $request->only(['postcode', 'address', 'building']);
 
         return view('confirm',compact('item','address','isSold' ,'paymentMethod'));

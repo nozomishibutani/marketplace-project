@@ -43,23 +43,48 @@ class PaymentMethodTest extends TestCase
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
-        // プルダウンが存在するか
-        $response->assertSee(Order::PAYMENT_METHODS[Order::PAYMENT_CARD]);
-        $response->assertSee(Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]);
 
-        // 購入
-        $this->post(route('purchase.store', $item->id), [
+        // お支払い方法をコンビニ払いに変更
+        $response = $this->post(route('purchase.confirm', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => 1, // 要確認
-            'postcode' => $postcode, // ハイフンあり
+            'postcode' => $postcode,
             'address' => $profile->address,
             'building' => $profile->building,
         ]);
 
-        $response->assertSee(Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]);
-        $this->assertDatabaseHas('orders', [
-            'payment_method' => Order::PAYMENT_CONVENIENCE,
+        // 支払方法欄で表示されているか
+        // セレクトボックス内の値と支払方法欄の表示で合計2回
+        $response->assertStatus(200);
+        $this->assertEquals(
+            2,
+            substr_count(
+                $response->getContent(),
+                Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]
+            )
+        );
+        // セレクトボックスで選択されているか
+        $response->assertSeeInOrder(['value="' . Order::PAYMENT_CONVENIENCE . '"','selected',], false);
+
+        // お支払方法をカードに変更
+        $response = $this->post(route('purchase.confirm', $item->id), [
+            'payment_method' => Order::PAYMENT_CARD,
+            'postcode' => $postcode,
+            'address' => $profile->address,
+            'building' => $profile->building,
         ]);
+
+        // 支払方法欄で表示されているか
+        // セレクトボックス内の値と支払方法欄の表示で合計2回
+        $response->assertStatus(200);
+        $this->assertEquals(
+            2,
+            substr_count(
+                $response->getContent(),
+                Order::PAYMENT_METHODS[Order::PAYMENT_CARD]
+            )
+        );
+        // セレクトボックスで選択されているか
+        $response->assertSeeInOrder(['value="' . Order::PAYMENT_CARD . '"','selected',], false);
 
     }
 }
