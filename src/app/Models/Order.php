@@ -34,12 +34,13 @@ class Order extends Model
      */
     public const PAYMENT_CONVENIENCE = 1;
     public const PAYMENT_CARD = 2;
+    public const PAYMENT_HIDDEN = '選択してください';
 
     /**
      * 支払い方法
      */
     public const PAYMENT_METHODS = [
-        1 => 'コンビニ支払い',
-        2 => 'カード支払い',
-    ];
+    self::PAYMENT_CONVENIENCE => 'コンビニ支払い',
+    self::PAYMENT_CARD => 'カード支払い',
+];
 }

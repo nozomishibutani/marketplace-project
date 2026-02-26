@@ -15,8 +15,6 @@
 @section('content')
     <main>
         <div class="item-detail">
-            <form action="{{ route('purchase.store', $item->id) }}" method="post">
-            @csrf
                 <div class="left-content">
                     <div class="item-info">
                         <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
@@ -29,21 +27,41 @@
                         </div>
                     </div>
                     <div class="payment-info">
+                    <form method="post" action="{{ route('purchase.payment', $item->id) }}">
+                        @csrf
                         <h2>支払い方法</h2>
-                        <select class="payment-method" name="payment_method">
-                        <option hidden>選択してください</option>
+
+                        <select class="payment-method" name="payment_method" onchange="this.form.submit()">
+                            <option hidden>
+                                {{ \App\Models\Order::PAYMENT_HIDDEN }}
+                            </option>
+
                             @foreach(\App\Models\Order::PAYMENT_METHODS as $key => $label)
-                                <option value="{{ $key }}" {{ old('payment_method') == $key ? 'selected' : '' }}>
+                                <option value="{{ $key }}"
+                                    {{ request('payment_method') == $key ? 'selected' : '' }}>
                                     {{ $label }}
                                 </option>
                             @endforeach
                         </select>
+
+                        <input type="hidden" name="postcode"
+                            value="{{ request('postcode') ?? $profileAddress->postcode }}">
+
+                        <input type="hidden" name="address"
+                            value="{{ request('address') ?? $profileAddress->address }}">
+
+                        <input type="hidden" name="building"
+                            value="{{ request('building') ?? $profileAddress->building }}">
+                    </form>
                         @error('payment_method')
                             <div>
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
+
+                    <form action="{{ route('purchase.store', $item->id) }}" method="post">
+                    @csrf
                     <div class="address-info">
                         <div class="address-info__nav">
                             <h2>配送先</h2>
@@ -96,7 +114,8 @@
                             <label for="">支払い方法</label>
                         </span>
                         <span>
-                            <p class="selected-payment"></p>
+                            <p>{{ \App\Models\Order::PAYMENT_METHODS[$paymentMethod] ?? \App\Models\Order::PAYMENT_HIDDEN }}</p>
+                            <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
                         </span>
                     </div>
                     <button id>購入する</button>
@@ -106,5 +125,5 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('js/payment-method.js') }}"></script>
+    {{--<script src="{{ asset('js/payment-method.js') }}"></script>--}}
 @endsection

@@ -89,12 +89,13 @@ class ItemController extends Controller
         return view('show',compact('item','isSold','content','isFavorite','favoriteCount'));
     }
 
-    public function confirm($item_id){
+    public function confirm(Request $request, $item_id){
 
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
         // 売り切れかどうか
         $isSold = $this->isSold($item->status);
 
+        $paymentMethod = null;
         // プロフィール登録している住所を取得
         $profileAddress = Profile::where('user_id', Auth::id())
             ->select('postcode', 'address', 'building')
@@ -106,7 +107,25 @@ class ItemController extends Controller
             $profileAddress['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
         }
 
-        return view('confirm',compact('item','profileAddress','isSold'));
+        return view('confirm',compact('item','profileAddress','isSold' ,'paymentMethod'));
+    }
+
+    public function payment(Request $request, $item_id){
+
+        $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
+        // 売り切れかどうか
+        $isSold = $this->isSold($item->status);
+
+        // 支払い方法変更の遷移
+        $paymentMethod = $request->input('payment_method');
+
+        //$paymentMethods =  $key ? Order::PAYMENT_METHODS[$key] : Order::PAYMENT_HIDDEN;
+
+
+            // 住所を取得
+            $profileAddress = (object)  $request->only(['postcode', 'address', 'building']);
+
+        return view('confirm',compact('item','profileAddress','isSold' ,'paymentMethod'));
     }
 
     public function editAddress($item_id){
