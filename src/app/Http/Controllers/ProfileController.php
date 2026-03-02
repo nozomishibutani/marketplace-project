@@ -42,11 +42,11 @@ class ProfileController extends Controller
         //DBから情報を取得
         $username = Auth::user()->username;
         $profile = Auth::user()->profile;
-        // 郵便番号にハイフン追加
-        $postcode = $profile['postcode'];
-        if (strlen($postcode) === 7) {
+        if($profile){
+            // 郵便番号にハイフン追加
+            $postcode = $profile['postcode'];
             $profile['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-        }
+            }
         return view('editProfile',compact('username','profile'));
     }
 

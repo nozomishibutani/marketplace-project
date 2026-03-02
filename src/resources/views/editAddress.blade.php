@@ -5,10 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/editAddress.css') }}">
 @endsection
 
-@section('jquery')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-@endsection
-
 @section('title')
     <title>住所変更</title>
 @endsection
@@ -49,10 +45,6 @@
         <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
         <button type="submit">更新する</button>
     </form>
-@endsection
-
-@section('js')
-    <script src="{{ asset('js/postcode.js') }}"></script>
 @endsection
 
 </body>

@@ -104,9 +104,7 @@ class ItemController extends Controller
                 ->first();
             // 郵便番号にハイフン追加
             $postcode = $address['postcode'];
-            if (strlen($postcode) === 7) {
-                $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-            }
+            $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
         } else {
             // フォームに入力のある住所
             $address = $request->only(['postcode', 'address', 'building']);

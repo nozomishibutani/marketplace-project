@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class ProfileRequest extends FormRequest
 {
@@ -24,7 +26,11 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'string','max:255','unique:users,username'],
+            'username' => ['required', 'string','max:255',
+                            Rule::unique('users', 'username')
+                                ->ignore($this->user()->id)
+                                ->whereNull('deleted_at')
+                            ],
             'postcode' => ['required', 'string','regex:/^\d{3}-\d{4}$/'],
             'address' => ['required', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],

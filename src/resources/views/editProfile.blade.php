@@ -4,10 +4,6 @@
     <link rel="stylesheet" href="{{ asset('css/editProfile.css') }}">
 @endsection
 
-@section('jquery')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-@endsection
-
 @section('title')
     <title>プロフィール</title>
 @endsection
@@ -72,8 +68,4 @@
         </form>
     </div>
 </div>
-@endsection
-
-@section('js')
-    <script src="{{ asset('js/postcode.js') }}"></script>
 @endsection
