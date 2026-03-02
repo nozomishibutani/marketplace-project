@@ -15,23 +15,30 @@ class Item extends Model
     public const STATUS_SOLD = 2;
     public const STATUS_SUSPENDED = 3;
 
-    public const STATUSES = [
-        self::STATUS_ON_SALE,
-        self::STATUS_SOLD,
-        self::STATUS_SUSPENDED,
-    ];
+    /**
+     * 商品ステータス
+     */
+    // public const STATUSES = [
+    //     self::STATUS_ON_SALE,
+    //     self::STATUS_SOLD,
+    //     self::STATUS_SUSPENDED,
+    // ];
 
     public const CONDITION_GOOD = 1;
     public const CONDITION_NO_DAMAGE = 2;
     public const CONDITION_SCRATCH = 3;
     public const CONDITION_BAD = 4;
+    public const CONDITION_HIDDEN = '選択してください';
 
+    /**
+     * 商品の状態
+     */
     public const CONDITIONS = [
         self::CONDITION_GOOD => '良好',
         self::CONDITION_NO_DAMAGE => '目立った傷や汚れなし',
         self::CONDITION_SCRATCH => 'やや傷や汚れあり',
         self::CONDITION_BAD => '状態が悪い',
-];
+    ];
 
     protected $fillable = [
         'user_id',

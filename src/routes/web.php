@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/purchase/address/{item_id}/update', [PurchaseController::class, 'updateAddress'])->name('purchase.update');
     Route::post('/purchase/{item_id}/store', [PurchaseController::class, 'store'])->name('purchase.store');
 
+    // 商品出品
+    Route::get('/sell', [ItemController::class, 'create'])->name('items.create');
+    Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
+
     // プロフィール画面
     Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
     // 「プロフィールを編集」ボタン押下

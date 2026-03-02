@@ -9,6 +9,8 @@ use App\Models\Comment;
 use App\Models\Favorite;
 use App\Common\Common;
 use App\Http\Requests\CommentRequest;
+use App\Models\Category;
+use App\Http\Requests\ExhibitionRequest;
 
 class ItemController extends Controller
 {
@@ -111,11 +113,34 @@ class ItemController extends Controller
 
     }
 
-    /**
-     * 商品検索
-     */
-    public function search(Request $request)
-    {
+    public function create(){
+
+        // 商品カテゴリーを取得
+        $categories = Category::pluck('name', 'id');
+        return view('sell',compact('categories'));
+    }
+
+    public function store(ExhibitionRequest $request){
+
+        $data = $request->only(['name', 'brand_name', 'description', 'price', 'condition', 'img', 'categories']);
+
+        $item = Item::create([
+                    'user_id' => Auth::id(),
+                    'name' => $data['name'],
+                    'brand_name' => $data['brand_name'],
+                    'description' => $data['description'],
+                    'price' => $data['price'],
+                    'condition' => $data['condition'],
+                    'img' => $data['img'],
+                    ]);
+        // 選択カテゴリーをcategory_itemテーブルに登録
+        $item->categories()->attach($data['categories']);
+
+        return redirect()->route('profile.index', ['page' => \App\Common\Common::PAGE_SELL]);
+
+    }
+
+    public function search(Request $request){
         $keyword = $request->query('keyword');
         $tab = $request->input('tab');
 

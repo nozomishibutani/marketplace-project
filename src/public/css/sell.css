@@ -1,0 +1,14 @@
+.price-wrapper {
+    position: relative;
+}
+
+.yen {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.price-wrapper input {
+    padding-left: 20px;
+}

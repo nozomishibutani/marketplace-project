@@ -39,7 +39,9 @@
                 <li>
                     <a href="{{ route('profile.index') }}" class="header-nav__button">マイページ</a>
                 </li>
-                <li>出品</li>
+                <li>
+                    <a href="{{ route('items.create') }}" class="header-nav__button">出品</a>
+                </li>
             </ul>
         </nav>
     </header>
