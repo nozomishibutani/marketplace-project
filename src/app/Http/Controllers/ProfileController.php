@@ -52,7 +52,13 @@ class ProfileController extends Controller
 
     public function store(ProfileRequest $request){
 
-        $data = $request->only(['username', 'postcode', 'address', 'building']);
+        $data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
+        // プロフィール画像
+        if(isset($data['avatar'])){
+            $path = $request->file('avatar')->store('profiles', 'public');
+        } else{
+            $path = null;
+        }
 
         auth()->user()->profile()->updateOrCreate(
             ['user_id' => Auth::id()],
@@ -60,6 +66,7 @@ class ProfileController extends Controller
                 'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
                 'address' => $data['address'],
                 'building' => $data['building'] ?: null,
+                'avatar' => $path,
             ]
         );
 

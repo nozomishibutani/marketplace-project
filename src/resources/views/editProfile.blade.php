@@ -11,19 +11,17 @@
 @section('content')
 <div class="profile-form">
     <h1 class="profile-form__heading">プロフィール設定</h1>
-    <div class="profile-form__inner">
-        <form action="" method="post">
-            <img src="{{ asset('images/dummy.jpeg') }}" alt="">
-            <input class="profile-img__btn btn" type="file" value="画像を選択する">
-        </form>
-    </div>
+    <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @if ($profile)
+        @method('PATCH')
+    @endif
+        <div class="profile-form__inner">
+                <img src="{{ asset('storage/' . $profile->avatar) }}" alt="プロフィール画像">
+                <input type="file" name="avatar" accept="image/*" value="画像を選択する">
+        </div>
 
-    <div class="profile-form__inner">
-        <form action="{{ route('profile.store') }}" method="post">
-        @csrf
-        @if ($profile)
-            @method('PATCH')
-        @endif
+        <div class="profile-form__inner">
             <div class="profile-form__group">
                 <label class="profile-form__label" for="username">ユーザー名</label>
                 <input class="profile-form__input" type="text" name="username" id="username" value="{{ old('username', $username) }}" >

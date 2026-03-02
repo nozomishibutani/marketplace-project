@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Item;
-use App\Models\Item_Category;
 
 class ItemsTableSeeder extends Seeder
 {
@@ -26,7 +24,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 15000,
                     'condition' => Item::CONDITION_GOOD,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img1',
+                    'img' => 'items/Armani+Mens+Clock.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -41,7 +39,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 5000,
                     'condition' => Item::CONDITION_NO_DAMAGE,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img2',
+                    'img' => 'items/HDD+Hard+Disk.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -56,7 +54,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 300,
                     'condition' => Item::CONDITION_SCRATCH,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img3',
+                    'img' => 'items/iLoveIMG+d.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -71,7 +69,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 4000,
                     'condition' => Item::CONDITION_BAD,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img4',
+                    'img' => 'items/Leather+Shoes+Product+Photo.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -86,7 +84,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 45000,
                     'condition' => Item::CONDITION_GOOD,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img4',
+                    'img' => 'items/Living+Room+Laptop.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -101,7 +99,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 8000,
                     'condition' => Item::CONDITION_NO_DAMAGE,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img5',
+                    'img' => 'items/Music+Mic+4632231.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -116,7 +114,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 3500,
                     'condition' => Item::CONDITION_SCRATCH,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img6',
+                    'img' => 'items/Purse+fashion+pocket.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -131,7 +129,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 500,
                     'condition' => Item::CONDITION_BAD,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img7',
+                    'img' => 'items/Tumbler+souvenir.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -146,7 +144,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 4000,
                     'condition' => Item::CONDITION_GOOD,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img8',
+                    'img' => 'items/Waitress+with+Coffee+Grinder.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -161,7 +159,7 @@ class ItemsTableSeeder extends Seeder
                     'price' => 2500,
                     'condition' => Item::CONDITION_NO_DAMAGE,
                     'status' => Item::STATUS_ON_SALE,
-                    'img' => 'img9',
+                    'img' => 'items/外出メイクアップセット.jpg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],

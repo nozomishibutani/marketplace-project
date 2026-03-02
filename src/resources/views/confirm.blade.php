@@ -13,7 +13,7 @@
         <div class="item-detail">
                 <div class="left-content">
                     <div class="item-info">
-                        <img src="{{ asset('storage/' . $item->image) }}" alt="商品画像">
+                        <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
                         <div>
                             <h1>{{ $item->name }}</h1>
                             <p>¥{{ $item->price }}</p>

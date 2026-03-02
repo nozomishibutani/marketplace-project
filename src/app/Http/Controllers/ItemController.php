@@ -124,6 +124,8 @@ class ItemController extends Controller
 
         $data = $request->only(['name', 'brand_name', 'description', 'price', 'condition', 'img', 'categories']);
 
+        // 画像保存
+        $path = $request->file('img')->store('items', 'public');
         $item = Item::create([
                     'user_id' => Auth::id(),
                     'name' => $data['name'],
@@ -131,10 +133,11 @@ class ItemController extends Controller
                     'description' => $data['description'],
                     'price' => $data['price'],
                     'condition' => $data['condition'],
-                    'img' => $data['img'],
+                    'img' => $path,
                     ]);
         // 選択カテゴリーをcategory_itemテーブルに登録
         $item->categories()->attach($data['categories']);
+        
 
         return redirect()->route('profile.index', ['page' => \App\Common\Common::PAGE_SELL]);
 
