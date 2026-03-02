@@ -78,4 +78,12 @@ class Item extends Model
         return $query->where('status','!=', self::STATUS_SUSPENDED);
     }
 
+    /**
+     * 売り切れかどうか
+     */
+    public function isSold()
+    {
+        return $this->status == Item::STATUS_SOLD;
+    }
+
 }
