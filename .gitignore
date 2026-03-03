@@ -20,7 +20,6 @@ docker/mysql/data/*
 *.bk
 .DS_Store
 Thumbs.db
-storage/*.key
 storage/debugbar/
 *.php-cs-fixer.dist.php
 *.Identifier

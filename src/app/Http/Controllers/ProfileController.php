@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request){
         $username = Auth::user()->username;
-        $avatar = Auth::user()->profile->avatar;
+        $avatar = Auth::user()->profile->avatar ?? null;
         $page = $request->query('page');
         switch ($page) {
 
@@ -43,10 +43,13 @@ class ProfileController extends Controller
         $username = Auth::user()->username;
         $profile = Auth::user()->profile;
         if($profile){
+            // 編集
             // 郵便番号にハイフン追加
-            $postcode = $profile['postcode'];
-            $profile['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
+            $postcode = $profile->postcode;
+            $profile->postcode = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
+            $profile->save();
             }
+
         return view('editProfile',compact('username','profile'));
     }
 

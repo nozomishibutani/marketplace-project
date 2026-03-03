@@ -137,7 +137,6 @@ class ItemController extends Controller
                     ]);
         // 選択カテゴリーをcategory_itemテーブルに登録
         $item->categories()->attach($data['categories']);
-        
 
         return redirect()->route('profile.index', ['page' => \App\Common\Common::PAGE_SELL]);
 
