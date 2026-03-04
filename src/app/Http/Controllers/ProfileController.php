@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
     public function index(Request $request){
         $username = Auth::user()->username;
-        $avatar = Auth::user()->profile->avatar ?? null;
+        $avatar = Auth::user()->profile->avatar ?? 'profiles/icon_dummy.png';
         $page = $request->query('page');
         switch ($page) {
 

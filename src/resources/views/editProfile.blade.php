@@ -17,7 +17,7 @@
         @method('PATCH')
     @endif
         <div class="profile-form__inner">
-                <img src="{{ asset('storage/' . ($profile->avatar ?? 'dummy.png')) }}" alt="プロフィール画像">
+                <img src="{{ asset('storage/' . ($profile->avatar ?? 'profiles/icon_dummy.png')) }}" alt="プロフィール画像" width="200">
                 <input type="file" name="avatar" accept="image/*" value="画像を選択する">
         </div>
 

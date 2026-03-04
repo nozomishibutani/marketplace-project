@@ -11,7 +11,7 @@
 @section('profile')
     <div>
         <div>
-            <img src="{{ asset('storage/' . $avatar) }}" alt="プロフィール画像">
+            <img src="{{ asset('storage/' . $avatar) }}" alt="プロフィール画像" width="200">
             <p>{{ $username }}</p>
         </div>
         <a href="{{ route('profile.edit') }}">プロフィールを編集</a>
