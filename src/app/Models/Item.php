@@ -86,11 +86,11 @@ class Item extends Model
     }
 
     /**
-     * 売り切れかどうか
+     * 販売中かどうか
      */
-    public function isSold()
+    public function isSale()
     {
-        return $this->status == Item::STATUS_SOLD;
+        return $this->status == Item::STATUS_ON_SALE;
     }
 
 }

@@ -13,17 +13,17 @@
         <div class="item-detail">
                 <div class="left-content">
                     <div class="item-info">
-                        <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
+                        <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像" width="200">
                         <div>
                             <h1>{{ $item->name }}</h1>
                             <p>¥{{ $item->price }}</p>
-                            @if($isSold == true)
+                            @if($isSale == false)
                                 <p>sold</p>
                             @endif
                         </div>
                     </div>
                     <div class="payment-info">
-                    <form method="post" action="{{ route('purchase.confirm', $item->id) }}">
+                        <form method="post" action="{{ route('purchase.confirm', $item->id) }}">
                         @csrf
                         <h2>支払い方法</h2>
 
@@ -52,7 +52,7 @@
                     <div class="address-info">
                         <div class="address-info__nav">
                             <h2>配送先</h2>
-                            @if($isSold == false)
+                            @if($isSale == true)
                                 <form method="post" action="{{ route('purchase.edit', $item->id) }}">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
@@ -62,7 +62,7 @@
                             </form>
                             @endif
                         </div>
-                        <form action="{{ route('purchase.store', $item->id) }}" method="post">
+                            <form action="{{ route('purchase.store', $item->id) }}" method="post">
                         @csrf
                         <ul>
                             <li>

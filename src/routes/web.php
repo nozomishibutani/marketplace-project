@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\CheckoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +18,8 @@ use App\Http\Controllers\PurchaseController;
 */
 Route::middleware('auth')->group(function () {
     // 購入手続きへ
-    Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm');
-    Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm');
+    Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
+    Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.edit');
     Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.edit');
     Route::post('/purchase/address/{item_id}/update', [PurchaseController::class, 'updateAddress'])->name('purchase.update');
@@ -46,3 +47,10 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
+
+// stripe
+Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
+Route::get('/checkout/cancel', function () {
+    return '決済キャンセル';
+})->name('checkout.cancel');
+

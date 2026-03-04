@@ -16,13 +16,12 @@
             </div>
         @endif
         <div class="item-image">
-            <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
-            {{--<img src="{{ asset('images/dummy.jpeg') }}" alt="商品画像"> --}}
+            <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像" width="200">
         </div>
 
         <div class="item-info">
             <h1>{{ $item->name }}</h1>
-            @if($isSold == true)
+            @if($isSale == false)
                 <p>Sold</p>
             @endif
             <p>{{ $item->brand_name }}</p>
@@ -51,7 +50,7 @@
                     <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
                     <span>{{ $content['count'] }}</span>
                 </div>
-                @if($isSold == false)
+                @if($isSale == true)
                     <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
                 @endif
 
