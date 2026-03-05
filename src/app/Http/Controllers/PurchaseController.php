@@ -9,7 +9,7 @@ use App\Models\Item;
 use App\Models\Profile;
 use App\Models\Order;
 use App\Exceptions\SoldOutException;
-use Illuminate\Support\Facades\DB;
+use App\Exceptions\SuspendedException;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\PurchaseRequest;
@@ -32,7 +32,7 @@ class PurchaseController extends Controller
     {
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
         // 売り切れかどうか
-        $isSale = $item->isSale();
+        $itemStatuses = $item->itemStatus();
         // お支払方法
         $paymentMethod = $request->input('payment_method');
 
@@ -48,7 +48,7 @@ class PurchaseController extends Controller
             // フォームに入力のある住所
             $address = $request->only(['postcode', 'address', 'building']);
         }
-        return view('confirm', compact('item', 'address', 'isSale', 'paymentMethod'));
+        return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
     }
 
     public function editAddress(Request $request, $item_id)
@@ -65,13 +65,13 @@ class PurchaseController extends Controller
     {
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
         // 売り切れかどうか
-        $isSale = $item->isSale();
+        $itemStatuses = $item->itemStatus();
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
 
         $address = $request->only(['postcode', 'address', 'building']);
 
-        return view('confirm', compact('item', 'address', 'isSale', 'paymentMethod'));
+        return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
     }
 
         public function store(PurchaseRequest $request, $item_id)
@@ -89,14 +89,21 @@ class PurchaseController extends Controller
                 // カード払い
                 return $this->redirectToStripe($data);
 
-            } catch (SoldOutException $e) {
+            } catch (SoldOutException) {
 
                 $item = Item::find($data['item_id']);
                 return redirect()
                     ->route('items.show', $item_id)
                     ->with('alert', $item->name . 'は売り切れました');
 
-            } catch (\Exception $e) {
+            } catch (SuspendedException) {
+
+            $item = Item::find($data['item_id']);
+            return redirect()
+                ->route('items.show', $item_id)
+                ->with('alert', '現在、' .$item->name . 'は出品を中止しております');
+
+        } catch (\Exception $e) {
 
                 Log::error($e);
                 return redirect()
@@ -151,11 +158,19 @@ class PurchaseController extends Controller
 
             return redirect()->route('items.index')->with('alert', 'ご購入ありがとうございました。');
 
-        } catch (SoldOutException $e) {
+        } catch (SoldOutException) {
 
+            $item = Item::find($session->metadata->item_id);
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
-                ->with('alert', $session->metadata->item_id . 'は売り切れました');
+                ->with('alert', $item->name . 'は売り切れました');
+
+        } catch (SuspendedException) {
+
+            $item = Item::find($session->metadata->item_id);
+            return redirect()
+                ->route('items.show', $session->metadata->item_id)
+                ->with('alert', '現在、' .$item->name . 'は出品を中止しております');
 
         } catch (\Exception $e) {
 

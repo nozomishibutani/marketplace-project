@@ -62,8 +62,7 @@ class ItemController extends Controller
     public function show($item_id){
 
         $item = Item::with('categories')->findOrFail($item_id);
-        // 売り切れかどうか
-        $isSale = $item->isSale();
+        $itemStatuses = $item->itemStatus();
 
         // コメント取得
         $data = Comment::where('item_id', $item_id)->latest()->get(['content']);
@@ -81,7 +80,7 @@ class ItemController extends Controller
         // いいねの数
         $favoriteCount = Favorite::where('item_id', $item_id)->count();
 
-        return view('show',compact('item','isSale','content','isFavorite','favoriteCount'));
+        return view('show',compact('item','itemStatuses','content','isFavorite','favoriteCount'));
     }
 
     public function comment(CommentRequest $request, $item_id){

@@ -17,8 +17,11 @@
                         <div>
                             <h1>{{ $item->name }}</h1>
                             <p>¥{{ $item->price }}</p>
-                            @if($isSale == false)
-                                <p>sold</p>
+                            @if($itemStatuses['sold'] == true)
+                                <p>Sold</p>
+                            @endif
+                            @if($itemStatuses['suspended'] == true)
+                                <p>現在、この商品は出品を停止しています</p>
                             @endif
                         </div>
                     </div>
@@ -52,7 +55,7 @@
                     <div class="address-info">
                         <div class="address-info__nav">
                             <h2>配送先</h2>
-                            @if($isSale == true)
+                            @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
                                 <form method="post" action="{{ route('purchase.edit', $item->id) }}">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
@@ -111,7 +114,9 @@
                             <input type="hidden" name="payment_method" value="{{ $paymentMethod ?? null }}">
                         </span>
                     </div>
-                    <button id>購入する</button>
+                    @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
+                        <button>購入する</button>
+                    @endif
                 </div>
             </form>
         </div>

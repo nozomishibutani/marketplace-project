@@ -21,8 +21,11 @@
 
         <div class="item-info">
             <h1>{{ $item->name }}</h1>
-            @if($isSale == false)
+            @if($itemStatuses['sold'] == true)
                 <p>Sold</p>
+            @endif
+            @if($itemStatuses['suspended'] == true)
+                <p>現在、この商品は出品を停止しています</p>
             @endif
             <p>{{ $item->brand_name }}</p>
             <p>¥{{ $item->price }}(税込)</p>
@@ -50,7 +53,7 @@
                     <img src="{{ asset('images/speech_bubble.png') }}" alt="コメントマーク">
                     <span>{{ $content['count'] }}</span>
                 </div>
-                @if($isSale == true)
+                @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
                     <a href="{{ route('purchase.confirm', $item->id) }}" class="btn">購入手続きへ</a>
                 @endif
 

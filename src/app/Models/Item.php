@@ -86,11 +86,27 @@ class Item extends Model
     }
 
     /**
-     * 販売中かどうか
+     * 商品ステータス
      */
-    public function isSale()
+    public function itemStatus()
     {
-        return $this->status == Item::STATUS_ON_SALE;
+        switch ($this->status) {
+            case Item::STATUS_ON_SALE:
+            $itemStatuses['sold'] = false;
+            $itemStatuses['suspended'] = false;
+            break;
+
+            case Item::STATUS_SOLD:
+            $itemStatuses['sold'] = true;
+            $itemStatuses['suspended'] = false;
+            break;
+
+            case Item::STATUS_SUSPENDED:
+            $itemStatuses['sold'] = false;
+            $itemStatuses['suspended'] = true;
+            break;
+        }
+        return $itemStatuses;
     }
 
 }
