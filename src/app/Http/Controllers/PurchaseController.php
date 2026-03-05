@@ -15,11 +15,19 @@ use App\Http\Requests\AddressRequest;
 use App\Http\Requests\PurchaseRequest;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Services\OrderService;
 
 
 
 class PurchaseController extends Controller
 {
+    private $orderService;
+
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
+    }
+
     public function confirm(Request $request, $item_id)
     {
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
@@ -66,55 +74,36 @@ class PurchaseController extends Controller
         return view('confirm', compact('item', 'address', 'isSale', 'paymentMethod'));
     }
 
-    public function store(PurchaseRequest $request, $item_id)
-    {
-        $data = $request->only(['payment_method', 'postcode', 'address', 'building']);
-        $data['item_id'] = $item_id;
+        public function store(PurchaseRequest $request, $item_id)
+        {
+            $data = $request->only(['payment_method', 'postcode', 'address', 'building']);
+            $data['item_id'] = $item_id;
 
-        // コンビニ払い
-        if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
-            $this->createOrder($data);
+            try {
+                // コンビニ払い
+                if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
+                    $data['status'] = Order::STATUS_PENDING;
+                    $this->orderService->createOrder($data);
+                    return redirect()->route('items.index')->with('alert', 'ご購入ありがとうございました。');
+                }
+                // カード払い
+                return $this->redirectToStripe($data);
 
-            return redirect()->route('items.index');
-        }
-        // カード払い
-        return $this->redirectToStripe($data);
+            } catch (SoldOutException $e) {
 
-    }
+                $item = Item::find($data['item_id']);
+                return redirect()
+                    ->route('items.show', $item_id)
+                    ->with('alert', $item->name . 'は売り切れました');
 
-    public function createOrder($data)
-    {
+            } catch (\Exception $e) {
 
-        try {
-            // 売り切れかどうか
-            $item = Item::select('status')->find($data['item_id']);
-            $isSale = $item->isSale();
-            if (!$isSale) {
-                throw new SoldOutException();
+                Log::error($e);
+                return redirect()
+                    ->route('items.show', $item_id)
+                    ->with('alert', 'システムエラーが発生しました');
             }
-
-            DB::transaction(function () use ($data) {
-
-                Order::create([
-                'user_id' => Auth::id(),
-                'item_id' => $data['item_id'],
-                'payment_method' => $data['payment_method'],
-                'status' => 1, // 要確認
-                'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
-                'address' => $data['address'],
-                'building' => $data['building'] ?: null,
-                ]);
-                // 売り切れに変更
-                Item::where('id', $data['item_id'])->update(['status' => item::STATUS_SOLD]);
-            });
-
-
-        } catch (\Exception $e) {
-
-            Log::error($e);
-            return redirect()->route('items.show', $data['item_id'])->with('alert', 'システムエラーが発生しました。');
         }
-    }
 
     public function redirectToStripe(array $data)
         {
@@ -145,7 +134,7 @@ class PurchaseController extends Controller
                             ],
 
                 'success_url' => route('purchase.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('checkout.cancel'),
+                'cancel_url' => route('purchase.cancel'),
             ]);
             // Stripe 決済画面にリダイレクト
             return redirect($session->url);
@@ -153,33 +142,46 @@ class PurchaseController extends Controller
 
         public function success(Request $request)
         {
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
 
-            $session = \Stripe\Checkout\Session::retrieve(
-                $request->session_id
-            );
+            $session = Session::retrieve($request->session_id);
 
-            // 念のため支払い確認（超重要）
-            // if ($session->payment_status !== 'paid') {
-            //     abort(403);
-            // }
-
-            // ここで createOrder に渡す
             $this->createOrderFromStripe($session);
 
-            return redirect()->route('items.index');
+            return redirect()->route('items.index')->with('alert', 'ご購入ありがとうございました。');
 
+        } catch (SoldOutException $e) {
+
+            return redirect()
+                ->route('items.show', $session->metadata->item_id)
+                ->with('alert', $session->metadata->item_id . 'は売り切れました');
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            return redirect()
+                ->route('items.show', $session->metadata->item_id)
+                ->with('alert', 'エラーが発生しました');
         }
+    }
 
         private function createOrderFromStripe($session)
         {
-            return $this->createOrder([
+            return $this->orderService->createOrder([
                 'user_id' => $session->metadata->user_id,
                 'item_id' => $session->metadata->item_id,
                 'postcode' => $session->metadata->postcode,
                 'address' => $session->metadata->address,
                 'building' => $session->metadata->building,
                 'payment_method' => Order::PAYMENT_CARD,
+                'status' => Order::STATUS_PAID,
             ]);
+        }
+
+        public function cancel(){
+            return redirect()
+                ->route('items.index')
+                ->with('alert', '決済エラーが発生しました、もう一度やり直してください。');
         }
 }

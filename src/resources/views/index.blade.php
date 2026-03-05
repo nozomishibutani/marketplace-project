@@ -24,6 +24,11 @@
 @endsection
 
 @section('content')
+    @if(session('alert'))
+            <div class="alert">
+                <p>{{ session('alert') }}</p>
+            </div>
+    @endif
     @foreach ($items as $item)
         <a href="{{ route('items.show', $item->id) }}" class="item" >
             <img src="{{ asset('storage/' . $item->img) }}" alt="{{ $item->name }}"  width="300" >

@@ -50,7 +50,5 @@ Route::get('/search', [ItemController::class, 'search'])->name('search');
 
 // stripe
 Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
-Route::get('/checkout/cancel', function () {
-    return '決済キャンセル';
-})->name('checkout.cancel');
+Route::get('/purchase/cancel', [PurchaseController::class, 'cancel'])->name('purchase.cancel');
 
