@@ -16,36 +16,33 @@ use App\Http\Controllers\EmailVerificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// メール認証誘導画面
-Route::get('/verify/notice', [EmailVerificationController::class, 'notice'])
-    ->middleware('auth')
-    ->name('verification.notice');
 
-// メール認証
-// Route::get('/email/verify/', [EmailVerificationController::class, 'verify'])
-//     ->middleware('auth')
-//     ->name('verification.verify');
+Route::get('/', [ItemController::class, 'index'])->name('items.index');
+Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
+Route::get('/search', [ItemController::class, 'search'])->name('search');
 
+Route::middleware(['auth','signed'])->group(function () {
+    // メール認証
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+});
 
-Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-    ->middleware(['auth','signed'])
-    ->name('verification.verify');
+Route::middleware(['auth', 'throttle:3,1'])->group(function () {
+    // 認証メール再送
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.send');
+});
 
-    
-Route::get('/verify/email/confirm', [EmailVerificationController::class, 'confirm'])
-    ->middleware('auth')
-    ->name('verification.confirm');
+Route::middleware('auth')->group(function () {
+    // メール認証誘導画面
+    Route::get('/verify/notice', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    // メール認証画面
+    Route::get('/verify/email/confirm', [EmailVerificationController::class, 'confirm'])->name('verification.confirm');
 
-
-
-// 認証メール再送
-Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
-    ->middleware(['auth', 'throttle:3,1'])
-    ->name('verification.send');
-
-
-
-
+    // プロフィール
+    Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+    Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+    });
 
 Route::middleware('auth','verified')->group(function () {
     // 購入手続きへ
@@ -66,26 +63,12 @@ Route::middleware('auth','verified')->group(function () {
 
     // コメント
     Route::post('/item/{item_id}/comment', [ItemController::class, 'comment'])->name('items.comment');
+
     // いいね
     Route::post('/item/{item_id}/favorite', [ItemController::class, 'favorite'])->name('items.favorite');
     Route::delete('/item/{item_id}/unfavorite', [ItemController::class, 'unfavorite'])->name('items.unfavorite');
 });
 
-
-Route::get('/', [ItemController::class, 'index'])->name('items.index');
-Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
-Route::get('/search', [ItemController::class, 'search'])->name('search');
-
-Route::middleware('auth')->group(function () {
-// プロフィール画面
-Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
-// 「プロフィールを編集」ボタン押下
-Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-// 「更新する」ボタン押下
-Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
-Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
-
-});
 
 
 

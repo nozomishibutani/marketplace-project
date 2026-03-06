@@ -17,8 +17,14 @@
     <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
         <h1 class="text-xl font-bold mb-4">メール認証が必要です</h1>
 
-        <p>登録していただいたメールアドレスに認証メールを送付しました。</p>
-        <p>メール認証を完了してください。</p>
+        @if(session('alert'))
+            <div class="alert">
+                <p>{{ session('alert') }}</p>
+            </div>
+        @else
+            <p>登録していただいたメールアドレスに認証メールを送付しました。</p>
+            <p>メール認証を完了してください。</p>
+        @endif
 
         <div class="mt-6">
             <a href="{{ route('verification.confirm')}}">

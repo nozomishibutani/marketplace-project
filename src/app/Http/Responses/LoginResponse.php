@@ -11,6 +11,14 @@ class LoginResponse implements LoginResponseContract
     {
         $user = Auth::user();
 
+        // ログインしていて、メール未認証の場合
+        if ($user && !$user->hasVerifiedEmail()) {
+
+            // メール再送
+            $user->sendEmailVerificationNotification();
+            return redirect()->route('verification.notice');
+        }
+
         // プロフィール未登録なら
         if (!$user->profile) {
             return redirect()->route('profile.edit');

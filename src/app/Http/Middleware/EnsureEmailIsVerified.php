@@ -22,11 +22,9 @@ class EnsureEmailIsVerified
         // ログインしていて、メール未認証の場合
         if ($user && !$user->hasVerifiedEmail()) {
 
-            // メール再送
-            $user->sendEmailVerificationNotification();
-
             // 認証ページにリダイレクト
-            return redirect()->route('verification.notice');
+            return redirect()->route('verification.notice')
+                            ->with('alert','認証メールを再送信し、メール認証を完了してください。');
         }
 
         return $next($request);
