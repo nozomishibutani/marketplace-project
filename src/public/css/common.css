@@ -1,0 +1,62 @@
+* {
+    border: solid salmon;
+}
+
+header {
+    background-color: rgb(187, 185, 185);
+    /* 背景色は画面いっぱいに */
+}
+
+.container {
+    max-width: 1540px;
+    /* PC (1400-1540px) で崩れない */
+    margin: 0 auto;
+    padding: 0px;
+}
+
+.header__inner {
+    display: flex;
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    padding: 5px;
+}
+
+.header__logo img {
+    width: 100%;
+}
+
+.header__search {
+    display: flex;
+    width: 40%;
+}
+
+.header__search form{
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    background-color: aqua;
+}
+
+input.search-form {
+    width: 80%;
+    height: 50%;
+
+}
+
+.header__nav {
+    width: 30%;
+}
+
+.header__ul {
+    list-style: none;
+    display: flex;
+    justify-content: right;
+}
+
+.header__ul li{
+    margin-left: 5px;
+}
