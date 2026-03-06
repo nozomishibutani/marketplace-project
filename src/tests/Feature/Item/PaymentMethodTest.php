@@ -62,6 +62,7 @@ class PaymentMethodTest extends TestCase
                 Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]
             )
         );
+
         // セレクトボックスで選択されているか
         $response->assertSeeInOrder(['value="' . Order::PAYMENT_CONVENIENCE . '"','selected',], false);
 
@@ -83,6 +84,7 @@ class PaymentMethodTest extends TestCase
                 Order::PAYMENT_METHODS[Order::PAYMENT_CARD]
             )
         );
+
         // セレクトボックスで選択されているか
         $response->assertSeeInOrder(['value="' . Order::PAYMENT_CARD . '"','selected',], false);
 

@@ -50,6 +50,7 @@ class CommentTest extends TestCase
             'item_id' => $item->id,
             'content' => 'テストコメント',
         ]);
+
         // コメント数が増えている
         $this->assertEquals($beforeCount + 1, Comment::count());
     }
@@ -73,8 +74,10 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => 'テストコメント',
         ]);
+
         // ログイン画面にリダイレクトされるか
         $response->assertRedirect(route('login'));
+
         // コメントが保存されていないか
         $this->assertDatabaseCount('comments', 0);
     }
@@ -100,6 +103,7 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => '',
         ]);
+
         $response->assertSessionHasErrors([
             'content' => 'コメントを入力してください',
         ]);
@@ -126,6 +130,7 @@ class CommentTest extends TestCase
         $response = $this->post(route('items.comment', $item->id), [
             'content' => str_repeat('a', 256),
         ]);
+
         $response->assertSessionHasErrors([
             'content' => 'コメントは255文字以内で入力してください',
         ]);

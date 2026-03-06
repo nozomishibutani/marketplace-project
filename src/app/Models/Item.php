@@ -18,11 +18,11 @@ class Item extends Model
     /**
      * 商品ステータス
      */
-    // public const STATUSES = [
-    //     self::STATUS_ON_SALE,
-    //     self::STATUS_SOLD,
-    //     self::STATUS_SUSPENDED,
-    // ];
+    public const STATUSES = [
+        self::STATUS_ON_SALE,
+        self::STATUS_SOLD,
+        self::STATUS_SUSPENDED,
+    ];
 
     public const CONDITION_GOOD = 1;
     public const CONDITION_NO_DAMAGE = 2;

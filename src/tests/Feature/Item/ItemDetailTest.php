@@ -8,6 +8,8 @@ use App\Models\Comment;
 use App\Models\Favorite;
 use App\Models\Category;
 use Tests\TestCase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ItemDetailTest extends TestCase
@@ -27,11 +29,16 @@ class ItemDetailTest extends TestCase
 
         // ユーザーを作成
         $user = User::factory()->create();
+        // フェイクのストレージを作成
+        Storage::fake('public');
+        // フェイクの画像を作成
+        $file = UploadedFile::fake()->image('dummy.png');
         // 商品を作成
         $item = Item::factory()->create([
             'status' => Item::STATUS_ON_SALE,
-            'img' => now()->format('YmdHis') . '.png',
+            'img' => $file,
         ]);
+
         // カテゴリを作成
         $category = Category::factory()->create();
         $item->categories()->attach($category->pluck('id'));
@@ -82,7 +89,6 @@ class ItemDetailTest extends TestCase
         // 商品を作成
         $item = Item::factory()->create([
             'status' => Item::STATUS_ON_SALE,
-            'img' => now()->format('YmdHis') . '.png',
         ]);
         // カテゴリを作成
         $categories = Category::factory()->count(2)->create();

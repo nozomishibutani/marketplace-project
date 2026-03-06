@@ -37,7 +37,7 @@ class FavoriteTest extends TestCase
         //  いいね数を確認
         $beforeCount = Favorite::count();
         // いいねする
-        $response = $this->get(route('items.favorite', $item->id));
+        $response = $this->post(route('items.favorite', $item->id));
 
         $response->assertRedirect(route('items.show', $item->id));
         // いいね数が増えている
@@ -68,7 +68,7 @@ class FavoriteTest extends TestCase
         // いいねなし
         $response->assertSee('heart_default.png', false); // デザイン修正後確認
         // いいねする
-        $response = $this->get(route('items.favorite', $item->id));
+        $response = $this->post(route('items.favorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
 
         $response = $this->get(route('items.show', $item->id));
@@ -106,7 +106,7 @@ class FavoriteTest extends TestCase
         $beforeCount = Favorite::count();
 
         // いいね解除する
-        $response = $this->get(route('items.unfavorite', $item->id));
+        $response = $this->delete(route('items.unfavorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
 
         //  いいね数が減少している

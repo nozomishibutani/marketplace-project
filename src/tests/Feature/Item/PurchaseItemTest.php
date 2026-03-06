@@ -48,7 +48,6 @@ class PurchaseItemTest extends TestCase
         // 購入
         $response = $this->post(route('purchase.store', $item->id),[
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
             'building' => $profile->building,
@@ -61,11 +60,12 @@ class PurchaseItemTest extends TestCase
             'user_id' => $user->id,
             'item_id' => $item->id,
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => 1, // 要確認
+            'status' => Order::STATUS_PENDING,
             'postcode' => $profile->postcode, // ハイフンなし
             'address' => $profile->address,
             'building' => $profile->building,
         ]);
+
         // 商品ステータスが売り切れになっているか
         $this->assertDatabaseHas('items', [
                 'id' => $item->id,
@@ -101,7 +101,6 @@ class PurchaseItemTest extends TestCase
         // 購入
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
             'building' => $profile->building,
@@ -142,7 +141,6 @@ class PurchaseItemTest extends TestCase
         // 購入
         $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => 1, // 要確認
             'postcode' => $postcode, // ハイフンあり
             'address' => $profile->address,
             'building' => $profile->building,

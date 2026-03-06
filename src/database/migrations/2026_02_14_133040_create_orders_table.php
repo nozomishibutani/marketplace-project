@@ -22,8 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('postcode', 20);
             $table->string('address');
             $table->string('building')->nullable();
-            $table->tinyInteger('status')->default(1)
-                    ->comment('1=支払い待ち, 2=支払い済み, 3=発送済み, 4=キャンセル');
+            $table->tinyInteger('status')->comment('1=支払い待ち, 2=支払い済み, 3=発送済み, 4=キャンセル');
             $table->timestamps();
             $table->softDeletes();
                 });

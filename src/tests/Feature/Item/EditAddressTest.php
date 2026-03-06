@@ -85,8 +85,7 @@ class EditAddressTest extends TestCase
 
         // 購入
         $this->post(route('purchase.store', $item->id), [
-            'payment_method' => Order::PAYMENT_CARD,
-            'status' => 1, // 要確認
+            'payment_method' => Order::PAYMENT_CONVENIENCE,
             'postcode' => $postcode,
             'address' => $address,
             'building' => $building,

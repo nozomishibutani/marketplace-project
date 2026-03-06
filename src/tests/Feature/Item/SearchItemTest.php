@@ -58,7 +58,7 @@ class SearchItemTest extends TestCase
         $response->assertStatus(200);
 
         // マイリストにアクセス
-        $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST]));
+        $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST, 'keyword' => 'Apple']));
         $response->assertStatus(200);
 
         // 検索フォームに検索キーワードが保持されている

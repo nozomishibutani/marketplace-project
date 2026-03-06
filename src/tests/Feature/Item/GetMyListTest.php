@@ -31,7 +31,6 @@ class GetMyListTest extends TestCase
         $this->actingAs($user);
         // ログインしているユーザーを確認
         $this->assertAuthenticatedAs($user);
-
         // 商品を作成していいねする
         $item = Item::factory()->create(['status' =>Item::STATUS_ON_SALE]);
         // カテゴリを作成
@@ -61,7 +60,6 @@ class GetMyListTest extends TestCase
         $this->actingAs($user);
         // ログインしているユーザーを確認
         $this->assertAuthenticatedAs($user);
-
         // 商品を作成していいねする
         $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
         // カテゴリを作成
