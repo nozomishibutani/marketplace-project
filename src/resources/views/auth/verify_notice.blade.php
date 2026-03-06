@@ -17,25 +17,30 @@
     <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
         <h1 class="text-xl font-bold mb-4">メール認証が必要です</h1>
 
-        <p>登録していただいたメールアドレスに認証メールを送付しました。メール内のリンクをクリックして認証してください。</p>
+        <p>登録していただいたメールアドレスに認証メールを送付しました。</p>
+        <p>メール認証を完了してください。</p>
 
         <div class="mt-6">
-            <a href="{{ route('verification.verify') }}" class="btn btn-primary">
-                認証はこちらから
+            <a href="{{ route('verification.confirm')}}">
+                メール認証はこちら
             </a>
         </div>
 
         <div class="mt-4">
-            {{-- 認証メール再送 --}}
-            <form method="POST" action="">
+            <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
                 <button type="submit" class="underline text-blue-500">
-                    認証メールを再送信
+                    認証メールを再送信する
                 </button>
             </form>
         </div>
     </div>
     </main>
+    @if(session('message'))
+        <script>
+            alert("{{ session('message') }}");
+        </script>
+    @endif
 </body>
 
 </html>

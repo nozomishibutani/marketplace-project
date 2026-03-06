@@ -22,19 +22,32 @@ Route::get('/verify/notice', [EmailVerificationController::class, 'notice'])
     ->name('verification.notice');
 
 // メール認証
-Route::get('/email/verify/', [EmailVerificationController::class, 'verify'])
-    ->middleware('auth')
+// Route::get('/email/verify/', [EmailVerificationController::class, 'verify'])
+//     ->middleware('auth')
+//     ->name('verification.verify');
+
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['auth','signed'])
     ->name('verification.verify');
 
+    
+Route::get('/verify/email/confirm', [EmailVerificationController::class, 'confirm'])
+    ->middleware('auth')
+    ->name('verification.confirm');
+
+
+
 // 認証メール再送
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
+    ->middleware(['auth', 'throttle:3,1'])
+    ->name('verification.send');
 
 
 
-Route::middleware('auth','verified','profile')->group(function () {
+
+
+Route::middleware('auth','verified')->group(function () {
     // 購入手続きへ
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
@@ -58,15 +71,12 @@ Route::middleware('auth','verified','profile')->group(function () {
     Route::delete('/item/{item_id}/unfavorite', [ItemController::class, 'unfavorite'])->name('items.unfavorite');
 });
 
-Route::middleware('verified')->group(function () {
-// 未ログイン時でも利用可能
+
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
-});
 
-
-// プロフィール登録のミドルウェアは不要？？
+Route::middleware('auth')->group(function () {
 // プロフィール画面
 Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
 // 「プロフィールを編集」ボタン押下
@@ -74,5 +84,9 @@ Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile
 // 「更新する」ボタン押下
 Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
 Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+
+});
+
+
 
 

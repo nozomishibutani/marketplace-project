@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 
 
 class EmailVerificationController extends Controller
@@ -28,5 +31,26 @@ class EmailVerificationController extends Controller
         }
 
         return redirect()->route('profile.edit');
+    }
+
+    public function resend(Request $request)
+    {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', '認証メールを再送信しました');
+    }
+
+    public function confirm()
+    {
+        $url = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            [
+                'id' => auth()->id(),
+                'hash' => sha1(auth()->user()->email),
+            ]
+        );
+
+        return view('auth.verify_confirm', compact('url'));
     }
 }

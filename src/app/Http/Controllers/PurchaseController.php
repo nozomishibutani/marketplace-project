@@ -41,9 +41,15 @@ class PurchaseController extends Controller
             $address = Profile::where('user_id', Auth::id())
                 ->select('postcode', 'address', 'building')
                 ->first();
-            // 郵便番号にハイフン追加
-            $postcode = $address['postcode'];
-            $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
+                if($address){
+                    // プロフィール登録済み
+                    $postcode = $address['postcode'];
+                    $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
+                }else{
+                    $address['postcode'] = null;
+                    $address['address'] = null;
+                    $address['building'] = null;
+                }
         } else {
             // フォームに入力のある住所
             $address = $request->only(['postcode', 'address', 'building']);
