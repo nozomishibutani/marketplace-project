@@ -63,7 +63,7 @@ class PurchaseController extends Controller
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
 
-        return view('editAddress', compact('item_id', 'paymentMethod'));
+        return view('edit_address', compact('item_id', 'paymentMethod'));
 
     }
 

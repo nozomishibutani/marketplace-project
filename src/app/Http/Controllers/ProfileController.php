@@ -50,7 +50,7 @@ class ProfileController extends Controller
             $profile->save();
             }
 
-        return view('editProfile',compact('username','profile'));
+        return view('edit_profile',compact('username','profile'));
     }
 
     public function store(ProfileRequest $request){
