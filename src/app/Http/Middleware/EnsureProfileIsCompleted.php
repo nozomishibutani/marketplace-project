@@ -4,9 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class EnsureEmailIsVerified
+use function Laravel\Prompts\alert;
+
+class EnsureProfileIsCompleted
 {
     /**
      * Handle an incoming request.
@@ -17,14 +18,15 @@ class EnsureEmailIsVerified
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = Auth::user();
 
-        // ログインしていて、メール未認証の場合
-        if ($user && !$user->hasVerifiedEmail()) {
-            // 認証ページにリダイレクト
-            return redirect()->route('verification.notice');
+        $user = auth()->user();
+
+        // プロフィール未登録
+        if (!$user->profile) {
+            return redirect()->route('profile.edit')->with('alert','プロフィールが未登録です。登録完了すると全ての機能が使えるようになります。');
         }
 
         return $next($request);
+
     }
 }

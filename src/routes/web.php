@@ -34,7 +34,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 
-Route::middleware('auth','verified')->group(function () {
+Route::middleware('auth','verified','profile')->group(function () {
     // 購入手続きへ
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
@@ -51,14 +51,6 @@ Route::middleware('auth','verified')->group(function () {
     Route::get('/sell', [ItemController::class, 'create'])->name('items.create');
     Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
 
-    // プロフィール画面
-    Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
-    // 「プロフィールを編集」ボタン押下
-    Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // 「更新する」ボタン押下
-    Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
-    Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
-
     // コメント
     Route::post('/item/{item_id}/comment', [ItemController::class, 'comment'])->name('items.comment');
     // いいね
@@ -72,4 +64,15 @@ Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
 });
+
+
+// プロフィール登録のミドルウェアは不要？？
+// プロフィール画面
+Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
+// 「プロフィールを編集」ボタン押下
+Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+// 「更新する」ボタン押下
+Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
+
 
