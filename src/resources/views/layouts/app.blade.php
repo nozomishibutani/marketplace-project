@@ -11,7 +11,7 @@
 
 <body>
     <header class="header">
-        <div class="container">
+        <div class="header__container">
                 <div class="header__logo">
                     <a href="{{ route('items.index') }}">
                         <img src="{{ asset('/images/header_logo.png') }}" alt="ヘッダーロゴ画像">
@@ -46,20 +46,20 @@
                         </li>
                     </ul>
                 </nav>
-        </div>
+            </div>
     </header>
 
-        <main>
-            {{-- マイページ画面のみ表示 --}}
-            @yield('profile')
+    <main>
+        {{-- マイページ画面のみ表示 --}}
+        @yield('profile')
 
-            {{-- 商品一覧画面、マイページのみ表示 --}}
-            @yield('menu')
+        {{-- 商品一覧画面、マイページのみ表示 --}}
+        @yield('menu')
 
+        <div class="main__container">
             @yield('content')
-        </main>
-
-    </div>
+        </div>
+    </main>
 
 </body>
 

@@ -23,12 +23,17 @@ class ItemController extends Controller
 
         // 未ログイン
         if (!$user) {
+            if ($tab === Common::TAB_MYLIST) {
+                // マイリストを押下
+                $items= array();
+                return view('index', compact('items','tab'));
+            }
             // 全商品
             $items = Item::notSuspended()
                 ->latest()
                 ->get(['id', 'name', 'status', 'img']);
 
-            return view('index', compact('items'));
+            return view('index', compact('items','tab'));
         }
 
         // ログイン済み
@@ -46,7 +51,7 @@ class ItemController extends Controller
                 ->latest()
                 ->get(['id', 'name', 'status', 'img']);
 
-            return view('index', compact('items'));
+            return view('index', compact('items','tab'));
         }
 
         // 自分が出品した商品以外
@@ -55,7 +60,7 @@ class ItemController extends Controller
             ->latest()
             ->get(['id', 'name', 'status', 'img']);
 
-        return view('index', compact('items'));
+        return view('index', compact('items','tab'));
     }
 
 

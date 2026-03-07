@@ -1,10 +1,5 @@
 * {
-    border: solid salmon;
     box-sizing: border-box;
-}
-
-header * {
-    border: none;
 }
 
 html {
@@ -18,8 +13,8 @@ header {
     /* 背景色は画面いっぱいに */
 }
 
-.container {
-    max-width: 1400px;
+.header__container {
+    max-width: 1540px;
     /* PC (1400-1540px) で崩れない */
     width: 100%;
     margin: 0 auto;
@@ -30,12 +25,13 @@ header {
 .header__logo,
 .header__search,
 .header__list {
-    margin-top: 10px;
+    margin: 10px 0px;
     flex: 3;
 }
 
 .header__logo img {
     width: 75%;
+    height: auto;
 }
 
 .header__search-input {
@@ -66,6 +62,7 @@ header {
     background: black;
     color: white;
     font-size: 0.9rem;
+    border: none;
 }
 
 .header__link{
@@ -88,18 +85,24 @@ header {
 
 /* ヘッダー ここまで*/
 
-
+.main__container{
+    max-width: 1540px;
+    /* PC (1400-1540px) で崩れない */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0px;
+}
 .btn {
     background: rgb(245, 110, 95);
     color: white;
     cursor: pointer;
     border-radius: 5px;
     height: 40px;
+    border: none;
 }
 
 input,
 textarea,
 select {
     outline: none;
-    border: none;/* 要検討*/
 }
