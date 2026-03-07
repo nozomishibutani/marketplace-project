@@ -1,62 +1,105 @@
 * {
     border: solid salmon;
+    box-sizing: border-box;
 }
 
+header * {
+    border: none;
+}
+
+html {
+    font-size: 16px;
+}
+
+/* ヘッダー*/
+
 header {
-    background-color: rgb(187, 185, 185);
+    background-color: black;
     /* 背景色は画面いっぱいに */
 }
 
 .container {
-    max-width: 1540px;
+    max-width: 1400px;
     /* PC (1400-1540px) で崩れない */
+    width: 100%;
     margin: 0 auto;
     padding: 0px;
-}
-
-.header__inner {
     display: flex;
 }
 
-.header__logo {
-    display: flex;
-    align-items: center;
-    width: 30%;
-    padding: 5px;
+.header__logo,
+.header__search,
+.header__list {
+    margin-top: 10px;
+    flex: 3;
 }
 
 .header__logo img {
-    width: 100%;
+    width: 75%;
 }
 
-.header__search {
-    display: flex;
-    width: 40%;
-}
-
-.header__search form{
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    background-color: aqua;
-}
-
-input.search-form {
+.header__search-input {
     width: 80%;
-    height: 50%;
-
+    height: 40px;
+    border-radius: 5px;
+    padding-left: 30px;
+    /* プレースホルダーの表示位置 */
 }
 
-.header__nav {
-    width: 30%;
+.header__search-input::placeholder {
+    color: black;
 }
 
-.header__ul {
+.header__list {
     list-style: none;
     display: flex;
-    justify-content: right;
+    margin-right: 20px;
+    gap: 15px;
 }
 
-.header__ul li{
-    margin-left: 5px;
+.header__item {
+    display: flex;
+    align-items: center;
+}
+
+.header__btn--logout{
+    background: black;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.header__link{
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.header__link--sell{
+    color: black;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* .btn--search{
+    width: 15%;
+} */
+
+
+/* ヘッダー ここまで*/
+
+
+.btn {
+    background: rgb(245, 110, 95);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 40px;
+}
+
+input,
+textarea,
+select {
+    outline: none;
+    border: none;/* 要検討*/
 }

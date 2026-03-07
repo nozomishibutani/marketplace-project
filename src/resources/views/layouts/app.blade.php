@@ -12,43 +12,42 @@
 <body>
     <header class="header">
         <div class="container">
-            <div class="header__inner">
                 <div class="header__logo">
                     <a href="{{ route('items.index') }}">
                         <img src="{{ asset('/images/header_logo.png') }}" alt="ヘッダーロゴ画像">
                     </a>
                 </div>
                 <div class="header__search">
-                    <form action="{{ route('search')}}" method="get" >
+                    <form class="header__search-form" action="{{ route('search')}}" method="get" >
                         @if(request('tab'))
                             <input type="hidden" name="tab" value="{{ request('tab') }}">
                         @endif
-                            <input type="text" class="search-form" name="keyword" value="{{ request('keyword') ?? null }}" placeholder="なにをお探しですか？">
-                            <button class="">検索</button>
+                            <input type="text" class="header__search-input" name="keyword" value="{{ request('keyword') ?? null }}" placeholder="なにをお探しですか？">
+                            {{--<button class="btn btn--search">検索</button>--}}
                     </form>
                 </div>
                 <nav class="header__nav">
-                    <ul class="header__ul">
-                        <li>
+                    <ul class="header__list">
+                        <li class="header__item">
                             @if (Auth::check())
-                                <form class="form" action="/logout" method="post">
+                                <form class="header__logout-form" action="/logout" method="post">
                                 @csrf
-                                    <button class="header-nav__button">ログアウト</button>
+                                    <button class="header__btn--logout">ログアウト</button>
                                 </form>
                             @else
-                                <a href="/login" class="header-nav__button">ログイン</a>
+                                <a href="/login" class="header__link">ログイン</a>
                             @endif
                         </li>
-                        <li>
-                            <a href="{{ route('profile.index') }}" class="header-nav__button">マイページ</a>
+                        <li class="header__item">
+                            <a href="{{ route('profile.index') }}" class="header__link">マイページ</a>
                         </li>
-                        <li>
-                            <a href="{{ route('items.create') }}" class="header-nav__button">出品</a>
+                        <li class="header__item">
+                            <a href="{{ route('items.create') }}" class="header__link header__link--sell">出品</a>
                         </li>
                     </ul>
                 </nav>
-            </div>
-        </header>
+        </div>
+    </header>
 
         <main>
             {{-- マイページ画面のみ表示 --}}
