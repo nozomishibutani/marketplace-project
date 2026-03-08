@@ -25,12 +25,13 @@ header {
 .header__logo,
 .header__search,
 .header__list {
-    margin: 10px 0px;
+    margin: 8px 0px;
     flex: 3;
 }
 
 .header__logo img {
-    width: 75%;
+    width: 400px;
+    /* 画面サイズが変わっても固定 */
     height: auto;
 }
 
@@ -38,7 +39,7 @@ header {
     width: 80%;
     height: 40px;
     border-radius: 5px;
-    padding-left: 30px;
+    padding-left: 32px;
     /* プレースホルダーの表示位置 */
 }
 
@@ -49,8 +50,8 @@ header {
 .header__list {
     list-style: none;
     display: flex;
-    margin-right: 20px;
-    gap: 15px;
+    margin-right: 24px;
+    gap: 16px;
 }
 
 .header__item {
@@ -74,7 +75,7 @@ header {
 .header__link--sell{
     color: black;
     background-color: white;
-    padding: 5px 10px;
+    padding: 8px 16px;
     border-radius: 5px;
 }
 
