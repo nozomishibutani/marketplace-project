@@ -31,18 +31,17 @@
             </div>
     @endif
 
-    <div class="items">
+    <div class="item">
         @foreach($items as $item)
-            <div class="item">
-                <a href="{{ route('items.show', $item->id) }}" class="item__link">
-                    <img src="{{ asset('storage/' . $item->img) }}" alt="{{ $item->name }}" class="item__img">
-                    <h2 class="item__ttl">{{ $item->name }}</h2>
-
-                    @if($item->status == \App\Models\Item::STATUS_SOLD)
-                        <span class="item__sold">Sold</span>
-                    @endif
-                </a>
+        <a class="item__link" href="{{ route('items.show', $item->id) }}">
+            <div class="item__img">
+                <img src="{{ asset('storage/' . $item->img) }}" alt="{{ $item->name }}">
             </div>
+            <h2 class="item__ttl">{{ $item->name }}</h2>
+            @if($item->status == \App\Models\Item::STATUS_SOLD)
+                <span class="item__sold">Sold</span>
+            @endif
+        </a>
         @endforeach
     </div>
 @endsection

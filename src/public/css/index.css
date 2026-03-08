@@ -1,7 +1,3 @@
-* {
-    /* border: solid chartreuse 2px; */
-}
-
 .menu__nav {
     border-bottom: 2px solid #817e7e;
 }
@@ -34,7 +30,7 @@
     color: rgb(247, 89, 72);
 }
 
-.items {
+.item {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     /* 4列固定 */
@@ -50,9 +46,20 @@
 
 .item__img {
     width: 100%;
-    height: auto;
+    height: 200px;
+    overflow: hidden;
+    /* 画像がはみ出さないように */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item__img img{
+    max-width: 100%;
+    max-height: 100%;
     display: block;
-    border-radius: 5px;
+    object-fit: contain;
+    /* 画像比率を崩さず枠内に収める */
 }
 
 .item__ttl {

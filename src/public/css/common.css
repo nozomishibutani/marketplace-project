@@ -98,8 +98,26 @@ header {
     color: white;
     cursor: pointer;
     border-radius: 5px;
-    height: 40px;
     border: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 16px 0;
+    height: 50px;
+}
+
+.link {
+    background: rgb(245, 110, 95);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 16px 0;
+    height: 50px;
 }
 
 input,
