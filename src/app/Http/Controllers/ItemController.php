@@ -83,6 +83,7 @@ class ItemController extends Controller
         // いいね数
         $favoritesCount = $item->favorites->count();
         // プロフィール登録がなければダミー画像
+        $avatar = array();
         foreach ($item->comments as $comment) {
             $avatar[$comment->id] = $comment->user->profile->avatar ?? 'profiles/icon_dummy.png';
         }
