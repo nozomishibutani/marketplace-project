@@ -10,7 +10,6 @@
 
 @section('content')
     <div class="item">
-
         <!-- 左側：商品画像 -->
         <div class="item__img">
             <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
@@ -27,7 +26,7 @@
             <!-- 商品名 -->
             <div class="item__header">
                 @if($itemStatuses['suspended'] == true)
-                        <span class="item__suspended">現在、この商品は出品を停止しています</span>
+                        <span class="item__msg--suspended">現在、この商品は出品を停止しています</span>
                 @endif
                 <h1 class="item__ttl">{{ $item->name }}
                     @if($itemStatuses['sold'] == true)
@@ -95,11 +94,11 @@
                     <h2 class="information__ttl">商品の情報</h2>
                     <div class="information__row">
                         <h3 class="information__label">カテゴリー</h3>
-                            <div class="information__tag">
-                                @foreach($item->categories as $category)
-                                    <span class="information__tag-name information__tag-name--category">{{ $category->name }}</span>
-                                @endforeach
-                            </div>
+                        <div class="information__tag">
+                            @foreach($item->categories as $category)
+                                <span class="information__tag-name information__tag-name--category">{{ $category->name }}</span>
+                            @endforeach
+                        </div>
                     </div>
                     <div class="information__row">
                         <h3 class="information__label">商品の状態</h3>
@@ -135,12 +134,12 @@
                     <h3 class="comment__form-title">商品へのコメント</h3>
                         <form class="comment__form" action="{{ route('items.comment', $item->id) }}" method="post">
                         @csrf
-                            @error('content')
-                                <div class="msg">
-                                    {{ $message }}
-                                </div>
-                            @enderror
                         <textarea class="comment__textarea" name="content" id=""></textarea>
+                        @error('content')
+                            <div class="msg">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         <button  class="btn comment__btn">コメントを送信する</button>
                     </form>
                 </section>

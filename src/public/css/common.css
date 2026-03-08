@@ -125,3 +125,9 @@ textarea,
 select {
     outline: none;
 }
+
+.item__msg--suspended {
+    color: #fa2323;
+    font-weight: bold;
+    font-size: 0.9rem;
+}

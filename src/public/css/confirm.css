@@ -1,0 +1,158 @@
+.purchase {
+    display: flex;
+    margin: 80px;
+}
+/* 左側 */
+.purchase__form {
+    width: 65%;
+}
+
+.item {
+    display: flex;
+    width: 85%;
+    border-bottom: solid 2px rgb(116, 114, 114);
+    padding-bottom: 42px;
+}
+
+.item__img{
+    width: 300px;
+}
+
+.item__img img{
+    width: 100%;
+}
+.item___information{
+    margin-left: 64px;
+}
+
+.item__ttl {
+    margin-top: 0px;
+}
+
+.item__sold {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: rgb(86, 135, 241);
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    text-align: center;
+    /* 横中央 */
+    vertical-align: middle;
+    /* 行の中央に揃える */
+}
+
+.item__price {
+    font-size: 1.6rem;
+}
+
+.item__price-symbol,
+.item__price-tax {
+    font-size: 1.2rem;
+}
+
+.payment__ttl,
+.payment__select-box,
+.address__ttl,
+.address__btn{
+    font-size: 1rem;
+    display: block;
+    margin: 32px 0px 0px 32px;
+}
+
+.payment__select-box {
+    width: 320px;
+    margin-left: 80px;
+}
+
+.payment,
+.address {
+    width: 85%;
+    border-bottom: solid 2px rgb(116, 114, 114);
+    padding-bottom: 64px;
+}
+
+.address__nav{
+    display: flex;
+    justify-content: space-between;
+}
+
+.address__btn {
+    color: rgb(3, 105, 238);
+    font-size: 0.9rem;
+    border: none;
+    background: none;
+}
+
+.address__btn--sold {
+    pointer-events: none;
+    /* クリック不可 */
+}
+
+.address__btn-box {
+    cursor: not-allowed;
+    /* 禁止マークに変更 */
+}
+
+.address__list {
+    list-style: none;
+    margin-left: 80px;
+    padding-left: 0px;
+}
+
+.address__postcode-symbol {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.address__item-form {
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* 右側 */
+.purchase__summary {
+    width: 35%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.purchase__item{
+    display: flex;
+    padding: 30px 50px;
+    border: 2px solid #747272;
+    align-items: center;
+}
+
+.purchase__item:first-child {
+    border-bottom: none;
+}
+
+.purchase__label{
+    font-weight: 400;
+    font-size: 1.1rem;
+    flex: 4;
+}
+
+.purchase__tag{
+    font-size: 1.3rem;
+    flex: 6;
+    text-align: center;
+    flex-wrap: wrap;
+    /* 折り返す */
+    white-space: nowrap;
+    /* タグ内改行禁止 */
+}
+
+.purchase__btn{
+    width: 100%;
+    margin-top: 64px;
+}
+
+.msg{
+    color: red;
+    margin: 8px 0px 0px 80px;
+}

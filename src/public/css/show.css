@@ -1,7 +1,3 @@
-* {
-    /* border: solid chartreuse 2px; */
-}
-
 .item {
     display: flex;
     gap: 56px;
@@ -24,12 +20,6 @@
     display: flex;
     flex-direction: column;
     /* 縦に並べる */
-}
-
-.item__suspended {
-    color: #fa2323;
-    font-weight: bold;
-    font-size: 0.9rem;
 }
 
 .item__ttl,
