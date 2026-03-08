@@ -66,26 +66,28 @@ class ItemController extends Controller
 
     public function show($item_id){
 
-        $item = Item::with('categories')->findOrFail($item_id);
+        $item = Item::with(['categories', 'favorites', 'comments.user.profile'])->findOrFail($item_id);
         $itemStatuses = $item->itemStatus();
-
-        // コメント取得
-        $data = Comment::where('item_id', $item_id)->latest()->get(['content']);
-        $content['content'] = $data;
-        $content['count']   = $data->count();
-
+        // 値段にコンマ追加
+        $item->price = number_format($item->price);
+        // コメント数
+        $commentsCount = $item->comments->count();
         // いいね取得
-        $isFavorite = null;
+        $isFavorite = false;
         if(Auth::check() === true){
             // 自分がいいねしているか
             $isFavorite = Favorite::where('item_id', $item_id)
                             ->where('user_id', Auth::id())
                             ->exists();
         }
-        // いいねの数
-        $favoriteCount = Favorite::where('item_id', $item_id)->count();
+        // いいね数
+        $favoritesCount = $item->favorites->count();
+        // プロフィール登録がなければダミー画像
+        foreach ($item->comments as $comment) {
+            $avatar[$comment->id] = $comment->user->profile->avatar ?? 'profiles/icon_dummy.png';
+        }
 
-        return view('show',compact('item','itemStatuses','content','isFavorite','favoriteCount'));
+        return view('show',compact('item','itemStatuses','isFavorite','favoritesCount','commentsCount','avatar'));
     }
 
     public function comment(CommentRequest $request, $item_id){

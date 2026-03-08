@@ -35,6 +35,8 @@ class PurchaseController extends Controller
         $itemStatuses = $item->itemStatus();
         // お支払方法
         $paymentMethod = $request->input('payment_method');
+        // 値段にコンマ追加
+        $item->price = number_format($item->price);
 
         if (!$paymentMethod) {
             // 最初のアクセス
