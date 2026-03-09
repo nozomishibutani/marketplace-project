@@ -20,7 +20,7 @@
                     </div>
                     <div class="item___information">
                         @if($itemStatuses['suspended'] == true)
-                            <p class="msg--suspended">現在、この商品は出品を停止しています</p>
+                            <p class="msg msg--suspended">現在、この商品は出品を停止しています</p>
                         @endif
                         <!-- 商品名 -->
                         <h1 class="item__ttl">{{ $item->name }}
@@ -58,7 +58,7 @@
                     <input type="hidden" name="building" value="{{ $address['building'] }}">
                     </form>
                     @error('payment_method')
-                        <div class="msg">
+                        <div class="msg  payment__msg">
                             {{ $message }}
                         </div>
                     @enderror
@@ -103,7 +103,7 @@
                         @endphp
                         @foreach($fields as $field)
                             @error($field)
-                                <div class="msg">{{ $message }}</div>
+                                <div class="msg address__msg">{{ $message }}</div>
                             @enderror
                         @endforeach
                 </section>

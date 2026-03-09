@@ -26,7 +26,7 @@
             <!-- 商品名 -->
             <div class="item__header">
                 @if($itemStatuses['suspended'] == true)
-                        <span class="msg--suspended">現在、この商品は出品を停止しています</span>
+                        <span class="msg msg--suspended">現在、この商品は出品を停止しています</span>
                 @endif
                 <h1 class="item__ttl">{{ $item->name }}
                     @if($itemStatuses['sold'] == true)
@@ -138,7 +138,9 @@
                                 {{ $message }}
                             </div>
                         @enderror
-                        <button  class="btn comment__btn">コメントを送信する</button>
+                        <div class="btn-box">
+                            <button class="btn comment__btn">コメントを送信する</button>
+                        </div>
                     </form>
                 </section>
         <div><!-- item_content -->

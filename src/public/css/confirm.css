@@ -104,6 +104,11 @@
     font-weight: bold;
 }
 
+.address__msg,
+.payment__msg{
+    margin: 8px 0px 0px 80px;
+}
+
 .address__item-form {
     border: none;
     font-size: 1.1rem;

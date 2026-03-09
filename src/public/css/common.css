@@ -134,6 +134,7 @@ header {
 .btn-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
+    margin: 16px 0px;
 }
 
 .link--disabled {
@@ -146,6 +147,7 @@ header {
 .link-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
+    margin: 16px 0px;
 }
 
 input,
@@ -153,15 +155,14 @@ textarea,
 select {
     outline: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 .msg {
-    color: red;
-    margin: 8px 0px 0px 80px;
+    color: #fa2323;
 }
 
 .msg--suspended {
-    color: #fa2323;
     font-weight: bold;
     font-size: 0.9rem;
 }
