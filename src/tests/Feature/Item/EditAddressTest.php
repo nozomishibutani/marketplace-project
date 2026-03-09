@@ -45,9 +45,10 @@ class EditAddressTest extends TestCase
                     'address' => '変更先住所',
                     'building' => '変更先建物名',
                 ]);
+        $response->assertRedirect(route('purchase.confirm', $item->id));
 
-        // 購入画面に遷移
-        $response->assertStatus(200);
+        // 購入画面にリダイレクト
+        $response = $this->followRedirects($response);
         $response->assertSee('postcode','123-1234', false);
         $response->assertSee('address','変更先住所', false);
         $response->assertSee('building','変更先建物名', false);
@@ -74,16 +75,24 @@ class EditAddressTest extends TestCase
         $item->categories()->attach($category->pluck('id'));
 
         // 住所変更
-        $postcode ='987-9876';
-        $address = '変更先住所';
-        $building = '変更先建物名';
-        $this->post(route('purchase.update', $item->id),[
-            'postcode' => $postcode,
-            'address' => $address,
-            'building' => $building,
+        $response = $this->post(route('purchase.update', $item->id),[
+            'postcode' => '987-9876',
+            'address' => '変更先住所',
+            'building' => '変更先建物名',
         ]);
+        $response->assertRedirect(route('purchase.confirm', $item->id));
 
-        // 購入
+        // セッションに保存される
+        $response->assertSessionHasInput([
+            'postcode' => '987-9876',
+            'address' => '変更先住所',
+            'building' => '変更先建物名',
+        ]);
+        $postcode =session()->getOldInput('postcode');
+        $address = session()->getOldInput('address');
+        $building = session()->getOldInput('building');
+
+        // セッションの内容で購入
         $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
             'postcode' => $postcode,
@@ -91,7 +100,10 @@ class EditAddressTest extends TestCase
             'building' => $building,
         ]);
 
+        // セッションの内容がDBに登録されている
         $this->assertDatabaseHas('orders', [
+            'user_id' => $user->id,
+            'item_id' => $item->id,
             'postcode' => str_replace('-', '', $postcode),
             'address' => $address,
             'building' => $building,

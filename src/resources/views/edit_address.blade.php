@@ -43,7 +43,7 @@
             @enderror
         </div>
         <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
-        <button type="submit">更新する</button>
+        <button>更新する</button>
     </form>
 @endsection
 

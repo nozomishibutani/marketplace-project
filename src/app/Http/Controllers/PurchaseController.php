@@ -38,24 +38,33 @@ class PurchaseController extends Controller
         // 値段にコンマ追加
         $item->price = number_format($item->price);
 
+        // 配送先変更からのリダイレクト
+        if (session()->hasOldInput()) {
+            $address['postcode'] = $request->old('postcode');
+            $address['address']  = $request->old('address');
+            $address['building'] = $request->old('building');
+            $paymentMethod = $request->old('paymentMethod');
+
+            return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
+        }
+
+        // 最初の遷移
         if (!$paymentMethod) {
-            // 最初のアクセス
             $address = Profile::where('user_id', Auth::id())
                 ->select('postcode', 'address', 'building')
                 ->first();
-                if($address){
-                    // プロフィール登録済み
-                    $postcode = $address['postcode'];
-                    $address['postcode'] = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-                }else{
-                    $address['postcode'] = null;
-                    $address['address'] = null;
-                    $address['building'] = null;
-                }
-        } else {
-            // フォームに入力のある住所
-            $address = $request->only(['postcode', 'address', 'building']);
+
+                $address['postcode'] = substr($address['postcode'], 0, 3) . '-' . substr($address['postcode'], 3) ?? null;
+                $address['address'] = $address['address'] ?? null;
+                $address['building'] = $address['building'] ?? null;
+
+                return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
         }
+
+        // 支払い方法変更
+        // フォーム内容を表示
+        $address = $request->only(['postcode', 'address', 'building']);
+
         return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
     }
 
@@ -71,15 +80,21 @@ class PurchaseController extends Controller
 
     public function updateAddress(AddressRequest $request, $item_id)
     {
-        $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
+        //$item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
         // 売り切れかどうか
-        $itemStatuses = $item->itemStatus();
+        //$itemStatuses = $item->itemStatus();
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
-
         $address = $request->only(['postcode', 'address', 'building']);
 
-        return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
+        // 連想配列にまとめる
+        $inputData = array_merge($address, ['paymentMethod' => $paymentMethod]);
+
+        return redirect()->route('purchase.confirm', ['item_id' => $item_id])->withInput($inputData);
+
+
+
+        //return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
     }
 
         public function store(PurchaseRequest $request, $item_id)
