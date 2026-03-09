@@ -1,0 +1,64 @@
+.profile{
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 56px;
+}
+
+.profile-ttl{
+    text-align: center;
+    margin: 32px 0px;
+}
+
+.profile-img-box {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.profile-img-box img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile__img-input {
+    display: none;
+}
+
+.profile__img-btn {
+    border: 2px solid rgb(245, 110, 95);
+    color: rgb(245, 110, 95);
+    padding: 8px 24px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.profile__list{
+    padding-left: 0px;
+}
+.profile__item{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 40px;
+}
+
+.profile__label{
+    font-weight: 600;
+    margin-top: 24px;
+}
+
+.profile__form-input{
+    height: 50px;
+    border: solid 1px rgb(195, 195, 199);
+    color: rgb(122, 120, 120);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.profile__btn-box{
+    margin-top: 120px;
+}

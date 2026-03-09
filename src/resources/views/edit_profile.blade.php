@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/editProfile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/edit-profile.css') }}">
 @endsection
 
 @section('title')
@@ -14,61 +14,89 @@
             <p>{{ session('alert') }}</p>
         </div>
     @endif
-    <div class="profile-form">
-        <h1 class="profile-form__heading">プロフィール設定</h1>
+
+    <div class="profile">
+        <h1 class="profile-ttl">プロフィール設定</h1>
         <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        @if ($profile)
-            @method('PATCH')
-        @endif
-            <div class="profile-form__inner">
-                    <img src="{{ asset('storage/' . ($profile->avatar ?? 'profiles/icon_dummy.png')) }}" alt="プロフィール画像" width="200">
-                    <input type="file" name="avatar" accept="image/*" value="画像を選択する">
+            @if($profile)
+                @method('PATCH')
+            @endif
+            <div class="profile-img-box">
+
+                <img id="avatarPreview"
+                    src="{{ asset('storage/' . ($profile->avatar ?? 'profiles/icon_dummy.png')) }}"alt="プロフィール画像">
+
+                <label class="profile__img-btn btn--outline">
+                    画像を選択する
+                    <input
+                        id="avatarInput"
+                        class="profile__img-input"
+                        type="file"
+                        name="avatar"
+                        accept="image/*">
+                </label>
             </div>
 
-            <div class="profile-form__inner">
-                <div class="profile-form__group">
-                    <label class="profile-form__label" for="username">ユーザー名</label>
-                    <input class="profile-form__input" type="text" name="username" id="username" value="{{ old('username', $username) }}" >
-                    <p class="profile-form__error-message">
-                        @error('username')
+            <ul class="profile__list">
+                <li class="profile__item">
+                    <label class="profile__label" for="username">ユーザー名</label>
+                    <input class="profile__form-input" type="text" name="username" id="username" value="{{ old('username', $username) }}" >
+                    @error('username')
+                        <div class="msg">
                             {{ $message }}
-                        @enderror
-                    </p>
-                </div>
+                        </div>
+                    @enderror
+                </li>
 
-                <div class="profile-form__group">
-                    <label class="profile-form__label" for="postcode">郵便番号</label>
-                    <input class="profile-form__input" type="text" name="postcode" id="postcode" value="{{ old('postcode' , $profile->postcode ?? null) }}">
-                    <p class="profile-form__error-message">
-                        @error('postcode')
+                <li class="profile__item">
+                    <label class="profile__label" for="postcode">郵便番号</label>
+                    <input class="profile__form-input" type="text" name="postcode" id="postcode" value="{{ old('postcode' , $profile->postcode ?? null) }}">
+                    @error('postcode')
+                        <div class="msg">
                             {{ $message }}
-                        @enderror
-                    </p>
-                </div>
+                        </div>
+                    @enderror
+                </li>
 
-                <div class="profile-form__group">
-                    <label class="profile-form__label" for="address">住所</label>
-                    <input class="profile-form__input" type="text" name="address" id="address" value="{{ old('address' , $profile->address ?? null) }}">
-                    <p class="profile-form__error-message">
-                        @error('address')
+                <li class="profile__item">
+                    <label class="profile__label" for="address">住所</label>
+                    <input class="profile__form-input" type="text" name="address" id="address" value="{{ old('address' , $profile->address ?? null) }}">
+                    @error('address')
+                        <div class="msg">
                             {{ $message }}
-                        @enderror
-                    </p>
-                </div>
+                        </div>
+                    @enderror
+                </li>
 
-                <div class="profile-form__group">
-                    <label class="profile-form__label" for="building">建物名</label>
-                    <input class="profile-form__input" type="text" name="building" id="building" value="{{ old('building' , $profile->building ?? null) }}">
-                    <p class="profile-form__error-message">
-                        @error('building')
+                <li class="profile__item">
+                    <label class="profile__label" for="building">建物名</label>
+                    <input class="profile__form-input" type="text" name="building" id="building" value="{{ old('building' , $profile->building ?? null) }}">
+                    @error('building')
+                        <div class="msg">
                             {{ $message }}
-                        @enderror
-                    </p>
-                </div>
+                        </div>
+                    @enderror
+                </li>
+            </ul>
+            <div class="btn-box profile__btn-box">
+                <button class="btn">更新する</button>
+            </div>
+        </div><!-- profile-->
+    </form>
+@endsection
 
-                <input class="profile-form__btn btn" type="submit" value="更新する">
-            </form>
-        </div>
-    </div>
+@section('js')
+    <!-- 画像プレビュー表示-->
+    <script>
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('avatarPreview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
 @endsection

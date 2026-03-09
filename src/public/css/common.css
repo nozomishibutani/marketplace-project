@@ -105,6 +105,17 @@ header {
     /* カーソルがリンクにだけあたるように */
     height: 50px;
     width: 100%;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background-color: rgb(230, 95, 80);
+}
+
+.btn--outline:hover,
+.link--outline:hover {
+    background-color: rgb(245, 110, 95);
+    color: white;
 }
 
 .link {
@@ -122,6 +133,11 @@ header {
     /* カーソルがリンクにだけあたるように */
     height: 50px;
     width: 100%;
+    transition: 0.2s;
+}
+
+.link:hover {
+    background-color: rgb(230, 95, 80);
 }
 
 .btn--disabled {

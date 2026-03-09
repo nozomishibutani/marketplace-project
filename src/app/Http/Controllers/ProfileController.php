@@ -15,6 +15,7 @@ class ProfileController extends Controller
         $username = Auth::user()->username;
         $avatar = Auth::user()->profile->avatar ?? 'profiles/icon_dummy.png';
         $page = $request->query('page');
+        $items = array();
         switch ($page) {
 
         case Common::PAGE_BUY:
@@ -25,13 +26,15 @@ class ProfileController extends Controller
                         ->notSuspended()
                         ->latest()
                         ->get(['id', 'name', 'img']);
+            // 購入商品にはsold表示しない
+            $items->status = null;
         break;
 
-        default:
+        case Common::PAGE_SELL:
             // 出品した商品
             $items = Item::where('user_id', '=', Auth::id())
                         ->notSuspended()
-                        ->latest()->get(['id', 'name', 'img']);
+                        ->latest()->get(['id', 'name', 'img', 'status']);
             break;
         }
         return view('profile', compact('username','avatar','items'));
@@ -47,7 +50,6 @@ class ProfileController extends Controller
             // 郵便番号にハイフン追加
             $postcode = $profile->postcode;
             $profile->postcode = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-            $profile->save();
             }
 
         return view('edit_profile',compact('username','profile'));
@@ -77,6 +79,6 @@ class ProfileController extends Controller
                 'username' => $data['username'],
         ]);
 
-        return redirect()->route('profile.index',['page' => \App\Common\Common::PAGE_SELL]);
+        return redirect()->route('profile.index');
     }
 }
