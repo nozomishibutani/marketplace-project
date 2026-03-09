@@ -79,19 +79,22 @@ class ProfileTest extends TestCase
         // マイページに遷移
         $response = $this->get(route('profile.index'));
         $response->assertStatus(200);
-
         // プロフィール画像
         $response->assertSee($profile->avatar, false); // デザイン修正後確認
         // ユーザー名
         $response->assertSeeText($user->username);
-        // マイページのデフォルトは出品した商品が表示
+
+        // 出品
+        $response = $this->get(route('profile.index', ['page' => Common::PAGE_SELL]));
+        $response->assertStatus(200);
+        $response->assertSee($profile->avatar, false); // デザイン修正後確認
+        $response->assertSeeText($user->username);
         $response->assertSeeText($sellItem->name);
         $response->assertSee($sellItem->img, false);
 
         // 購入
         $response = $this->get(route('profile.index', ['page' => Common::PAGE_BUY]));
         $response->assertStatus(200);
-
         $response->assertSee($profile->avatar, false); // デザイン修正後確認
         $response->assertSeeText($user->username);
         $response->assertSeeText($buyItem->name);
