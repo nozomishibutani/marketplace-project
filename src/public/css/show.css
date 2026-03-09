@@ -57,6 +57,7 @@
 .item__actions-container{
     display: flex;
     gap: 32px;
+    margin-bottom: 16px;
 }
 
 .item__actions-group {
@@ -89,23 +90,6 @@
 
 .item__actions-count {
     font-weight: bold;
-}
-
-.item__link,
-.comment__btn{
-    width: 100%;
-}
-
-.item__link--sold{
-    pointer-events: none;
-    /* クリック不可 */
-    opacity: 0.5;
-    /* 透明度 */
-}
-
-.item__link-box{
-    cursor: not-allowed;
-    /* 禁止マークに変更 */
 }
 
 .information__row {
@@ -170,4 +154,5 @@
     height: 200px;
     border: solid black 1px;
     border-radius: 4px;
+    margin-bottom: 16px;
 }

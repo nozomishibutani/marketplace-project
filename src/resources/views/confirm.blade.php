@@ -20,7 +20,7 @@
                     </div>
                     <div class="item___information">
                         @if($itemStatuses['suspended'] == true)
-                            <p class="item__msg--suspended">現在、この商品は出品を停止しています</p>
+                            <p class="msg--suspended">現在、この商品は出品を停止しています</p>
                         @endif
                         <!-- 商品名 -->
                         <h1 class="item__ttl">{{ $item->name }}
@@ -69,17 +69,17 @@
                     <div class="address__nav">
                         <h2 class="address__ttl">配送先</h2>
                         <!-- 配送先を変更する-->
-                        @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
-                            <form method="post" action="{{ route('purchase.edit', $item->id) }}">
-                            @csrf
-                                <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
-                                <button class="address__btn">変更する</button>
-                            </form>
-                        @else
-                            <div class="address__btn-box">
-                                <button class="address__btn address__btn--sold">変更する</button>
-                            </div>
-                        @endif
+                        <div class="btn-box">
+                            @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
+                                <form method="post" action="{{ route('purchase.edit', $item->id) }}">
+                                @csrf
+                                    <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
+                                    <button class="address__btn">変更する</button>
+                                </form>
+                            @else
+                                <button class="address__btn btn--disabled" disabled>変更する</button>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- 現在の配送先の表示-->
@@ -119,9 +119,13 @@
                     <h3 class="purchase__label">支払い方法</h3>
                     <span class="purchase__tag">{{ \App\Models\Order::PAYMENT_METHODS[$paymentMethod] ?? \App\Models\Order::PAYMENT_HIDDEN }}</span>
                 </li>
-                @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
-                    <button class="btn purchase__btn">購入する</button>
-                @endif
+                <li class="btn-box purchase__btn-box">
+                    @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
+                        <button class="btn">購入する</button>
+                    @else
+                        <button class="btn btn--disabled" disabled>購入する</button>
+                    @endif
+                </li>
             </ul><!-- purchase__summary -->
             <input type="hidden" name="payment_method" value="{{ $paymentMethod ?? null }}">
         </form>

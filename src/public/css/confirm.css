@@ -53,16 +53,14 @@
 }
 
 .payment__ttl,
-.payment__select-box,
-.address__ttl,
-.address__btn{
-    font-size: 1rem;
-    display: block;
+.payment__select-box{
+    font-size: 1.2rem;
     margin: 32px 0px 0px 32px;
 }
 
 .payment__select-box {
-    width: 320px;
+    width: 400px;
+    height: 40px;
     margin-left: 80px;
 }
 
@@ -73,26 +71,26 @@
     padding-bottom: 64px;
 }
 
+.address__ttl{
+    margin: 0px 0px 0px 32px;
+    /* 左以外０にすることで高さがボタンと揃う*/
+    font-size: 1.2rem;
+}
+
 .address__nav{
     display: flex;
     justify-content: space-between;
+    margin-top: 32px;
+    align-items: flex-start;
 }
 
 .address__btn {
     color: rgb(3, 105, 238);
-    font-size: 0.9rem;
+    font-size: 1rem;
     border: none;
     background: none;
-}
-
-.address__btn--sold {
-    pointer-events: none;
-    /* クリック不可 */
-}
-
-.address__btn-box {
-    cursor: not-allowed;
-    /* 禁止マークに変更 */
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 .address__list {
@@ -102,13 +100,13 @@
 }
 
 .address__postcode-symbol {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
 .address__item-form {
     border: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
@@ -125,6 +123,7 @@
     padding: 30px 50px;
     border: 2px solid #747272;
     align-items: center;
+    font-size: 1.2rem;
 }
 
 .purchase__item:first-child {
@@ -147,12 +146,7 @@
     /* タグ内改行禁止 */
 }
 
-.purchase__btn{
-    width: 100%;
+.purchase__btn-box {
     margin-top: 64px;
 }
 
-.msg{
-    color: red;
-    margin: 8px 0px 0px 80px;
-}

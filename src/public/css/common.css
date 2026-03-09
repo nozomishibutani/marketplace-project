@@ -101,8 +101,10 @@ header {
     border: none;
     font-size: 1.3rem;
     font-weight: 600;
-    margin: 16px 0;
+    margin: 0;
+    /* カーソルがリンクにだけあたるように */
     height: 50px;
+    width: 100%;
 }
 
 .link {
@@ -116,17 +118,49 @@ header {
     align-items: center;
     font-size: 1.4rem;
     font-weight: 700;
-    margin: 16px 0;
+    margin: 0;
+    /* カーソルがリンクにだけあたるように */
     height: 50px;
+    width: 100%;
+}
+
+.btn--disabled {
+    pointer-events: none;
+    /* クリック不可 */
+    opacity: 0.5;
+    /* 透明度 */
+}
+
+.btn-box {
+    cursor: not-allowed;
+    /* 禁止マークに変更 */
+}
+
+.link--disabled {
+    pointer-events: none;
+    /* クリック不可 */
+    opacity: 0.5;
+    /* 透明度 */
+}
+
+.link-box {
+    cursor: not-allowed;
+    /* 禁止マークに変更 */
 }
 
 input,
 textarea,
 select {
     outline: none;
+    cursor: pointer;
 }
 
-.item__msg--suspended {
+.msg {
+    color: red;
+    margin: 8px 0px 0px 80px;
+}
+
+.msg--suspended {
     color: #fa2323;
     font-weight: bold;
     font-size: 0.9rem;

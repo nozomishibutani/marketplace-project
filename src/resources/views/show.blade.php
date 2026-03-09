@@ -26,7 +26,7 @@
             <!-- 商品名 -->
             <div class="item__header">
                 @if($itemStatuses['suspended'] == true)
-                        <span class="item__msg--suspended">現在、この商品は出品を停止しています</span>
+                        <span class="msg--suspended">現在、この商品は出品を停止しています</span>
                 @endif
                 <h1 class="item__ttl">{{ $item->name }}
                     @if($itemStatuses['sold'] == true)
@@ -74,15 +74,13 @@
                         <span class="item__actions-count">{{ $commentsCount }}</span>
                     </div>
                 </div>
-
-                @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
-                    <a class="link item__link" href="{{ route('purchase.confirm', $item->id) }}">購入手続きへ</a>
-                @else
-                <div class="item__link-box">
-                    <a class="link item__link item__link--sold" href="#">購入手続きへ</a>
+                <div class="link-box">
+                    @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
+                        <a class="link item__link" href="{{ route('purchase.confirm', $item->id) }}">購入手続きへ</a>
+                    @else
+                        <a class="link item__link link--disabled" href="#">購入手続きへ</a>
+                    @endif
                 </div>
-                @endif
-
                 <!-- 商品説明 -->
                 <section class="description">
                     <h2 class="description__ttl">商品説明</h2>
