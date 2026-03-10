@@ -54,9 +54,16 @@ class PurchaseController extends Controller
                 ->select('postcode', 'address', 'building')
                 ->first();
 
-                $address['postcode'] = substr($address['postcode'], 0, 3) . '-' . substr($address['postcode'], 3) ?? null;
-                $address['address'] = $address['address'] ?? null;
-                $address['building'] = $address['building'] ?? null;
+                if($address){
+                    // プロフィール登録あり
+                    $address['postcode'] = substr($address['postcode'], 0, 3) . '-' . substr($address['postcode'], 3);
+                    $address['address'] = $address['address'];
+                    $address['building'] = $address['building'] ?? null;
+                }else{
+                    $address['postcode'] = null;
+                    $address['address'] = null;
+                    $address['building'] = null;
+                }
 
                 return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
         }
