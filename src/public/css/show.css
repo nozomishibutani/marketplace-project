@@ -1,7 +1,7 @@
 .item {
     display: flex;
-    gap: 56px;
-    margin: 80px;
+    gap: 3.5rem;
+    margin: 5rem;
 }
 
 /* 左側：画像 */
@@ -22,14 +22,14 @@
     /* 縦に並べる */
 }
 
-.item__ttl,
-.item__brand-name {
+.item__ttl{
     margin: 0;
+    font-size: 2rem;
 }
 
 .item__sold {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 0.5rem 1.2rem;
     background-color: rgb(86, 135, 241);
     color: #fff;
     font-weight: bold;
@@ -48,23 +48,24 @@
 }
 
 .item__price{
-    font-size: 1.7rem;
+    font-size: 2rem;
 }
 .item__price-symbol, .item__price-tax{
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .item__actions-container{
     display: flex;
-    gap: 32px;
-    margin-bottom: 16px;
+    gap: 3rem;
+    padding-left: 3rem;
+    padding-bottom: 0;
 }
 
 .item__actions-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 0.5rem;
 }
 
 .item__actions-btn{
@@ -75,6 +76,10 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.item__link{
+    margin: 1rem 0 3rem 0;
 }
 
 .item__actions-img {
@@ -95,10 +100,11 @@
 .information__row {
     display: flex;
     align-items: center;
+    margin-bottom: 2rem;
 }
 
 .information__label{
-    margin-right: 56px;
+    margin-right: 3.5rem;
     font-size: 1rem;
     flex-shrink: 0;
     /* ラベルを折り返さない */
@@ -108,12 +114,11 @@
     display: flex;
     flex-wrap: wrap;
     /* 折り返す */
-    gap: 8px 16px;
+    gap: 1rem 2rem;
 }
 
 .information__tag-name {
     display: inline-block;
-    padding: 5px 15px;
     white-space: nowrap;
     /* タグ内改行禁止 */
     text-align: center;
@@ -122,16 +127,22 @@
 .information__tag-name--category {
     border-radius: 15px;
     background-color: #dfdddd;
+    padding: 3px 16px;
+}
+
+.comment__list{
+    margin-bottom: 3rem;
 }
 
 .comment__item {
-    margin-bottom: 15px;
+    margin-bottom: 2rem;
 }
 
 .comment__user {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 1.2rem;
+    margin-bottom: 8px;
 }
 
 .comment__avatar {
@@ -145,7 +156,7 @@
 
 .comment__content {
     background: #f5f5f5;
-    padding: 16px;
+    padding: 1rem;
     border-radius: 4px;
 }
 

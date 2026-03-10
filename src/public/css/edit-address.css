@@ -1,28 +1,28 @@
 .address{
     width: 50%;
     margin: 0 auto;
-    padding-bottom: 56px;
+    padding-bottom: 3.5rem;
 }
 
 .address-ttl{
     text-align: center;
-    margin: 32px 0px;
+    margin: 2rem 0;
 }
 
-.address__list{
+/* .address__list{
     padding-left: 0px;
-}
+} */
 .address__item{
     list-style: none;
     display: flex;
     flex-direction: column;
     /* 縦に並べる */
-    margin-bottom: 40px;
+    margin-bottom: 1rem;
 }
 
 .address__label{
     font-weight: 600;
-    margin-top: 24px;
+    margin-top: 1.5rem;
 }
 
 .address__form-input{
@@ -31,5 +31,5 @@
 }
 
 .address__btn-box{
-    margin-top: 120px;
+    margin-top: 4rem;
 }

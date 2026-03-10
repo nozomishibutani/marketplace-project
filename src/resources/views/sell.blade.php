@@ -9,41 +9,57 @@
 @endsection
 
 @section('content')
-    <h1>商品の出品</h1>
+
+<div class="item">
+    <h1 class="item__ttl">商品の出品</h1>
 
     <form method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
     @csrf
-    <div class="">
-        <h3>商品画像</h3>
-        <input type="file" name="img" accept="image/*">
-    </div>
-    @error('img')
-        <div>
-            {{ $message }}
+    <!-- 商品画像 -->
+    <div class="item__img-upload">
+        <div class="item__img-box">
+            <img id="preview" class="item__img-preview" src="" alt="">
+            <label id="imgLabel" class="item__img-btn btn--outline">
+                画像を選択する
+                <input
+                    id="imgInput"
+                    class="item__img-input"
+                    type="file"
+                    name="img"
+                    accept="image/*">
+            </label>
         </div>
-    @enderror
+        @error('img')
+            <div class="msg">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
 
-    <div>
-        <h2>商品の詳細</h2>
-        <h3>カテゴリー</h3>
-        <div>
+    <!-- 商品の詳細 -->
+    <section class="detail">
+        <h2 class="detail__ttl">商品の詳細</h2>
+        <h3 class="detail__label">カテゴリー</h3>
+        <div class="detail__tag">
             @foreach($categories as $id => $name)
-                <input type="checkbox" id="{{ $id }}" name="categories[]" value="{{ $id }}"  {{ in_array($id, old('categories', [])) ? 'checked' : '' }}>
-                <label for="{{ $id }}">{{ $name }}</label>
+                <input class="detail__checkbox" type="checkbox" id="cat-{{ $id }}" name="categories[]" value="{{ $id }}"
+                    {{ in_array($id, old('categories', [])) ? 'checked' : '' }}>
+                <label class="detail__tag-name btn--outline" for="cat-{{ $id }}">{{ $name }}</label>
             @endforeach
         </div>
         @error('categories')
-            <div>
+            <div class="msg">
                 {{ $message }}
             </div>
         @enderror
         @error('categories.*')
-            <div>
+            <div class="msg">
                 {{ $message }}
             </div>
         @enderror
-        <h3>商品の状態</h3>
-        <select class="" name="condition" >
+
+        <h3 class="detail__label--status">商品の状態</h3>
+        <select class="detail__select-box" name="condition" >
             <option hidden>
                 {{ \App\Models\Item::CONDITION_HIDDEN }}
             </option>
@@ -54,56 +70,80 @@
             @endforeach
         </select>
         @error('condition')
-            <div>
+            <div class="msg ">
                 {{ $message }}
             </div>
         @enderror
-    </div>
+    </section>
 
-    <div>
-        <h2>商品名と説明</h2>
-        <div>
-            <h3>商品名</h3>
-            <input type="text" name="name" id="" value="{{ old('name') }}">
-        </div>
-        @error('name')
-            <div>
-                {{ $message }}
-            </div>
-        @enderror
-        <div>
-            <h3>ブランド名</h3>
-            <input type="text" name="brand_name" id="" value="{{ old('brand_name') }}">
-        </div>
-        @error('brand_name')
-            <div>
-                {{ $message }}
-            </div>
-        @enderror
-        <div>
-            <h3>商品の説明</h3>
-            <textarea name="description" id="">{{ old('description') }}</textarea>
-        </div>
-        @error('description')
-            <div>
-                {{ $message }}
-            </div>
-        @enderror
-        <div>
-            <h3>販売価格</h3>
-            <div class="price-wrapper">
-                <span class="yen">¥</span>
-                <input type="text" name="price" value="{{ old('price') }}">
-            </div>
-        </div>
-        @error('price')
-            <div>
-                {{ $message }}
-            </div>
-        @enderror
-    </div>
-    <div>
-        <button>出品する</button>
-    </div>
+    <!-- 商品名と説明 -->
+    <section class="description">
+        <h2 class="description__ttl">商品名と説明</h2>
+        <ul class="description__list">
+            <li class="description__item">
+                <label class="description__label" for="name">商品名</label>
+                <input type="text" class="description__form-input" name="name" id="name" value="{{ old('name') }}">
+                @error('name')
+                    <div class="msg">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </li>
+
+            <li class="description__item">
+                <label class="description__label" for="brand_name">ブランド名</label>
+                <input type="text" class="description__form-input" name="brand_name" id="brand_name" value="{{ old('brand_name') }}">
+                @error('brand_name')
+                    <div class="msg">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </li>
+
+            <li class="description__item">
+                <label class="description__label" for="description">商品の説明</label>
+                <textarea class="description__form-textarea" name="description" id="description">{{ old('description') }}</textarea>
+                @error('description')
+                    <div class="msg">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </li>
+
+            <li class="description__item">
+                <label class="description__label" for="price">販売価格</label>
+                <div class="description__price-box">
+                    <span class="description__price-symbol">¥</span>
+                    <input class="description__form-input description__form-input--price" type="text" name="price" id="price" value="{{ old('price') }}">
+                </div>
+                @error('price')
+                    <div class="msg">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </li>
+        </ul>
+    </section>
+    <button class="btn">出品する</button>
     </form>
+</div><!-- item -->
+@endsection
+
+@section('js')
+    <!-- 画像プレビュー表示-->
+    <script>
+        const input = document.getElementById("imgInput");
+        const preview = document.getElementById("preview");
+        const box = document.querySelector(".item__img-box");
+        const label = document.getElementById("imgLabel");
+        input.addEventListener("change", function(){
+            const file = this.files[0];
+            if(file){
+                preview.src = URL.createObjectURL(file);
+                box.classList.add("has-image");
+                label.textContent = "画像を変更する";
+                label.appendChild(input);
+            }
+        });
+</script>
 @endsection

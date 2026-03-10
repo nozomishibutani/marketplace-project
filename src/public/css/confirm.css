@@ -1,6 +1,6 @@
 .purchase {
     display: flex;
-    margin: 80px;
+    margin: 8rem;
 }
 /* 左側 */
 .purchase__form {
@@ -11,7 +11,7 @@
     display: flex;
     width: 85%;
     border-bottom: solid 2px rgb(116, 114, 114);
-    padding-bottom: 42px;
+    padding-bottom: 2.5rem;
 }
 
 .item__img{
@@ -22,16 +22,12 @@
     width: 100%;
 }
 .item___information{
-    margin-left: 64px;
-}
-
-.item__ttl {
-    margin-top: 0px;
+    margin-left: 4rem;
 }
 
 .item__sold {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 0.2rem 1rem;
     background-color: rgb(86, 135, 241);
     color: #fff;
     font-weight: bold;
@@ -55,32 +51,31 @@
 .payment__ttl,
 .payment__select-box{
     font-size: 1.2rem;
-    margin: 32px 0px 0px 32px;
+    margin: 2rem 0 0 2rem;
 }
 
 .payment__select-box {
     width: 400px;
     height: 40px;
-    margin-left: 80px;
+    margin-left: 7rem;
 }
 
 .payment,
 .address {
     width: 85%;
     border-bottom: solid 2px rgb(116, 114, 114);
-    padding-bottom: 64px;
+    padding-bottom: 4rem;
 }
 
 .address__ttl{
-    margin: 0px 0px 0px 32px;
-    /* 左以外０にすることで高さがボタンと揃う*/
+    margin-left: 2rem;
     font-size: 1.2rem;
 }
 
 .address__nav{
     display: flex;
     justify-content: space-between;
-    margin-top: 32px;
+    margin-top: 2rem;
     align-items: flex-start;
 }
 
@@ -95,8 +90,7 @@
 
 .address__list {
     list-style: none;
-    margin-left: 80px;
-    padding-left: 0px;
+    margin-left: 7rem;
 }
 
 .address__postcode-symbol {
@@ -125,7 +119,7 @@
 
 .purchase__item{
     display: flex;
-    padding: 30px 50px;
+    padding: 2rem 2.5rem;
     border: 2px solid #747272;
     align-items: center;
     font-size: 1.2rem;
@@ -142,16 +136,18 @@
 }
 
 .purchase__tag{
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     flex: 6;
     text-align: center;
-    flex-wrap: wrap;
-    /* 折り返す */
     white-space: nowrap;
     /* タグ内改行禁止 */
+    white-space: normal;
+    /* 折り返し許可 */
+    overflow-wrap: anywhere;
+    /* 長い文字も折り返す */
 }
 
 .purchase__btn-box {
-    margin-top: 64px;
+    margin-top: 4rem;
 }
 

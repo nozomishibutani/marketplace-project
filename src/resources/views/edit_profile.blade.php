@@ -16,14 +16,13 @@
     @endif
 
     <div class="profile">
-        <h1 class="profile-ttl">プロフィール設定</h1>
+        <h1 class="profile__ttl">プロフィール設定</h1>
         <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
         @csrf
             @if($profile)
                 @method('PATCH')
             @endif
-            <div class="profile-img-box">
-
+            <div class="profile__img-box">
                 <img id="avatarPreview"
                     src="{{ asset('storage/' . ($profile->avatar ?? 'profiles/icon_dummy.png')) }}"alt="プロフィール画像">
 
@@ -37,6 +36,11 @@
                         accept="image/*">
                 </label>
             </div>
+            @error('avatar')
+                <div class="msg">
+                    {{ $message }}
+                </div>
+            @enderror
 
             <ul class="profile__list">
                 <li class="profile__item">

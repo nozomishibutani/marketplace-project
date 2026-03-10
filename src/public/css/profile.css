@@ -1,8 +1,8 @@
 .profile__container {
     max-width: 1540px;
-    width: 100%;
+    width: 65%;
     margin: 0 auto;
-    padding: 36px 168px;
+    padding: 7rem 0 2rem 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -11,11 +11,12 @@
 .profile__user {
     display: flex;
     align-items: center;
-    gap: 36px;
+    gap: 3rem;
 }
 
 .profile__avatar{
-    width: 160px;
+    width: 180px;
+    border-radius: 50%;
     height: auto;
     object-fit: cover;
     /* 画像の縦横比を保持 */
@@ -33,7 +34,7 @@
 }
 
 .profile__link-box{
-    margin: 0 8px;
+    margin: 0 1rem;
     flex-shrink: 0;
     /* ラベルを折り返さない */
 
@@ -42,7 +43,7 @@
 .profile__link {
     display: inline-block;
     font-size: 1rem;
-    padding: 8px 32px;
+    padding: 0.5rem 2rem;
     border: solid 2px rgb(245, 110, 95);
     color: rgb(245, 110, 95);
     background: none;
@@ -58,15 +59,15 @@
     max-width: 1540px;
     width: 100%;
     margin: 0 auto;
-    padding-left: 168px;
+    padding-left: 10rem;
 }
 
 .menu__list{
     display: flex;
     list-style: none;
     padding-left: 0;
-    margin: 48px 0px 0px;
-    gap: 16px;
+    margin: 3rem 0 0;
+    gap: 2rem;
 }
 
 .menu__link{
@@ -78,7 +79,8 @@
     display: block;
 }
 
-.menu__link--active{
+.menu__link--active,
+.menu__link:hover {
     color: rgb(247, 89, 72);
 }
 
@@ -86,8 +88,8 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     /* 4列固定 */
-    gap: 64px;
-    margin: 96px 88px;
+    gap: 4rem;
+    margin: 6rem 5.5rem;
 }
 
 .item__link {
@@ -98,26 +100,33 @@
 
 .item__img {
     width: 100%;
-    height: 200px;
+    height: 260px;
     overflow: hidden;
     /* 画像がはみ出さないように */
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.item__img img{
-    max-width: 100%;
-    max-height: 100%;
+.item__img img {
     display: block;
-    object-fit: contain;
-    /* 画像比率を崩さず枠内に収める */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 枠いっぱいに表示 */
 }
 
 .item__ttl {
-    margin: 8px 0px 0px;
+    margin: 1rem 0 0;
     font-size: 1.2rem;
     font-weight: 400;
+    /* 長文は省略 ここから */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: calc(1.5em * 2);
+    /* 長文は省略 ここまで */
+    text-decoration: none;
+    color: black;
 }
 
 .item__sold {

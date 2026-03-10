@@ -1,4 +1,9 @@
-* {
+/* ===============================
+    Base Layout
+================================ */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
@@ -6,8 +11,34 @@ html {
     font-size: 16px;
 }
 
-/* ヘッダー*/
+body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
 
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+section {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ===============================
+    header
+================================ */
 header {
     background-color: black;
     /* 背景色は画面いっぱいに */
@@ -18,15 +49,19 @@ header {
     /* PC (1400-1540px) で崩れない */
     width: 100%;
     margin: 0 auto;
-    padding: 0px;
+    padding: 0;
     display: flex;
 }
 
 .header__logo,
 .header__search,
 .header__list {
-    margin: 8px 0px;
+    margin: 1rem ;
     flex: 3;
+}
+
+.header__logo{
+    margin-left: 1.5rem;
 }
 
 .header__logo img {
@@ -39,7 +74,7 @@ header {
     width: 80%;
     height: 40px;
     border-radius: 5px;
-    padding-left: 32px;
+    padding-left: 1.5rem;
     /* プレースホルダーの表示位置 */
 }
 
@@ -50,8 +85,8 @@ header {
 .header__list {
     list-style: none;
     display: flex;
-    margin-right: 24px;
-    gap: 16px;
+    margin-right: 1.5rem;
+    gap: 2rem;
 }
 
 .header__item {
@@ -75,7 +110,7 @@ header {
 .header__link--sell{
     color: black;
     background-color: white;
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
     border-radius: 5px;
 }
 
@@ -84,14 +119,16 @@ header {
 } */
 
 
-/* ヘッダー ここまで*/
+/* ===============================
+    main
+================================ */
 
 .main__container{
     max-width: 1540px;
     /* PC (1400-1540px) で崩れない */
     width: 100%;
     margin: 0 auto;
-    padding: 0px;
+    padding: 0;
 }
 .btn {
     background: rgb(245, 110, 95);
@@ -150,7 +187,7 @@ header {
 .btn-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
-    margin: 16px 0px;
+    margin: 1rem 0;
 }
 
 .link--disabled {
@@ -163,7 +200,7 @@ header {
 .link-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
-    margin: 16px 0px;
+    /* margin: 16px 0px; */
 }
 
 input,

@@ -1,21 +1,22 @@
 .profile{
     width: 50%;
     margin: 0 auto;
-    padding-bottom: 56px;
+    padding-bottom: 3rem;
 }
 
-.profile-ttl{
+.profile__ttl{
     text-align: center;
-    margin: 32px 0px;
+    margin: 2rem 0px;
 }
 
-.profile-img-box {
+.profile__img-box {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 3rem;
+    margin-bottom: 2rem;
 }
 
-.profile-img-box img {
+.profile__img-box img {
     width: 160px;
     height: 160px;
     object-fit: cover;
@@ -29,26 +30,22 @@
 .profile__img-btn {
     border: 2px solid rgb(245, 110, 95);
     color: rgb(245, 110, 95);
-    padding: 8px 24px;
+    padding: 0.8rem 1.5rem;
     cursor: pointer;
     border-radius: 6px;
     transition: 0.2s;
 }
 
-.profile__list{
-    padding-left: 0px;
-}
 .profile__item{
     list-style: none;
     display: flex;
     flex-direction: column;
     /* 縦に並べる */
-    margin-bottom: 40px;
+    margin-bottom: 1rem;
 }
 
 .profile__label{
     font-weight: 600;
-    margin-top: 24px;
 }
 
 .profile__form-input{
@@ -60,5 +57,5 @@
 }
 
 .profile__btn-box{
-    margin-top: 120px;
+    margin-top: 3rem;
 }
