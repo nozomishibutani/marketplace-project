@@ -3,6 +3,11 @@
 namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\VerifyEmail;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterTest extends TestCase
@@ -29,7 +34,7 @@ class RegisterTest extends TestCase
 
         $response->assertSessionHasErrors([
             // 実際のエラー文言と異なるとFAILURES!になる
-            'username' => 'お名前を入力してください',
+            'username' => 'ユーザー名を入力してください',
         ]);
 
         // メールアドレスが入力されていない場合、バリデーションメッセージが表示される
@@ -87,6 +92,9 @@ class RegisterTest extends TestCase
      */
     public function canRegisterAndRedirectToProfile(){
 
+        // メール送信を抑制
+        Notification::fake();
+
         $response = $this->post('/register', [
         'username' => 'sampleuser',
         'email' => 'sampleuser@example.com',
@@ -94,8 +102,29 @@ class RegisterTest extends TestCase
         'password_confirmation' => 'password',
         ]);
 
-        // プロフィール画面に遷移
-        $response->assertRedirect(route('profile.edit'));
+        // 登録ユーザー取得
+        $user = User::where('email', 'sampleuser@example.com')->first();
+
+        // メール認証画面認に遷移
+        $response->assertRedirect(route('verification.notice'));
+
+        // 認証リンクを作成
+        $verifyUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        // 認証リンクにアクセス
+        $this->actingAs($user)->get($verifyUrl);
+
+        // email_verified_at がセットされているか確認
+        $this->assertNotNull($user->fresh()->email_verified_at);
+
+        // 認証済みなのでプロフィール画面に遷移している
+        $response = $this->actingAs($user)->get(route('profile.edit'));
+        $response->assertStatus(200);
+
         // 会員情報が登録されている
         $this->assertDatabaseHas('users', [
             'username' => 'sampleuser',

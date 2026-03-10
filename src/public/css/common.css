@@ -86,7 +86,7 @@ header {
     list-style: none;
     display: flex;
     margin-right: 1.5rem;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .header__item {
@@ -94,17 +94,17 @@ header {
     align-items: center;
 }
 
-.header__btn--logout{
+.header__btn{
     background: black;
     color: white;
-    font-size: 0.9rem;
+    font-size: 1rem;
     border: none;
 }
 
 .header__link{
     color: white;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .header__link--sell{
@@ -113,11 +113,6 @@ header {
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
-
-/* .btn--search{
-    width: 15%;
-} */
-
 
 /* ===============================
     main
@@ -200,7 +195,6 @@ header {
 .link-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
-    /* margin: 16px 0px; */
 }
 
 input,

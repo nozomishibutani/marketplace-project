@@ -37,7 +37,7 @@
                 </label>
             </div>
             @error('avatar')
-                <div class="msg">
+                <div class="msg profile__img-msg">
                     {{ $message }}
                 </div>
             @enderror

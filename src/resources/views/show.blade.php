@@ -74,17 +74,22 @@
                         <span class="item__actions-count">{{ $commentsCount }}</span>
                     </div>
                 </div>
-                <div class="link-box">
+
+                <!-- 購入ボタン-->
+                <div class="link-box item__link-box">
                     @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
                         <a class="link item__link" href="{{ route('purchase.confirm', $item->id) }}">購入手続きへ</a>
                     @else
                         <a class="link item__link link--disabled" href="#">購入手続きへ</a>
                     @endif
                 </div>
+
                 <!-- 商品説明 -->
                 <section class="description">
                     <h2 class="description__ttl">商品説明</h2>
-                    <p>{{ $item->description }}</p>
+                    <p class="description__content">
+                        {{ $item->description }}
+                    </p>
                 </section>
 
                 <!-- 商品情報 -->
@@ -122,7 +127,7 @@
                                     </span>
                                 </div>
                                 <p class="comment__content">
-                                    {{ $comment->content }}
+                                    {!! nl2br(e(trim($comment->content))) !!}
                                 </p>
                             </div>
                             @endforeach

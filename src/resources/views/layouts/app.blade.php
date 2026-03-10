@@ -32,7 +32,7 @@
                             @if (Auth::check())
                                 <form class="header__logout-form" action="/logout" method="post">
                                 @csrf
-                                    <button class="header__btn--logout">ログアウト</button>
+                                    <button class="header__btn">ログアウト</button>
                                 </form>
                             @else
                                 <a href="/login" class="header__link">ログイン</a>
