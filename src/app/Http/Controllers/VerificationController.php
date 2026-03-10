@@ -10,12 +10,23 @@ use Illuminate\Http\Request;
 
 
 
-class EmailVerificationController extends Controller
+class VerificationController extends Controller
 {
+
+    /**
+     * このコントローラーは VerifyEmail 通知を利用したメール認証用です。
+     * VerifyEmail 通知ではデフォルトで以下3つのルートを使用します：
+     * 1. verification.notice      -> 確認メール送信後の画面
+     * 2. verification.verify      -> メール内のリンククリックで確認完了
+     * 3. verification.send        -> メール再送信
+     *
+     * ビューは自由にカスタマイズ可能ですが、ルート名は変更不可。
+     */
+
     // 未認証ユーザー向けの誘導画面
     public function notice()
     {
-        return view('auth.verify_notice');
+        return view('auth.notice');
     }
 
     /**
@@ -51,6 +62,6 @@ class EmailVerificationController extends Controller
             ]
         );
 
-        return view('auth.verify_confirm', compact('url'));
+        return view('auth.confirm', compact('url'));
     }
 }

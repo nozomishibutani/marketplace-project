@@ -11,11 +11,13 @@ class RegisterResponse implements RegisterResponseContract
     {
         $user = Auth::user();
 
-        // プロフィール未登録なら
-        if (!$user->profile) {
-            return redirect()->route('profile.edit');
+        // 新規登録後メール認証へ遷移
+        if ($user && !$user->hasVerifiedEmail()) {
+
+            return redirect()->route('verification.notice');
         }
 
         return redirect()->intended(config('fortify.home'));
+
     }
 }

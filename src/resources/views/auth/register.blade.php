@@ -1,82 +1,79 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>会員登録</title>
-    <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth/base.css') }}">
+    <title>会員登録</title>
 </head>
 
-<div class="register-form__content">
-    <div class="register-form__heading">
-        <h2>会員登録</h2>
-    </div>
-    <form class="form" action="/register" method="post">
-    @csrf
-        <div class="form__group">
-            <div class="form__group-title">
-                <span class="form__label--item">お名前</span>
-            </div>
-            <div class="form__group-content">
-                <div class="form__input--text">
-                    <input type="text" name="username" value="{{ old('username') }}" />
-                </div>
-                <div class="form__error">
-                    @error('username')
-                        {{ $message }}
-                    @enderror
+<body>
+    <header class="header">
+        <div class="header__container">
+                <div class="header__logo">
+                    <a href="{{ route('items.index') }}">
+                        <img src="{{ asset('/images/header_logo.png') }}" alt="ヘッダーロゴ画像">
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="form__group">
-            <div class="form__group-title">
-                <span class="form__label--item">メールアドレス</span>
+    </header>
+
+    <main>
+        <div class="main__container">
+            <div class="auth">
+                <h1 class="auth-ttl">会員登録</h1>
+                <form class="form" action="/register" method="post" novalidate>
+                @csrf
+                    <ul class="auth__list">
+                        <li class="auth__item">
+                            <label class="auth__label" for="email">ユーザー名</label>
+                            <input class="auth__form-input" type="text" name="username" value="{{ old('username') }}" />
+                            @error('username')
+                            <div class="msg">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="email">メールアドレス</label>
+                            <input class="auth__form-input" type="email" name="email" id="email" value="{{ old('email') }}" />
+                            @error('email')
+                                <div class="msg">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="password">パスワード</label>
+                            <input class="auth__form-input" type="password" name="password" id="password" />
+                            @error('password')
+                                <div class="msg">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="password_confirmation">確認用パスワード</label>
+                            <input class="auth__form-input" type="password" name="password_confirmation" id="password_confirmation" />
+                        </li>
+                    </ul>
+
+                    <div class="btn-box">
+                        <button class="btn">登録</button>
+                    </div>
+                </form>
+
+            <div class="auth__link-box">
+                <a class="auth__link" href="/login">ログインの方はこちら</a>
             </div>
-            <div class="form__group-content">
-                <div class="form__input--text">
-                    <input type="email" name="email" value="{{ old('email') }}" />
-                </div>
-                <div class="form__error">
-                    @error('email')
-                        {{ $message }}
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="form__group">
-            <div class="form__group-title">
-                <span class="form__label--item">パスワード</span>
-            </div>
-            <div class="form__group-content">
-                <div class="form__input--text">
-                    <input type="password" name="password" />
-                </div>
-                <div class="form__error">
-                    @error('password')
-                        {{ $message }}
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="form__group">
-            <div class="form__group-title">
-                <span class="form__label--item">確認用パスワード</span>
-            </div>
-            <div class="form__group-content">
-                <div class="form__input--text">
-                    <input type="password" name="password_confirmation" />
-                </div>
-            </div>
-        </div>
-        <div class="form__button">
-            <button class="form__button-submit" type="submit">登録</button>
-        </div>
-    </form>
-    <div class="login__link">
-        <a class="login__button-submit" href="/login">ログインの方はこちら</a>
-    </div>
-</div>
+
+            </div><!-- auth -->
+        </div><!-- main__container -->
+    </main>
+</body>
+</html>

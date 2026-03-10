@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,19 +23,19 @@ Route::get('/search', [ItemController::class, 'search'])->name('search');
 
 Route::middleware(['auth','signed'])->group(function () {
     // メール認証
-    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 });
 
 Route::middleware(['auth', 'throttle:3,1'])->group(function () {
     // 認証メール再送
-    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.send');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.send');
 });
 
 Route::middleware('auth')->group(function () {
     // メール認証誘導画面
-    Route::get('/verify/notice', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/verify/notice', [VerificationController::class, 'notice'])->name('verification.notice');
     // メール認証画面
-    Route::get('/verify/email/confirm', [EmailVerificationController::class, 'confirm'])->name('verification.confirm');
+    Route::get('/verify/email/confirm', [VerificationController::class, 'confirm'])->name('verification.confirm');
 
     // プロフィール
     Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');

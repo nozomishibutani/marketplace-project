@@ -1,0 +1,75 @@
+.auth {
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 56px;
+}
+
+.auth-ttl {
+    text-align: center;
+    margin: 32px 0px;
+}
+
+.auth__list {
+    padding-left: 0px;
+}
+
+.auth__item {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 40px;
+}
+
+.auth__label {
+    font-weight: 600;
+    margin-top: 24px;
+}
+
+.auth__form-input {
+    height: 40px;
+    border: solid 1px rgb(195, 195, 199);
+}
+
+.auth__link-box,
+.auth__btn-box {
+    text-align: center;
+    margin: 56px 0;
+}
+
+.auth__link,
+.auth__btn {
+    color: rgb(3, 105, 238);
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.auth__link--btn{
+    background-color: rgb(215, 217, 219);
+    font-size: 1.1rem;
+    border: solid 1px black;
+    padding: 12px 16px;
+    border-radius: 6px;
+    color: black;
+    transition: 0.2s;
+}
+
+.auth__link--btn:hover {
+    background-color: rgb(194, 191, 191);
+}
+
+.auth__btn {
+    background: none;
+    border: none;
+}
+
+.alert{
+    margin: 0 auto;
+}
+.alert__text{
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 160px;
+    text-align: center;
+}
