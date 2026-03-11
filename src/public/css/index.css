@@ -17,13 +17,15 @@
     gap: 1rem;
 }
 
+.menu__item{
+    width: 160px;
+}
+
 .menu__link{
     font-size: 1.3rem;
     font-weight: 650;
     color: rgb(104, 102, 102);
     text-decoration: none;
-    width: 160px;
-    display: block;
 }
 
 .menu__link--active,
