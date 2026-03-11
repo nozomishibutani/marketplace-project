@@ -97,7 +97,7 @@ class PurchaseController extends Controller
         $paymentMethod = $request->input('payment_method');
         $address = $request->only(['postcode', 'address', 'building']);
 
-        // 連想配列にまとめる
+        // 配列にまとめる
         $inputData = array_merge($address, ['paymentMethod' => $paymentMethod]);
 
         return redirect()->route('purchase.confirm', ['item_id' => $item_id])->withInput($inputData);

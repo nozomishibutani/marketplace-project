@@ -15,6 +15,8 @@
     <h1 class="address-ttl">住所の変更</h1>
         <form action="{{ route('purchase.update', $item_id) }}" method="post">
         @csrf
+        <!-- hidden -->
+        <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
         <ul class="address__list">
             <li class="address__item">
                 <label class="address__label" for="postcode">郵便番号</label>
@@ -49,7 +51,6 @@
         <div class="btn-box address__btn-box">
             <button class="btn">更新する</button>
         </div>
-        <input type="hidden" name="payment_method" value="{{ $paymentMethod }}">
     </form>
 </div>
 @endsection
