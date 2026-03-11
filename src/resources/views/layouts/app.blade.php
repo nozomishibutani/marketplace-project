@@ -23,7 +23,6 @@
                             <input type="hidden" name="tab" value="{{ request('tab') }}">
                         @endif
                             <input type="text" class="header__search-input" name="keyword" value="{{ request('keyword') ?? null }}" placeholder="なにをお探しですか？">
-                            {{--<button class="btn btn--search">検索</button>--}}
                     </form>
                 </div>
                 <nav class="header__nav">

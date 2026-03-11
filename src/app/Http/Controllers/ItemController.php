@@ -38,13 +38,14 @@ class ItemController extends Controller
         }
 
         // ログイン済み
-        // 検索状態をマイリストでも保持
-        if (str_contains(url()->previous(), 'search')) {
-            // search経由
+        if (str_contains(url()->previous(), route('search', [], false) . '?keyword=')) {
+
+            // 検索状態をマイリストでも保持
             return $this->search($request);
         }
 
         if ($tab === Common::TAB_MYLIST) {
+
             $items = Item::whereHas('favorites', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
                 })
@@ -155,12 +156,13 @@ class ItemController extends Controller
     }
 
     public function search(Request $request){
+
         $keyword = $request->query('keyword');
         $tab = $request->input('tab');
 
         $query = Item::query()->notSuspended();
 
-        // マイリスト
+        // マイリスト内の検索
         if ($tab === Common::TAB_MYLIST) {
             $query->whereHas('favorites', function ($q) {
                 $q->where('user_id', Auth::id());
