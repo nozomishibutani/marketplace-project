@@ -87,20 +87,36 @@
                 <button class="btn">更新する</button>
             </div>
         </div><!-- profile-->
+    <!-- hiddenで選択画像を保持 -->
+    <input type="hidden" name="avatar_preview" id="avatarPreviewHidden" value="{{ old('avatar_preview') }}">
     </form>
 @endsection
 
 @section('js')
-    <!-- 画像プレビュー表示-->
     <script>
-        document.getElementById('avatarInput').addEventListener('change', function(e) {
+        //  画像プレビュー表示
+        document.addEventListener('DOMContentLoaded', function() {
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const avatarHidden = document.getElementById('avatarPreviewHidden');
+
+        // ファイル選択時
+        avatarInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
+
             const reader = new FileReader();
-            reader.onload = function(event) {
-                document.getElementById('avatarPreview').src = event.target.result;
+            reader.onload = function(e) {
+                avatarPreview.src = e.target.result;   // プレビュー更新
+                avatarHidden.value = e.target.result;  // hiddenに保存
             };
             reader.readAsDataURL(file);
         });
+
+        // ページロード時に old があれば表示
+        if (avatarHidden.value) {
+            avatarPreview.src = avatarHidden.value;
+        }
+    });
     </script>
 @endsection

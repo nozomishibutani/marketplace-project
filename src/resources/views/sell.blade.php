@@ -18,7 +18,7 @@
     <!-- 商品画像 -->
     <div class="item__img-upload">
         <div class="item__img-box">
-            <img id="preview" class="item__img-preview" src="" alt="">
+            <img id="imgPreview" class="item__img-preview" src="" alt="">
             <label id="imgLabel" class="item__img-btn btn--outline">
                 画像を選択する
                 <input
@@ -125,25 +125,45 @@
         </ul>
     </section>
     <button class="btn">出品する</button>
+    <!-- hiddenで選択画像を保持 -->
+    <input type="hidden" name="img_preview" id="imgPreviewHidden" value="{{ old('img_preview') }}">
     </form>
 </div><!-- item -->
 @endsection
 
 @section('js')
-    <!-- 画像プレビュー表示-->
     <script>
+        // 画像プレビュー表示
+        document.addEventListener('DOMContentLoaded', function() {
         const input = document.getElementById("imgInput");
-        const preview = document.getElementById("preview");
+        const preview = document.getElementById("imgPreview");
+        const hidden = document.getElementById("imgPreviewHidden");
         const box = document.querySelector(".item__img-box");
         const label = document.getElementById("imgLabel");
-        input.addEventListener("change", function(){
+
+        // ページロード時に old があれば表示
+        if (hidden.value) {
+            preview.src = hidden.value;
+            box.classList.add("has-image");
+            label.textContent = "画像を変更する";
+            label.appendChild(input);
+        }
+
+        // ファイル選択時
+        input.addEventListener("change", function(e) {
             const file = this.files[0];
-            if(file){
-                preview.src = URL.createObjectURL(file);
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                hidden.value = e.target.result;  // hidden に保存
                 box.classList.add("has-image");
                 label.textContent = "画像を変更する";
-                label.appendChild(input);
-            }
+                label.appendChild(input);        // input を復活
+            };
+            reader.readAsDataURL(file);
         });
+    });
 </script>
 @endsection
