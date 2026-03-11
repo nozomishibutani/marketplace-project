@@ -23,19 +23,17 @@ class GetItemListTest extends TestCase
 
         // Itemテーブルに登録がないことを確認
         $this->assertDatabaseCount('items', 0);
-        // 商品を作成する
+        // 商品作成（ステータスごと）
         foreach(Item::STATUSES as $status){
             $item = Item::factory()->create(['status' => $status]);
             $name[$status] = $item->name;
         }
-        // カテゴリを作成
         $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
-
-        $response = $this->get(route('items.index'));
-        $response->assertStatus(200);
+        $item->categories()->attach($category->id);
 
         // 期待する表示件数
+        $response = $this->get(route('items.index'));
+        $response->assertStatus(200);
         $this->assertEquals(
             2,
             Item::where('status', '!=', Item::STATUS_SUSPENDED)->count()
@@ -54,15 +52,14 @@ class GetItemListTest extends TestCase
      */
     public function purchasedItemDisplaysSold()
     {
-        // 商品を作成
+        // 購入済み商品を作成する
         $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
-        // カテゴリを作成
         $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        $item->categories()->attach($category->id);
+
+        // Sold表示
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
-
-        // 売り切れ
         $response->assertSeeText($item->name);
         $response->assertSeeText('Sold');
     }
@@ -77,27 +74,20 @@ class GetItemListTest extends TestCase
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
-        // ログインしているユーザーを確認
         $this->assertAuthenticatedAs($user);
 
-        // 商品作成
+        // 商品作成（ステータスごと）
         foreach(Item::STATUSES as $status){
             $item = Item::factory()->create([
-            'user_id' => $user->id,
-            'status' => $status,
-        ]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+                'user_id' => $user->id,
+                'status' => $status,
+            ]);
+            $category = Category::factory()->create();
+            $item->categories()->attach($category->id);
 
-        $response = $this->get(route('items.index'));
-        $response->assertStatus(200);
-
-        //  商品ステータスに関わらず表示されない
-        $response->assertDontSeeText($item->name);
-
-        // テストデータ削除
-        Item::where('id', $item->id)->delete();
+            $response = $this->get(route('items.index'));
+            $response->assertStatus(200);
+            $response->assertDontSeeText($item->name);
         }
     }
 }

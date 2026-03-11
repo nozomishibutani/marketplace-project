@@ -2,21 +2,101 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Profile;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
 
 class LoginTest extends TestCase
 {
     /**
      * ログイン機能
-     *
-     * @return void
      */
-    public function test_example()
+    use RefreshDatabase;
+    /**
+     * @test
+     * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
+     */
+    public function emailIsRequired()
     {
-        $response = $this->get('/');
+        $user = $this->createVerifiedUser();
 
-        $response->assertStatus(200);
+        $response = $this->post('/login', [
+            'email' => '',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'email' => 'メールアドレスを入力してください'
+        ]);
+    }
+
+    /**
+     * @test
+     * パスワードが入力されていない場合、バリデーションメッセージが表示される
+     */
+    public function passwordIsRequired()
+    {
+        $user = $this->createVerifiedUser();
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => '',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'password' => 'パスワードを入力してください'
+        ]);
+    }
+
+    /**
+     * @test
+     * 入力情報が間違っている場合、バリデーションメッセージが表示される
+     */
+    public function loginFailsForNonExistentUser()
+    {
+        $response = $this->post('/login', [
+            'email' => 'notexist@example.com',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'email' => 'ログイン情報が登録されていません'
+        ]);
+        // 認証されていないことを確認
+        $this->assertGuest();
+    }
+
+    /**
+     * @test
+     * 正しい情報が入力された場合、ログイン処理が実行される
+     */
+    public function loginWithCorrectCredentials()
+    {
+        $user = $this->createVerifiedUser();
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        // ログインできている
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect(route('index.items'));
+    }
+
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser()
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create(['user_id' => $user->id]);
+        return $user;
     }
 }
