@@ -30,9 +30,14 @@ class PurchaseController extends Controller
 
     public function confirm(Request $request, $item_id)
     {
-        $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
+        $item = Item::select('id', 'user_id', 'name', 'img', 'price', 'status')->find($item_id);
         if (!$item) {
             return $this->redirectItemNotAvailable();
+        }
+        if ($item->user_id === Auth::id()) {
+            return redirect()->route('items.show', $item_id)
+                ->with('alert', '自分の商品は購入できません')
+                ->with('alert-type', 'alert-error');
         }
         // 売り切れかどうか
         $itemStatuses = $item->itemStatus();
@@ -105,6 +110,8 @@ class PurchaseController extends Controller
 
             try {
                 // コンビニ払い
+                // 決済機能実装まではテスト用のpayment_idを付与
+                $data['payment_id'] = now()->format('YmdHis');
                 if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
                     $data['status'] = Order::STATUS_PENDING;
                     $this->orderService->createOrder($data);
@@ -141,7 +148,18 @@ class PurchaseController extends Controller
 
     public function redirectToStripe(array $data)
         {
-            $item = Item::select('name', 'price', 'status')->find($data['item_id']);
+            $item = Item::find($data['item_id']);
+            $itemStatuses = $item->itemStatus();
+
+            if ($itemStatuses['sold'] == true) {
+
+                throw new SoldOutException();
+            }
+
+            if ($itemStatuses['suspended'] == true) {
+                throw new SuspendedException();
+            }
+
             // Stripe秘密キーセット
             Stripe::setApiKey(env('STRIPE_SECRET'));
             // Checkout Session 作成
@@ -191,14 +209,14 @@ class PurchaseController extends Controller
 
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は売り切れました')
+                ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました。')
                 ->with('alert-type', 'alert-error');
 
         } catch (SuspendedException) {
 
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は削除されたか、現在購入できません。')
+                ->with('alert', 'この商品は削除されたか、現在購入できません。<br>返金処理しました。')
                 ->with('alert-type', 'alert-error');
 
 
@@ -220,6 +238,7 @@ class PurchaseController extends Controller
                 'postcode' => $session->metadata->postcode,
                 'address' => $session->metadata->address,
                 'building' => $session->metadata->building,
+                'payment_id' => $session->payment_intent,
                 'payment_method' => Order::PAYMENT_CARD,
                 'status' => Order::STATUS_PAID,
             ]);

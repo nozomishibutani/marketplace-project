@@ -26,6 +26,7 @@ class OrderFactory extends Factory
         return [
         'user_id' => User::factory(),
         'item_id' => Item::factory(),
+        'payment_id' => fake()->unique()->uuid(),
         'payment_method' => Order::PAYMENT_CONVENIENCE,
         'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
         'address' => $faker->streetAddress(),
