@@ -11,6 +11,7 @@ use App\Common\Common;
 use App\Http\Requests\CommentRequest;
 use App\Models\Category;
 use App\Http\Requests\ExhibitionRequest;
+use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
 {
@@ -66,7 +67,11 @@ class ItemController extends Controller
 
     public function show($item_id){
 
-        $item = Item::with(['categories', 'favorites', 'comments.user.profile'])->findOrFail($item_id);
+        $item = Item::with(['categories', 'favorites', 'comments.user.profile'])->find($item_id);
+        if (!$item) {
+            return $this->redirectItemNotAvailable();
+        }
+        // 商品ステータス
         $itemStatuses = $item->itemStatus();
         // 値段にコンマ追加
         $item->price = number_format($item->price);

@@ -10,4 +10,15 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+
+    /**
+     * 商品が存在しない場合の共通リダイレクト処理
+     */
+    protected function redirectItemNotAvailable()
+    {
+        return redirect()->route('items.index')
+            ->with('alert','この商品は削除されたか、現在表示できません。')
+            ->with('alert-type','alert-error');
+    }
 }

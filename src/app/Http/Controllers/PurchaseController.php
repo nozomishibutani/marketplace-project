@@ -16,7 +16,7 @@ use App\Http\Requests\PurchaseRequest;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Services\OrderService;
-
+use App\Http\Controllers\Controller;
 
 
 class PurchaseController extends Controller
@@ -31,6 +31,9 @@ class PurchaseController extends Controller
     public function confirm(Request $request, $item_id)
     {
         $item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
+        if (!$item) {
+            return $this->redirectItemNotAvailable();
+        }
         // 売り切れかどうか
         $itemStatuses = $item->itemStatus();
         // お支払方法
@@ -77,19 +80,14 @@ class PurchaseController extends Controller
 
     public function editAddress(Request $request, $item_id)
     {
-
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
 
         return view('edit_address', compact('item_id', 'paymentMethod'));
-
     }
 
     public function updateAddress(AddressRequest $request, $item_id)
     {
-        //$item = Item::select('id', 'name', 'img', 'price', 'status')->find($item_id);
-        // 売り切れかどうか
-        //$itemStatuses = $item->itemStatus();
         // 支払い方法
         $paymentMethod = $request->input('payment_method');
         $address = $request->only(['postcode', 'address', 'building']);
@@ -98,10 +96,6 @@ class PurchaseController extends Controller
         $inputData = array_merge($address, ['paymentMethod' => $paymentMethod]);
 
         return redirect()->route('purchase.confirm', ['item_id' => $item_id])->withInput($inputData);
-
-
-
-        //return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
     }
 
         public function store(PurchaseRequest $request, $item_id)
@@ -114,31 +108,34 @@ class PurchaseController extends Controller
                 if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
                     $data['status'] = Order::STATUS_PENDING;
                     $this->orderService->createOrder($data);
-                    return redirect()->route('items.index')->with('alert', 'ご購入ありがとうございました。');
+                    return redirect()->route('items.index')
+                        ->with('alert', 'ご購入ありがとうございました。')
+                        ->with('alert-type', 'alert-success');
                 }
                 // カード払い
                 return $this->redirectToStripe($data);
 
             } catch (SoldOutException) {
 
-                $item = Item::find($data['item_id']);
                 return redirect()
                     ->route('items.show', $item_id)
-                    ->with('alert', $item->name . 'は売り切れました');
+                    ->with('alert', 'この商品は売り切れました')
+                    ->with('alert-type', 'alert-error');
 
             } catch (SuspendedException) {
 
-            $item = Item::find($data['item_id']);
-            return redirect()
-                ->route('items.show', $item_id)
-                ->with('alert', '現在、' .$item->name . 'は出品を中止しております');
+                return redirect()
+                    ->route('items.show', $item_id)
+                    ->with('alert', 'この商品は削除されたか、現在購入できません。')
+                    ->with('alert-type', 'alert-error');
 
-        } catch (\Exception $e) {
+            } catch (\Exception $e) {
 
                 Log::error($e);
                 return redirect()
-                    ->route('items.show', $item_id)
-                    ->with('alert', 'システムエラーが発生しました');
+                    ->route('items.index')
+                    ->with('alert', 'システムエラーが発生しました')
+                    ->with('alert-type', 'alert-error');
             }
         }
 
@@ -186,28 +183,32 @@ class PurchaseController extends Controller
 
             $this->createOrderFromStripe($session);
 
-            return redirect()->route('items.index')->with('alert', 'ご購入ありがとうございました。');
+            return redirect()->route('items.index')
+                    ->with('alert', 'ご購入ありがとうございました。')
+                    ->with('alert-type', 'alert-success');
 
         } catch (SoldOutException) {
 
-            $item = Item::find($session->metadata->item_id);
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
-                ->with('alert', $item->name . 'は売り切れました');
+                ->with('alert', 'この商品は売り切れました')
+                ->with('alert-type', 'alert-error');
 
         } catch (SuspendedException) {
 
-            $item = Item::find($session->metadata->item_id);
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
-                ->with('alert', '現在、' .$item->name . 'は出品を中止しております');
+                ->with('alert', 'この商品は削除されたか、現在購入できません。')
+                ->with('alert-type', 'alert-error');
+
 
         } catch (\Exception $e) {
 
             Log::error($e);
             return redirect()
-                ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'エラーが発生しました');
+                ->route('items.index')
+                ->with('alert', 'エラーが発生しました')
+                ->with('alert-type', 'alert-error');
         }
     }
 
@@ -227,6 +228,7 @@ class PurchaseController extends Controller
         public function cancel(){
             return redirect()
                 ->route('items.index')
-                ->with('alert', '決済エラーが発生しました、もう一度やり直してください。');
+                ->with('alert', '決済エラーが発生しました、もう一度やり直してください。')
+                ->with('alert-type', 'alert-error');
         }
 }
