@@ -76,7 +76,7 @@ class PurchaseController extends Controller
                 return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
         }
 
-        // 支払い方法変更
+        // 支払い方法変更時の遷移
         // フォーム内容を表示
         $address = $request->only(['postcode', 'address', 'building']);
 
@@ -207,6 +207,7 @@ class PurchaseController extends Controller
 
         } catch (SoldOutException) {
 
+            /** @var \Stripe\Checkout\Session $session */
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
                 ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました。')
@@ -214,6 +215,7 @@ class PurchaseController extends Controller
 
         } catch (SuspendedException) {
 
+            /** @var \Stripe\Checkout\Session $session */
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
                 ->with('alert', 'この商品は削除されたか、現在購入できません。<br>返金処理しました。')

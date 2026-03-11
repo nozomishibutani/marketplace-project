@@ -44,40 +44,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * User削除時にProfileも連動削除する
-     *
-     * ・通常削除 → ProfileもSoftDelete
-     * ・完全削除 → ProfileもforceDelete
-     *
-     * @return void
-     */
-    /* 現状ユーザーの削除は実装想定外
-    protected static function booted()
-    {
-        static::deleting(function ($user) {
-
-            // 関連モデルの配列
-            $relations = ['profile', 'items', 'favorites', 'orders', 'comments'];
-
-            foreach ($relations as $relation) {
-                if ($user->$relation) {
-
-                    // コレクションか単体かで処理を分ける
-                    if ($user->$relation instanceof \Illuminate\Database\Eloquent\Collection) {
-                        foreach ($user->$relation as $related) {
-                            $user->isForceDeleting() ? $related->forceDelete() : $related->delete();
-                        }
-                    } else {
-                        $user->isForceDeleting() ? $user->$relation->forceDelete() : $user->$relation->delete();
-                    }
-                }
-            }
-
-        });
-    }
-    */
-
     public function profile()
     {
         return $this->hasOne(Profile::class);

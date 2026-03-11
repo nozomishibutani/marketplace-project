@@ -16,8 +16,8 @@ class ProfileController extends Controller
         $avatar = Auth::user()->profile->avatar ?? 'profiles/icon_dummy.png';
         $page = $request->query('page');
         $items = array();
-        switch ($page) {
 
+        switch ($page) {
         case Common::PAGE_BUY:
             // 購入した商品
             $items = Item::whereHas('orders', function ($query) {
@@ -46,7 +46,6 @@ class ProfileController extends Controller
         $username = Auth::user()->username;
         $profile = Auth::user()->profile;
         if($profile){
-            // 編集
             // 郵便番号にハイフン追加
             $postcode = $profile->postcode;
             $profile->postcode = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
@@ -65,15 +64,19 @@ class ProfileController extends Controller
             $path = null;
         }
 
-        auth()->user()->profile()->updateOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
-                'address' => $data['address'],
-                'building' => $data['building'] ?: null,
-                'avatar' => $path,
-            ]
-        );
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if ($user) {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
+                    'address' => $data['address'],
+                    'building' => $data['building'] ?: null,
+                    'avatar' => $path,
+                ]
+            );
+        }
 
         User::find(Auth::id())->update([
                 'username' => $data['username'],

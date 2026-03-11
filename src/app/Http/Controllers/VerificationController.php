@@ -20,7 +20,7 @@ class VerificationController extends Controller
      * 2. verification.verify      -> メール内のリンククリックで確認完了
      * 3. verification.send        -> メール再送信
      *
-     * ビューは自由にカスタマイズ可能ですが、ルート名は変更不可。
+     * ビューは自由にカスタマイズ可能ですが、ルート名は変更不可です。
      */
 
     // 未認証ユーザー向けの誘導画面
@@ -34,6 +34,8 @@ class VerificationController extends Controller
      */
     public function verify()
     {
+
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user->hasVerifiedEmail()) {
