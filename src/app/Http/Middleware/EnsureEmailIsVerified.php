@@ -24,7 +24,7 @@ class EnsureEmailIsVerified
 
             // 認証ページにリダイレクト
             return redirect()->route('verification.notice')
-                            ->with('alert', 'メール認証が完了していません。<br>再送信して認証を完了してください。');
+                            ->with('email-verification', 'メール認証が完了していません。<br>再送信して認証を完了してください。');
         }
 
         return $next($request);

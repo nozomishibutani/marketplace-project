@@ -32,6 +32,10 @@
     border: solid 1px rgb(195, 195, 199);
 }
 
+.auth__msg{
+    text-align: left;
+}
+
 .auth__link-box,
 .auth__btn-box {
     margin: 2.5rem 0;
@@ -71,11 +75,11 @@
     border: none;
 }
 
-.alert{
+.auth__text-box{
     margin: 0 auto;
 }
 
-.alert__text{
+.auth__text{
     font-size: 1rem;
     font-weight: 600;
     margin-top: 10rem;

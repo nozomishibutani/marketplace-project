@@ -23,11 +23,12 @@
     <main>
         <div class="main__container">
             <div class="auth">
-                <div class="alert">
-                    @if(session('alert'))
-                            <p class="alert__text">{!! session('alert') !!}</p>
+                <div class="auth__text-box">
+                    @if(session('email-verification'))
+                    {{-- middleware('verified')内メッセージ --}}
+                        <p class="auth__text">{!! session('email-verification') !!}</p>
                     @else
-                        <p class="alert__text">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
+                        <p class="auth__text">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
                     @endif
                 </div>
 

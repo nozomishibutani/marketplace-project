@@ -31,7 +31,7 @@
                         <label class="auth__label" for="email">メールアドレス</label>
                         <input class="auth__form-input" type="email" name="email" id="email" value="{{ old('email') }}" />
                         @error('email')
-                            <div class="msg">
+                            <div class="msg auth__msg">
                                 {{ $message }}
                             </div>
                         @enderror
@@ -41,7 +41,7 @@
                         <label class="auth__label" for="password">パスワード</label>
                         <input class="auth__form-input" type="password" name="password" name="password" id="password" />
                         @error('password')
-                            <div class="msg">
+                            <div class="msg auth__msg">
                                 {{ $message }}
                             </div>
                         @enderror
