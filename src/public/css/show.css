@@ -25,6 +25,10 @@
 .item__ttl{
     margin: 0;
     font-size: 2rem;
+    word-break: break-word;
+    /* 単語途中でも折り返す */
+    overflow-wrap: anywhere;
+    /* 長い英数字や記号も折り返す */
 }
 
 .item__sold {

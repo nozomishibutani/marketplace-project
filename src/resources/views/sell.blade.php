@@ -47,7 +47,7 @@
             @foreach($categories as $id => $name)
                 <input class="detail__checkbox" type="checkbox" id="cat-{{ $id }}" name="categories[]" value="{{ $id }}"
                     {{ in_array($id, old('categories', [])) ? 'checked' : '' }}>
-                <label class="detail__tag-name btn--outline" for="cat-{{ $id }}">{{ $name }}</label>
+                <label class="detail__tag-name detail__btn--outline" for="cat-{{ $id }}">{{ $name }}</label>
             @endforeach
         </div>
         @error('categories')

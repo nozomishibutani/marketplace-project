@@ -103,6 +103,10 @@
     user-select: none;
     font-size: 0.9rem;
 }
+
+.detail__btn--outline:hover{
+    background-color: rgba(233, 133, 122, 0.589);
+}
 /* ラベル ここまで*/
 
 .detail__select-box{
