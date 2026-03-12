@@ -19,7 +19,6 @@
                     <a class="menu__link {{ $tab ? 'menu__link--active' : '' }}"
                         href="{{ route('items.index',array_merge(['tab' => \App\Common\Common::TAB_MYLIST],request()->only('keyword'))) }}">マイリスト</a>
                 </li>
-                {{-- TOPから遷移しているならrequest()->only('keyword')ほしい --}}
             </ul>
         </div>
     </nav>

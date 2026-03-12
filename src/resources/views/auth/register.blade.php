@@ -40,30 +40,36 @@
                         <li class="auth__item">
                             <label class="auth__label" for="email">メールアドレス</label>
                             <input class="auth__form-input" type="email" name="email" id="email" value="{{ old('email') }}" />
-                            @error('email')
-                                <div class="msg auth__msg">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            @if ($errors->has('email'))
+                                @foreach ($errors->get('email') as $message)
+                                    <div class="msg auth__msg">
+                                        {{ $message }}
+                                    </div>
+                                @endforeach
+                            @endif
                         </li>
 
                         <li class="auth__item">
                             <label class="auth__label" for="password">パスワード</label>
                             <input class="auth__form-input" type="password" name="password" id="password" />
                             @error('password')
-                                <div class="msg auth__msg">
-                                    {{ $message }}
-                                </div>
+                                @if ($message !== 'password_confirmed')
+                                    <div class="msg auth__msg">
+                                        {{ $message }}
+                                    </div>
+                                @endif
                             @enderror
                         </li>
 
                         <li class="auth__item">
                             <label class="auth__label" for="password_confirmation">確認用パスワード</label>
                             <input class="auth__form-input" type="password" name="password_confirmation" id="password_confirmation" />
-                            @error('password_confirmation')
-                                <div class="msg auth__msg">
-                                    {{ $message }}
-                                </div>
+                            @error('password')
+                                @if ($message === 'password_confirmed')
+                                    <div class="msg auth__msg">
+                                        パスワードと一致しません
+                                    </div>
+                                @endif
                             @enderror
                         </li>
                     </ul>
@@ -74,7 +80,7 @@
                 </form>
 
             <div class="auth__link-box">
-                <a class="auth__link" href="/login">ログインの方はこちら</a>
+                <a class="auth__link" href="/login">ログインはこちら</a>
             </div>
 
             </div><!-- auth -->

@@ -21,16 +21,17 @@ class RegisterRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'username' => ['required', 'string','max:20','unique:users,username'],
-            'email' => ['required', 'email', 'max:255','unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'max:255','confirmed',],
+            // 未入力時に required と形式エラーの2つを表示するため email ではなく regex を使用
+            'email' => ['required', 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/', 'max:255','unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed',],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'username.required' => 'お名前を入力してください',
@@ -39,13 +40,22 @@ class RegisterRequest extends FormRequest
             'username.unique' => 'このお名前は使用できません',
             'email.required' => 'メールアドレスを入力してください',
             'email.max' => 'メールアドレスは255文字以内で入力してください',
-            'email.email' => 'メールアドレスはメール形式で入力してください',
+            'email.regex' => 'メールアドレスはメール形式で入力してください',
             'email.unique' => 'このメールアドレスは利用できません',
             'password.required' => 'パスワードを入力してください',
             'password.string' => 'パスワードは文字列で入力してください',
             'password.min' => 'パスワードは8文字以上で入力してください',
             'password.max' => 'パスワードは255文字以内で入力してください',
-            'password.confirmed' => 'パスワードと一致しません',
+            'password.confirmed' => 'password_confirmed',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (!$this->email) {
+                $validator->errors()->add('email', 'メールアドレスはメール形式で入力してください');
+            }
+        });
     }
 }
