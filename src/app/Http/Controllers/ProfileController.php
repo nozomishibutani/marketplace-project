@@ -12,7 +12,8 @@ use App\Http\Requests\ProfileRequest;
 
 class ProfileController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         $username = $user->username;
@@ -43,7 +44,8 @@ class ProfileController extends Controller
         return view('profile', compact('username','avatar','items'));
     }
 
-    public function edit() {
+    public function edit()
+    {
         /** @var \App\Models\User|null $user */
         $user= Auth::user();
         $username = $user->username;
@@ -57,7 +59,8 @@ class ProfileController extends Controller
         return view('edit_profile',compact('username','profile'));
     }
 
-    public function store(ProfileRequest $request) {
+    public function store(ProfileRequest $request)
+    {
         $data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
         /** @var \App\Models\User|null $user */
         $user = Auth::user();

@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-
 class ProfileRequest extends FormRequest
 {
     /**
@@ -13,7 +12,8 @@ class ProfileRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize() {
+    public function authorize()
+    {
         return true;
     }
 
@@ -22,7 +22,8 @@ class ProfileRequest extends FormRequest
      *
      * @return array
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             'username' => ['required', 'string','max:20',
                             Rule::unique('users', 'username')
@@ -35,7 +36,9 @@ class ProfileRequest extends FormRequest
             'avatar' => ['nullable','image','mimes:jpeg,jpg,png'],
         ];
     }
-    public function messages() {
+
+    public function messages()
+    {
         return [
             'username.required' => 'ユーザー名を入力してください',
             'username.max' => 'ユーザー名は20文字以内で入力してください',

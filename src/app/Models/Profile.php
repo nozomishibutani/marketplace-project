@@ -11,6 +11,11 @@ class Profile extends Model
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * dummy画像
+     */
+    public const DEFAULT_AVATAR = 'profiles/icon_dummy.png';
+
     protected $fillable = [
         'user_id',
         'postcode',
@@ -19,12 +24,8 @@ class Profile extends Model
         'avatar',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * dummy画像
-     */
-    public const DEFAULT_AVATAR = 'profiles/icon_dummy.png';
 }
