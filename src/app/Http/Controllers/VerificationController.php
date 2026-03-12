@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-
-
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-
-
 class VerificationController extends Controller
 {
-
     /**
      * このコントローラーは VerifyEmail 通知を利用したメール認証用です。
      * VerifyEmail 通知ではデフォルトで以下3つのルートを使用します：
@@ -34,10 +29,8 @@ class VerificationController extends Controller
      */
     public function verify()
     {
-
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
         if (!$user->hasVerifiedEmail()) {
             // email_verified_at に日時セット
             $user->markEmailAsVerified();

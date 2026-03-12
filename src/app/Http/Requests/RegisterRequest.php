@@ -4,8 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
-
 class RegisterRequest extends FormRequest
 {
     /**
@@ -26,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'string','max:255','unique:users,username'],
+            'username' => ['required', 'string','max:20','unique:users,username'],
             'email' => ['required', 'email', 'max:255','unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:255','confirmed',],
         ];
@@ -35,10 +33,10 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => 'ユーザー名を入力してください',
-            'username.max' => 'ユーザー名は255文字以内で入力してください',
-            'username.string' => 'ユーザー名は文字列で入力してください',
-            'username.unique' => 'このユーザー名は使用できません',
+            'username.required' => 'お名前を入力してください',
+            'username.max' => 'お名前は20文字以内で入力してください',
+            'username.string' => 'お名前は文字列で入力してください',
+            'username.unique' => 'このお名前は使用できません',
             'email.required' => 'メールアドレスを入力してください',
             'email.max' => 'メールアドレスは255文字以内で入力してください',
             'email.email' => 'メールアドレスはメール形式で入力してください',

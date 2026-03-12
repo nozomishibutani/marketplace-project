@@ -29,7 +29,7 @@ class RegisterTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors([
-            'username' => 'ユーザー名を入力してください',
+            'username' => 'お名前を入力してください',
         ]);
     }
 

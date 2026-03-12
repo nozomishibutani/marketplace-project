@@ -69,7 +69,7 @@ class ProfileController extends Controller
         if (isset($data['avatar'])) {
             // 画像変更
             $path = $request->file('avatar')->store('profiles', 'public');
-        } elseif ($user->profile->avatar) {
+        } elseif ($user->profile?->avatar) {
             // 既に登録があり画像変更しない
             $path = $user->profile->avatar;
         }

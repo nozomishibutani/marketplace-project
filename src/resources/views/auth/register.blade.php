@@ -60,6 +60,11 @@
                         <li class="auth__item">
                             <label class="auth__label" for="password_confirmation">確認用パスワード</label>
                             <input class="auth__form-input" type="password" name="password_confirmation" id="password_confirmation" />
+                            @error('password_confirmation')
+                                <div class="msg auth__msg">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </li>
                     </ul>
 
