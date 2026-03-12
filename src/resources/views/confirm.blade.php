@@ -41,6 +41,11 @@
             <section class="payment">
                 <form method="post" action="{{ route('purchase.confirm', $item->id) }}">
                 @csrf
+                <!-- hidden -->
+                <input type="hidden" name="postcode" value="{{ $address['postcode'] }}">
+                <input type="hidden" name="address" value="{{ $address['address'] }}">
+                <input type="hidden" name="building" value="{{ $address['building'] }}">
+
                 <h2 class="payment__ttl">支払い方法</h2>
                 <select class="payment__select-box" name="payment_method" onchange="this.form.submit()">
                     <option hidden>
@@ -53,9 +58,6 @@
                         </option>
                     @endforeach
                 </select>
-                <input type="hidden" name="postcode" value="{{ $address['postcode'] }}">
-                <input type="hidden" name="address" value="{{ $address['address'] }}">
-                <input type="hidden" name="building" value="{{ $address['building'] }}">
                 </form>
                 @error('payment_method')
                     <div class="msg  payment__msg">
@@ -88,17 +90,24 @@
                 @csrf
                 <!-- hidden -->
                 <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
+                <!-- inputでは長い住所が折り返せないため、表示用はspan、送信用はhiddenに分けている -->
+                <input type="hidden" name="address" value="{{ old('address', $address['address']) }}">
+                <input type="hidden" name="building" value="{{ old('building', $address['building']) }}">
 
                     <ul class="address__list">
-                        <li lass="address__item">
+                        <li class="address__item">
                             <span class="address__postcode-symbol">〒</span>
-                            <input class="address__item-form" type="text" name="postcode" value="{{ old('postcode') ?? $address['postcode'] }}" readonly>
+                            <input class="address__item-form" type="text" name="postcode" value="{{ old('postcode', $address['postcode']) }}" readonly>
                         </li>
-                        <li lass="address__item">
-                            <input class="address__item-form" type="text" name="address" value="{{ old('address') ?? $address['address'] }}" readonly>
+                        <li class="address__item">
+                            <span class="address__text">
+                                {{ old('address', $address['address']) }}
+                            </span>
                         </li>
-                        <li lass="address__item">
-                            <input class="address__item-form" type="text" name="building" value="{{ old('building') ?? $address['building'] }}" readonly>
+                        <li class="address__item">
+                            <span class="address__text">
+                                {{ old('building', $address['building']) }}
+                            </span>
                         </li>
                     </ul>
                     <!-- バリデーション表示-->

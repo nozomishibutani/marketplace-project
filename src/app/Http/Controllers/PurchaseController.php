@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
@@ -17,7 +16,6 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Services\OrderService;
 use App\Http\Controllers\Controller;
-
 
 class PurchaseController extends Controller
 {
@@ -103,48 +101,43 @@ class PurchaseController extends Controller
         return redirect()->route('purchase.confirm', ['item_id' => $item_id])->withInput($inputData);
     }
 
-        public function store(PurchaseRequest $request, $item_id)
-        {
-            $data = $request->only(['payment_method', 'postcode', 'address', 'building']);
-            $data['item_id'] = $item_id;
+    public function store(PurchaseRequest $request, $item_id)
+    {
+        $data = $request->only(['payment_method', 'postcode', 'address', 'building']);
+        $data['item_id'] = $item_id;
 
-            try {
-                // コンビニ払い
-                // 決済機能実装まではテスト用のpayment_idを付与
-                $data['payment_id'] = now()->format('YmdHis');
-                if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
-                    $data['status'] = Order::STATUS_PENDING;
-                    $this->orderService->createOrder($data);
-                    return redirect()->route('items.index')
-                        ->with('alert', 'ご購入ありがとうございました。')
-                        ->with('alert-type', 'alert-success');
-                }
-                // カード払い
-                return $this->redirectToStripe($data);
-
-            } catch (SoldOutException) {
-
-                return redirect()
-                    ->route('items.show', $item_id)
-                    ->with('alert', 'この商品は売り切れました')
-                    ->with('alert-type', 'alert-error');
-
-            } catch (SuspendedException) {
-
-                return redirect()
-                    ->route('items.show', $item_id)
-                    ->with('alert', 'この商品は削除されたか、現在購入できません。')
-                    ->with('alert-type', 'alert-error');
-
-            } catch (\Exception $e) {
-
-                Log::error($e);
-                return redirect()
-                    ->route('items.index')
-                    ->with('alert', 'システムエラーが発生しました')
-                    ->with('alert-type', 'alert-error');
+        try {
+            // コンビニ払い
+            // TODO: 決済機能実装までテスト用のpayment_idを付与
+            $data['payment_id'] = now()->format('YmdHis');
+            if ($data['payment_method'] == Order::PAYMENT_CONVENIENCE) {
+                $data['status'] = Order::STATUS_PENDING;
+                $this->orderService->createOrder($data);
+                return redirect()->route('items.index')
+                    ->with('alert', 'ご購入ありがとうございました。')
+                    ->with('alert-type', 'alert-success');
             }
+            // カード払い
+            return $this->redirectToStripe($data);
+
+        } catch (SoldOutException) {
+            return redirect()
+                ->route('items.show', $item_id)
+                ->with('alert', 'この商品は売り切れました')
+                ->with('alert-type', 'alert-error');
+        } catch (SuspendedException) {
+            return redirect()
+                ->route('items.show', $item_id)
+                ->with('alert', 'この商品は削除されたか、現在購入できません')
+                ->with('alert-type', 'alert-error');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return redirect()
+                ->route('items.index')
+                ->with('alert', 'システムエラーが発生しました')
+                ->with('alert-type', 'alert-error');
         }
+    }
 
     public function redirectToStripe(array $data)
         {
@@ -152,7 +145,6 @@ class PurchaseController extends Controller
             $itemStatuses = $item->itemStatus();
 
             if ($itemStatuses['sold'] == true) {
-
                 throw new SoldOutException();
             }
 
@@ -192,64 +184,58 @@ class PurchaseController extends Controller
             return redirect($session->url);
         }
 
-        public function success(Request $request)
-        {
-        try {
-            Stripe::setApiKey(env('STRIPE_SECRET'));
+    public function success(Request $request)
+    {
+    try {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-            $session = Session::retrieve($request->session_id);
+        $session = Session::retrieve($request->session_id);
 
-            $this->createOrderFromStripe($session);
+        $this->createOrderFromStripe($session);
 
-            return redirect()->route('items.index')
-                    ->with('alert', 'ご購入ありがとうございました。')
-                    ->with('alert-type', 'alert-success');
+        return redirect()->route('items.index')
+                ->with('alert', 'ご購入ありがとうございました。')
+                ->with('alert-type', 'alert-success');
 
-        } catch (SoldOutException) {
-
-            /** @var \Stripe\Checkout\Session $session */
-            return redirect()
-                ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました。')
-                ->with('alert-type', 'alert-error');
-
-        } catch (SuspendedException) {
-
-            /** @var \Stripe\Checkout\Session $session */
-            return redirect()
-                ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は削除されたか、現在購入できません。<br>返金処理しました。')
-                ->with('alert-type', 'alert-error');
-
-
-        } catch (\Exception $e) {
-
-            Log::error($e);
-            return redirect()
-                ->route('items.index')
-                ->with('alert', 'エラーが発生しました')
-                ->with('alert-type', 'alert-error');
+    } catch (SoldOutException) {
+        /** @var \Stripe\Checkout\Session $session */
+        return redirect()
+            ->route('items.show', $session->metadata->item_id)
+            ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました')
+            ->with('alert-type', 'alert-error');
+    } catch (SuspendedException) {
+        /** @var \Stripe\Checkout\Session $session */
+        return redirect()
+            ->route('items.show', $session->metadata->item_id)
+            ->with('alert', 'この商品は削除されたか、現在購入できません。<br>返金処理しました')
+            ->with('alert-type', 'alert-error');
+    } catch (\Exception $e) {
+        Log::error($e);
+        return redirect()
+            ->route('items.index')
+            ->with('alert', 'エラーが発生しました')
+            ->with('alert-type', 'alert-error');
         }
     }
 
-        private function createOrderFromStripe($session)
-        {
-            return $this->orderService->createOrder([
-                'user_id' => $session->metadata->user_id,
-                'item_id' => $session->metadata->item_id,
-                'postcode' => $session->metadata->postcode,
-                'address' => $session->metadata->address,
-                'building' => $session->metadata->building,
-                'payment_id' => $session->payment_intent,
-                'payment_method' => Order::PAYMENT_CARD,
-                'status' => Order::STATUS_PAID,
-            ]);
-        }
+    private function createOrderFromStripe($session)
+    {
+        return $this->orderService->createOrder([
+            'user_id' => $session->metadata->user_id,
+            'item_id' => $session->metadata->item_id,
+            'postcode' => $session->metadata->postcode,
+            'address' => $session->metadata->address,
+            'building' => $session->metadata->building,
+            'payment_id' => $session->payment_intent,
+            'payment_method' => Order::PAYMENT_CARD,
+            'status' => Order::STATUS_PAID,
+        ]);
+    }
 
-        public function cancel(){
-            return redirect()
-                ->route('items.index')
-                ->with('alert', '決済エラーが発生しました、もう一度やり直してください。')
-                ->with('alert-type', 'alert-error');
-        }
+    public function cancel(){
+        return redirect()
+            ->route('items.index')
+            ->with('alert', '決済エラーが発生しました、もう一度やり直してください')
+            ->with('alert-type', 'alert-error');
+    }
 }

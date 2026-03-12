@@ -17,6 +17,7 @@
         @csrf
         <!-- hidden -->
         <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
+
         <ul class="address__list">
             <li class="address__item">
                 <label class="address__label" for="postcode">郵便番号</label>

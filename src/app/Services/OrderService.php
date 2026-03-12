@@ -14,7 +14,6 @@ class OrderService
     public function createOrder(array $data)
     {
         DB::transaction(function () use ($data) {
-
             $item = Item::lockForUpdate()->find($data['item_id']);
 
             if (!$item) {
@@ -22,9 +21,7 @@ class OrderService
             }
 
             $itemStatuses = $item->itemStatus();
-
             if ($itemStatuses['sold'] == true) {
-
                 throw new SoldOutException();
             }
 
@@ -40,7 +37,7 @@ class OrderService
                 'status' => $data['status'],
                 'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
                 'address' => $data['address'],
-                'building' => $data['building'] ?: null,
+                'building' => $data['building'] ?? null,
             ]);
 
             $item->update(['status' => Item::STATUS_SOLD]);

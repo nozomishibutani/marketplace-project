@@ -103,10 +103,18 @@
     margin: 0.8rem 0 0 7rem;
 }
 
-.address__item-form {
-    border: none;
+.address__item-form,
+.address__text {
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+.address__item-form {
+    border: none;
+}
+
+.address__text {
+    overflow-wrap: anywhere
 }
 
 /* 右側 */

@@ -40,10 +40,10 @@ class ProfileRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => 'ユーザー名を入力してください',
-            'username.max' => 'ユーザー名は20文字以内で入力してください',
-            'username.string' => 'ユーザー名は文字列で入力してください',
-            'username.unique' => 'このユーザー名は使用できません',
+            'username.required' => 'お名前を入力してください',
+            'username.max' => 'お名前は20文字以内で入力してください',
+            'username.string' => 'お名前は文字列で入力してください',
+            'username.unique' => 'このお名前は使用できません',
             'postcode.required' => '郵便番号を入力してください',
             'postcode.regex' => '郵便番号は半角数字3桁-4桁の形式（例: 123-4567）で入力してください',
             'postcode.string' => '郵便番号は文字列で入力してください',
