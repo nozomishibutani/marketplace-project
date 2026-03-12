@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     });
 
 Route::middleware('auth','verified')->group(function () {
-    // 購入手続きへ
+    // 購入手続き
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.edit');

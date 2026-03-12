@@ -31,7 +31,6 @@ class ProfileFactory extends Factory
             'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
             'address' => $faker->streetAddress(),
             'building' => $faker->secondaryAddress(),
-            'avatar' => $faker->imageUrl(200, 200, 'people'), // 200x200 px のランダムな人物画像
             'created_at' => now(),
             'updated_at' => now()
         ];

@@ -8,15 +8,15 @@ use App\Models\Item;
 use App\Models\Comment;
 use App\Models\Favorite;
 use App\Common\Common;
-use App\Http\Requests\CommentRequest;
+use App\Models\Profile;
 use App\Models\Category;
+use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
 use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
 {
-    public function index(Request $request){
-
+    public function index(Request $request) {
         $items = array();
         $tab = $request->query('tab');
         $keyword = $request->query('keyword');
@@ -38,13 +38,11 @@ class ItemController extends Controller
         }
 
         // ログイン済み
-        if (str_contains(url()->previous(), route('search', [], false) . '?keyword=')) {
-
-            // 検索状態をマイリストでも保持
-            return $this->search($request);
-        }
-
         if ($tab === Common::TAB_MYLIST) {
+            // 検索状態をマイリストでも保持
+            if (str_contains(url()->previous(), route('search', [], false) . '?keyword=')) {
+                return $this->search($request);
+            }
 
             $items = Item::whereHas('favorites', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -65,9 +63,7 @@ class ItemController extends Controller
         return view('index', compact('items','tab'));
     }
 
-
-    public function show($item_id){
-
+    public function show($item_id) {
         $item = Item::with(['categories', 'favorites', 'comments.user.profile'])->find($item_id);
         if (!$item) {
             return $this->redirectItemNotAvailable();
@@ -80,7 +76,7 @@ class ItemController extends Controller
         $commentsCount = $item->comments->count();
         // いいね取得
         $isFavorite = false;
-        if(Auth::check() === true){
+        if(Auth::check() === true) {
             // 自分がいいねしているか
             $isFavorite = Favorite::where('item_id', $item_id)
                             ->where('user_id', Auth::id())
@@ -91,14 +87,13 @@ class ItemController extends Controller
         // プロフィール登録がなければダミー画像
         $avatar = array();
         foreach ($item->comments as $comment) {
-            $avatar[$comment->id] = $comment->user->profile->avatar ?? 'profiles/icon_dummy.png';
+            $avatar[$comment->id] = $comment->user->profile->avatar ?? Profile::DEFAULT_AVATAR;
         }
 
         return view('show',compact('item','itemStatuses','isFavorite','favoritesCount','commentsCount','avatar'));
     }
 
-    public function comment(CommentRequest $request, $item_id){
-
+    public function comment(CommentRequest $request, $item_id) {
         $data = $request->only(['content']);
         Comment::create([
             'user_id' => Auth::id(),
@@ -108,33 +103,26 @@ class ItemController extends Controller
         return redirect()->route('items.show', ['item_id' => $item_id]);
     }
 
-    public function favorite($item_id){
-
+    public function favorite($item_id) {
         Favorite::create([
             'user_id' => Auth::id(),
             'item_id' => $item_id,
         ]);
         return redirect()->route('items.show', ['item_id' => $item_id]);
-
     }
 
-    public function unfavorite($item_id){
-
+    public function unfavorite($item_id) {
         Favorite::where('user_id', Auth::id())->where('item_id', $item_id)->delete();
 
         return redirect()->route('items.show', ['item_id' => $item_id]);
-
     }
 
-    public function create(){
-
-        // 商品カテゴリーを取得
+    public function create() {
         $categories = Category::pluck('name', 'id');
         return view('sell',compact('categories'));
     }
 
-    public function store(ExhibitionRequest $request){
-
+    public function store(ExhibitionRequest $request) {
         $data = $request->only(['name', 'brand_name', 'description', 'price', 'condition', 'img', 'categories']);
 
         // 画像保存
@@ -152,11 +140,9 @@ class ItemController extends Controller
         $item->categories()->attach($data['categories']);
 
         return redirect()->route('profile.index', ['page' => Common::PAGE_SELL]);
-
     }
 
-    public function search(Request $request){
-
+    public function search(Request $request) {
         $keyword = $request->query('keyword');
         $tab = $request->input('tab');
 

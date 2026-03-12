@@ -107,7 +107,7 @@
                         <h3 class="information__label">商品の状態</h3>
                         <div class="information__tag">
                             <span class="information__tag-name">
-                                {{ \App\Models\Item::CONDITIONS[$item->status] ?? '' }}
+                                {{ \App\Models\Item::CONDITIONS[$item->condition] ?? '' }}
                             </span>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                     <h3 class="comment__form-title">商品へのコメント</h3>
                         <form class="comment__form" action="{{ route('items.comment', $item->id) }}" method="post">
                         @csrf
-                        <textarea class="comment__textarea" name="content" id=""></textarea>
+                        <textarea class="comment__textarea" name="content" id="">{{ old('content') }}</textarea>
                         @error('content')
                             <div class="msg">
                                 {{ $message }}
