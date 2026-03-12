@@ -13,8 +13,7 @@ class ProfileRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -23,10 +22,9 @@ class ProfileRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            'username' => ['required', 'string','max:255',
+            'username' => ['required', 'string','max:20',
                             Rule::unique('users', 'username')
                                 ->ignore($this->user()->id)
                                 ->whereNull('deleted_at')
@@ -36,17 +34,15 @@ class ProfileRequest extends FormRequest
             'building' => ['nullable', 'string', 'max:255'],
             'avatar' => ['nullable','image','mimes:jpeg,jpg,png'],
         ];
-
     }
-    public function messages()
-    {
+    public function messages() {
         return [
             'username.required' => 'ユーザー名を入力してください',
-            'username.max' => 'ユーザー名は255文字以内で入力してください',
+            'username.max' => 'ユーザー名は20文字以内で入力してください',
             'username.string' => 'ユーザー名は文字列で入力してください',
             'username.unique' => 'このユーザー名は使用できません',
             'postcode.required' => '郵便番号を入力してください',
-            'postcode.regex' => '郵便番号は「123-4567」の形式で入力してください',
+            'postcode.regex' => '郵便番号は半角数字3桁-4桁の形式（例: 123-4567）で入力してください',
             'postcode.string' => '郵便番号は文字列で入力してください',
             'address.required' => '住所を入力してください',
             'address.max' => '住所は255文字以内で入力してください',

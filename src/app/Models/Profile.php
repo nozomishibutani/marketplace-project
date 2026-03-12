@@ -19,8 +19,12 @@ class Profile extends Model
         'avatar',
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * dummy画像
+     */
+    public const DEFAULT_AVATAR = 'profiles/icon_dummy.png';
 }

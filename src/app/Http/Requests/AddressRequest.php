@@ -34,7 +34,7 @@ class AddressRequest extends FormRequest
     {
         return [
             'postcode.required' => '郵便番号を入力してください',
-            'postcode.regex' => '郵便番号は「123-4567」の形式で入力してください',
+            'postcode.regex' => '郵便番号は半角数字3桁-4桁の形式（例: 123-4567）で入力してください',
             'postcode.string' => '郵便番号は文字列で入力してください',
             'address.required' => '住所を入力してください',
             'address.max' => '住所は255文字以内で入力してください',
