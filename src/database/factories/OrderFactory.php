@@ -26,12 +26,12 @@ class OrderFactory extends Factory
         return [
         'user_id' => User::factory(),
         'item_id' => Item::factory(),
-        'payment_id' => fake()->unique()->uuid(),
-        'payment_method' => Order::PAYMENT_CONVENIENCE,
         'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
         'address' => $faker->streetAddress(),
         'building' => $faker->secondaryAddress(),
-        'status' => '2', // 要確認
+        'payment_id' => $faker->unique()->uuid(),
+        //'payment_method' => Order::PAYMENT_CONVENIENCE,
+        //'status' => '2',
     ];
     }
 }

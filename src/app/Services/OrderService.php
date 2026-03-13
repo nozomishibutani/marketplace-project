@@ -32,12 +32,13 @@ class OrderService
             Order::create([
                 'user_id' => Auth::id(),
                 'item_id' => $data['item_id'],
-                'payment_id' => $data['payment_id'],
-                'payment_method' => $data['payment_method'],
-                'status' => $data['status'],
                 'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
                 'address' => $data['address'],
                 'building' => $data['building'] ?? null,
+                'payment_id' => $data['payment_id'],
+                'payment_method' => $data['payment_method'],
+                'payment_status' => $data['payment_status'],
+                'payment_expires_at' => $data['payment_expires_at'],
             ]);
 
             $item->update(['status' => Item::STATUS_SOLD]);

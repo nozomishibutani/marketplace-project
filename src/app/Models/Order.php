@@ -12,12 +12,13 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'item_id',
-        'payment_id',
-        'payment_method',
         'postcode',
         'address',
         'building',
-        'status',
+        'payment_id',
+        'payment_method',
+        'payment_status',
+        'payment_expires_at',
     ];
 
     public function user()
@@ -43,20 +44,5 @@ class Order extends Model
     public const PAYMENT_METHODS = [
     self::PAYMENT_CONVENIENCE => 'コンビニ支払い',
     self::PAYMENT_CARD => 'カード支払い',
-    ];
-
-    /**
-     * 支払いステータス
-     */
-    public const STATUS_PENDING   = 1;
-    public const STATUS_PAID      = 2;
-    public const STATUS_SHIPPED   = 3;
-    public const STATUS_CANCELED  = 4;
-
-    public const STATUS_LIST = [
-        self::STATUS_PENDING  => '支払い待ち',
-        self::STATUS_PAID     => '支払い済み',
-        self::STATUS_SHIPPED  => '発送済み',
-        self::STATUS_CANCELED => 'キャンセル',
     ];
 }
