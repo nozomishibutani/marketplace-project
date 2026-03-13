@@ -23,13 +23,12 @@ class ProfileController extends Controller
 
         switch ($page) {
         case Common::PAGE_BUY:
-            // 購入した商品
-            $items = Item::whereHas('orders', function ($query) {
-                            $query->where('user_id', Auth::id());
-                        })
-                        ->notSuspended()
-                        ->latest()
-                        ->get(['id', 'name', 'img']);
+            $items = Item::join('orders', 'items.id', '=', 'orders.item_id')
+                ->where('orders.user_id', Auth::id())
+                ->notSuspended()
+                ->orderBy('orders.created_at', 'desc')
+                ->get(['items.id', 'items.name', 'items.img']);
+
             // 購入商品にはsold表示しない
             $items->status = null;
         break;
@@ -61,7 +60,8 @@ class ProfileController extends Controller
 
     public function store(ProfileRequest $request)
     {
-        $data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
+        //$data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
+        $data = $request->validated();
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         // プロフィール画像
