@@ -124,7 +124,7 @@ class RegisterTest extends TestCase
         // 登録ユーザー取得
         $user = User::where('email', 'sampleuser@example.com')->first();
 
-        // メール認証画面認に遷移
+        // メール認証誘導画面に遷移
         $response->assertRedirect(route('verification.notice'));
         // 認証リンクを作成
         $verifyUrl = URL::temporarySignedRoute(
@@ -138,7 +138,7 @@ class RegisterTest extends TestCase
         $this->assertNotNull($user->fresh()->email_verified_at);
 
         // 認証済みなのでプロフィール画面に遷移している
-        $response = $this->actingAs($user)->get(route('profile.edit'));
+        $response = $this->actingAs($user)->get(route('profile.edit')); // TODO::リダイレクトでは？
         $response->assertStatus(200);
 
         // 会員情報が登録されている
