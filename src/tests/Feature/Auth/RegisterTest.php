@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -102,14 +103,19 @@ class RegisterTest extends TestCase
 
         $response->assertSessionHasErrors(['password' => 'password_confirmed']);
 
-        // blade側の処理
-        // @error('password')
-        //      @if ($message === 'password_confirmed')
-        //        <div class="msg auth__msg">
-        //            パスワードと一致しません
-        //        </div>
-        //        @endif
-        //  @enderror
+        /*
+        |--------------------------------------------------------------------------
+        | Blade表示仕様（参考）
+        |--------------------------------------------------------------------------
+        | password_confirmed エラー時
+        |
+        | @error('password')
+        |     @if ($message === 'password_confirmed')
+        |         パスワードと一致しません
+        |     @endif
+        | @enderror
+        */
+
     }
 
     /**
@@ -146,7 +152,7 @@ class RegisterTest extends TestCase
         );
         $response = $this->get($verifyUrl);
 
-        // 認証完了したのでプロフィール設定画面に遷移
+        // 認証完了したのでプロフィール設定画面に遷移している
         $response->assertRedirect(route('profile.edit'));
     }
 }
