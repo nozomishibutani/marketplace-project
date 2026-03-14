@@ -56,7 +56,7 @@
                 <img src="{{ asset('storage/' . $item->img) }}" alt="{{ $item->name }}">
             </div>
             <h2 class="item__ttl">{{ $item->name }}</h2>
-                @if($item->status == \App\Models\Item::STATUS_SOLD)
+                @if($item->isSold())
                     <span class="item__sold">Sold</span>
                 @endif
         </a>

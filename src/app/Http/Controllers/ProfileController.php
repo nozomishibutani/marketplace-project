@@ -26,18 +26,14 @@ class ProfileController extends Controller
         case Common::PAGE_BUY:
             $items = Item::join('orders', 'items.id', '=', 'orders.item_id')
                 ->where('orders.user_id', Auth::id())
-                ->notSuspended()
                 ->orderBy('orders.created_at', 'desc')
-                ->get(['items.id', 'items.name', 'items.img']);
+                ->get(['items.id', 'items.name', 'items.img', 'status']);
 
-            // 購入商品にはsold表示しない
-            $items->status = null;
         break;
 
         case Common::PAGE_SELL:
             // 出品した商品
             $items = Item::where('user_id', '=', Auth::id())
-                        ->notSuspended()
                         ->latest()->get(['id', 'name', 'img', 'status']);
             break;
         }
