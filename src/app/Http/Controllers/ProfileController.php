@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Common\Common;
 use App\Http\Requests\ProfileRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -60,13 +61,16 @@ class ProfileController extends Controller
 
     public function store(ProfileRequest $request)
     {
-        //$data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
         $data = $request->validated();
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         // プロフィール画像
         $path = null;
         if (isset($data['avatar'])) {
+            // 古い画像がある場合は削除
+            if ($user->profile?->avatar) {
+                Storage::disk('public')->delete($user->profile->avatar);
+            }
             // 画像変更
             $path = $request->file('avatar')->store('profiles', 'public');
         } elseif ($user->profile?->avatar) {

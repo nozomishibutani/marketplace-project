@@ -29,32 +29,33 @@
                         <p class="auth__text">{!! session('email-verification') !!}</p>
                     @else
                         <p class="auth__text">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
+                        <div class="auth__link-box">
+                            <a class="auth__link auth__link--btn" href="{{ route('verification.confirm')}}">
+                                認証はこちらから
+                            </a>
+                        </div>
                     @endif
                 </div>
 
-            <div class="auth__link-box">
-                <a class="auth__link auth__link--btn" href="{{ route('verification.confirm')}}">
-                    認証はこちらから
-                </a>
-            </div>
+                <div class="auth__btn-box">
+                    <form method="post" action="{{ route('verification.send') }}">
+                        @csrf
+                        <button class="auth__btn">
+                            認証メールを再送する
+                        </button>
+                    </form>
+                </div>
 
-            <div class="auth__btn-box">
-                <form method="post" action="{{ route('verification.send') }}">
-                    @csrf
-                    <button class="auth__btn">
-                        認証メールを再送信する
-                    </button>
-                </form>
-            </div>
-        </div>
+            </div><!-- main__container -->
+        </div><!-- auth -->
     </main>
 
-        <!-- メール再送信完了したメッセージ-->
-        @if(session('message'))
-            <script>
-                alert("{{ session('message') }}");
-            </script>
-        @endif
+    <!-- メール再送信完了したメッセージ-->
+    @if(session('message'))
+        <script>
+            alert("{{ session('message') }}");
+        </script>
+    @endif
 
-    </body>
+</body>
 </html>

@@ -94,7 +94,6 @@ class ItemController extends Controller
     }
 
     public function comment(CommentRequest $request, $item_id) {
-        //$data = $request->only(['content']);
         $data = $request->validated();
         Comment::create([
             'user_id' => Auth::id(),
@@ -124,7 +123,6 @@ class ItemController extends Controller
     }
 
     public function store(ExhibitionRequest $request) {
-        //$data = $request->only(['name', 'brand_name', 'description', 'price', 'condition', 'img', 'categories']);
         $data = $request->validated();
 
         // 画像保存
