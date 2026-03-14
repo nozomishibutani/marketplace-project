@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string','max:20','unique:users,username'],
+            'username' => ['required', 'string','max:20'],
             // 未入力時に required と形式エラーの2つを表示するため email ではなく regex を使用
             'email' => ['required', 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/', 'max:255','unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed',],
@@ -37,7 +37,6 @@ class RegisterRequest extends FormRequest
             'username.required' => 'お名前を入力してください',
             'username.max' => 'お名前は20文字以内で入力してください',
             'username.string' => 'お名前は文字列で入力してください',
-            'username.unique' => 'このお名前は使用できません',
             'email.required' => 'メールアドレスを入力してください',
             'email.max' => 'メールアドレスは255文字以内で入力してください',
             'email.regex' => 'メールアドレスはメール形式で入力してください',
