@@ -26,7 +26,6 @@ class CreateOrdersTable extends Migration
             $table->string('payment_status');
             $table->timestamp('payment_expires_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
                 });
     }
 
