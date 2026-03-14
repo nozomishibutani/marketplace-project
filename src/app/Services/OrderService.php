@@ -7,7 +7,6 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\SoldOutException;
-use App\Exceptions\SuspendedException;
 
 class OrderService
 {
@@ -20,13 +19,8 @@ class OrderService
                 throw new \Exception();
             }
 
-            $itemStatuses = $item->itemStatus();
-            if ($itemStatuses['sold'] == true) {
+            if ($item->isSold() === true) {
                 throw new SoldOutException();
-            }
-
-            if ($itemStatuses['suspended'] == true) {
-                throw new SuspendedException();
             }
 
             Order::create([

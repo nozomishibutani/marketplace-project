@@ -8,7 +8,6 @@ use App\Models\Item;
 use App\Models\Profile;
 use App\Models\Order;
 use App\Exceptions\SoldOutException;
-use App\Exceptions\SuspendedException;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\PurchaseRequest;
@@ -39,8 +38,6 @@ class PurchaseController extends Controller
                 ->with('alert', '自分の商品は購入できません')
                 ->with('alert-type', 'alert-error');
         }
-        // 売り切れかどうか
-        $itemStatuses = $item->itemStatus();
         // お支払方法
         $paymentMethod = $request->input('payment_method');
         // 値段にコンマ追加
@@ -53,7 +50,7 @@ class PurchaseController extends Controller
             $address['building'] = $request->old('building');
             $paymentMethod = $request->old('paymentMethod');
 
-            return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
+            return view('confirm', compact('item', 'address', 'paymentMethod'));
         }
 
         // 最初の遷移
@@ -73,14 +70,14 @@ class PurchaseController extends Controller
                     $address['building'] = null;
                 }
 
-                return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
+                return view('confirm', compact('item', 'address', 'paymentMethod'));
         }
 
         // 支払い方法変更時の遷移
         // フォーム内容を表示
         $address = $request->only(['postcode', 'address', 'building']);
 
-        return view('confirm', compact('item', 'address', 'itemStatuses', 'paymentMethod'));
+        return view('confirm', compact('item', 'address', 'paymentMethod'));
     }
 
     public function editAddress(Request $request, $item_id)
@@ -106,13 +103,8 @@ class PurchaseController extends Controller
     {
         try {
             $item = Item::find($item_id);
-            $itemStatuses = $item->itemStatus();
-            if ($itemStatuses['sold'] === true) {
+            if ($item->isSold() === true) {
                 throw new SoldOutException();
-            }
-
-            if ($itemStatuses['suspended'] === true) {
-                throw new SuspendedException();
             }
 
             $data = $request->validated();
@@ -135,11 +127,6 @@ class PurchaseController extends Controller
             return redirect()
                 ->route('items.show', $item_id)
                 ->with('alert', 'この商品は売り切れました')
-                ->with('alert-type', 'alert-error');
-        } catch (SuspendedException) {
-            return redirect()
-                ->route('items.show', $item_id)
-                ->with('alert', 'この商品は削除されたか、現在購入できません')
                 ->with('alert-type', 'alert-error');
         } catch (\Exception $e) {
             Log::error($e);
@@ -240,12 +227,6 @@ class PurchaseController extends Controller
             return redirect()
                 ->route('items.show', $session->metadata->item_id)
                 ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました')
-                ->with('alert-type', 'alert-error');
-        } catch (SuspendedException) {
-            /** @var \Stripe\Checkout\Session $session */
-            return redirect()
-                ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は削除されたか、現在購入できません。<br>返金処理しました')
                 ->with('alert-type', 'alert-error');
         } catch (\Exception $e) {
             Log::error($e);

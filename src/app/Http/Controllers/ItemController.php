@@ -30,9 +30,7 @@ class ItemController extends Controller
                 return view('index', compact('items','tab'));
             }
             // 全商品
-            $items = Item::notSuspended()
-                ->latest()
-                ->get(['id', 'name', 'status', 'img']);
+            $items = Item::latest()->get(['id', 'name', 'status', 'img']);
 
             return view('index', compact('items','tab'));
         }
@@ -47,7 +45,6 @@ class ItemController extends Controller
             $items = Item::whereHas('favorites', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
                 })
-                ->notSuspended()
                 ->latest()
                 ->get(['id', 'name', 'status', 'img']);
 
@@ -56,7 +53,6 @@ class ItemController extends Controller
 
         // 自分が出品した商品以外
         $items = Item::where('user_id', '!=', $user->id)
-            ->notSuspended()
             ->latest()
             ->get(['id', 'name', 'status', 'img']);
 
@@ -68,8 +64,6 @@ class ItemController extends Controller
         if (!$item) {
             return $this->redirectItemNotAvailable();
         }
-        // 商品ステータス
-        $itemStatuses = $item->itemStatus();
         // 値段にコンマ追加
         $item->price = number_format($item->price);
         // コメント数
@@ -90,7 +84,7 @@ class ItemController extends Controller
             $avatar[$comment->id] = $comment->user->profile->avatar ?? Profile::DEFAULT_AVATAR;
         }
 
-        return view('show',compact('item','itemStatuses','isFavorite','favoritesCount','commentsCount','avatar'));
+        return view('show',compact('item','isFavorite','favoritesCount','commentsCount','avatar'));
     }
 
     public function comment(CommentRequest $request, $item_id) {
@@ -146,7 +140,7 @@ class ItemController extends Controller
         $keyword = $request->query('keyword');
         $tab = $request->input('tab');
 
-        $query = Item::query()->notSuspended();
+        $query = Item::query();
 
         // マイリスト内の検索
         if ($tab === Common::TAB_MYLIST) {

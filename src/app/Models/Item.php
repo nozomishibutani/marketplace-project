@@ -13,7 +13,6 @@ class Item extends Model
 
     public const STATUS_ON_SALE = 1;
     public const STATUS_SOLD = 2;
-    public const STATUS_SUSPENDED = 3;
 
     /**
      * 商品ステータス
@@ -21,7 +20,6 @@ class Item extends Model
     public const STATUSES = [
         self::STATUS_ON_SALE,
         self::STATUS_SOLD,
-        self::STATUS_SUSPENDED,
     ];
 
     public const CONDITION_GOOD = 1;
@@ -78,35 +76,11 @@ class Item extends Model
     }
 
     /**
-     * 出品停止中
+     * 売り切れ判定
      */
-    public function scopeNotSuspended($query)
-    {
-        return $query->where('status','!=', self::STATUS_SUSPENDED);
-    }
-
-    /**
-     * 商品ステータス
-     */
-    public function itemStatus()
-    {
-        switch ($this->status) {
-            case Item::STATUS_ON_SALE:
-            $itemStatuses['sold'] = false;
-            $itemStatuses['suspended'] = false;
-            break;
-
-            case Item::STATUS_SOLD:
-            $itemStatuses['sold'] = true;
-            $itemStatuses['suspended'] = false;
-            break;
-
-            case Item::STATUS_SUSPENDED:
-            $itemStatuses['sold'] = false;
-            $itemStatuses['suspended'] = true;
-            break;
-        }
-        return $itemStatuses;
-    }
+    public function isSold(): bool
+{
+    return $this->status === self::STATUS_SOLD;
+}
 
 }
