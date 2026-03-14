@@ -21,7 +21,6 @@ class CreateProfilesTable extends Migration
             $table->string('building')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

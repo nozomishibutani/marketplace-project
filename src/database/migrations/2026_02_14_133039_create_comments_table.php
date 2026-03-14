@@ -19,7 +19,6 @@ class CreateCommentsTable extends Migration
             $table->foreignId('item_id')->constrained();
             $table->text('content');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

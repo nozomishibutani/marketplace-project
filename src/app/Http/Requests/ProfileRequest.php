@@ -28,7 +28,6 @@ class ProfileRequest extends FormRequest
             'username' => ['required', 'string','max:20',
                             Rule::unique('users', 'username')
                                 ->ignore($this->user()->id)
-                                ->whereNull('deleted_at')
                             ],
             'postcode' => ['required', 'string','regex:/^\d{3}-\d{4}$/'],
             'address' => ['required', 'string', 'max:255'],

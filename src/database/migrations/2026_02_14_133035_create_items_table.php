@@ -26,7 +26,6 @@ class CreateItemsTable extends Migration
                     ->comment('1=出品中, 2=売り切れ');
             $table->string('img')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
