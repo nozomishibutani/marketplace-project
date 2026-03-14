@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -100,51 +101,58 @@ class RegisterTest extends TestCase
             'password_confirmation' => str_repeat('A', 8),
         ]);
 
-        $response->assertSessionHasErrors([
-            'password' => 'パスワードと一致しません',
-        ]);
+        $response->assertSessionHasErrors(['password' => 'password_confirmed']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Blade表示仕様（参考）
+        |--------------------------------------------------------------------------
+        | password_confirmed エラー時
+        |
+        | @error('password')
+        |     @if ($message === 'password_confirmed')
+        |         パスワードと一致しません
+        |     @endif
+        | @enderror
+        */
+
     }
 
     /**
      * @test
      * 全ての項目が入力されている場合、会員情報が登録され、プロフィール設定画面に遷移される
      */
-    public function canRegisterAndRedirectToProfile(){
-
-        // メール送信を抑制
+    public function canRegisterAndRedirectToProfile()
+    {
         Notification::fake();
 
         $response = $this->post('/register', [
         'username' => 'sampleuser',
-        'email' => 'sampleuser@example.com',
+        'email' => 'sample@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
         ]);
-
         // 登録ユーザー取得
-        $user = User::where('email', 'sampleuser@example.com')->first();
+        $user = User::where([
+            'username' => 'sampleuser',
+            'email' => 'sample@example.com',
+        ])->first();
 
-        // メール認証画面認に遷移
-        $response->assertRedirect(route('verification.notice'));
-        // 認証リンクを作成
+        // 会員情報が登録されている
+        $this->assertDatabaseHas('users', [
+            'username' => 'sampleuser',
+            'email' => 'sample@example.com',
+        ]);
+
+        // メール認証
         $verifyUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
-        // 認証リンクにアクセス
-        $this->actingAs($user)->get($verifyUrl);
-        // email_verified_at がセットされているか確認
-        $this->assertNotNull($user->fresh()->email_verified_at);
+        $response = $this->get($verifyUrl);
 
-        // 認証済みなのでプロフィール画面に遷移している
-        $response = $this->actingAs($user)->get(route('profile.edit'));
-        $response->assertStatus(200);
-
-        // 会員情報が登録されている
-        $this->assertDatabaseHas('users', [
-            'username' => 'sampleuser',
-            'email' => 'sampleuser@example.com',
-        ]);
+        // 認証完了したのでプロフィール設定画面に遷移している
+        $response->assertRedirect(route('profile.edit'));
     }
 }

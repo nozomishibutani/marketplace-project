@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Profile;
 use App\Common\Common;
 use App\Http\Requests\ProfileRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -23,21 +24,16 @@ class ProfileController extends Controller
 
         switch ($page) {
         case Common::PAGE_BUY:
-            // 購入した商品
-            $items = Item::whereHas('orders', function ($query) {
-                            $query->where('user_id', Auth::id());
-                        })
-                        ->notSuspended()
-                        ->latest()
-                        ->get(['id', 'name', 'img']);
-            // 購入商品にはsold表示しない
-            $items->status = null;
+            $items = Item::join('orders', 'items.id', '=', 'orders.item_id')
+                ->where('orders.user_id', Auth::id())
+                ->orderBy('orders.created_at', 'desc')
+                ->get(['items.id', 'items.name', 'items.img', 'status']);
+
         break;
 
         case Common::PAGE_SELL:
             // 出品した商品
             $items = Item::where('user_id', '=', Auth::id())
-                        ->notSuspended()
                         ->latest()->get(['id', 'name', 'img', 'status']);
             break;
         }
@@ -61,12 +57,16 @@ class ProfileController extends Controller
 
     public function store(ProfileRequest $request)
     {
-        $data = $request->only(['username', 'postcode', 'address', 'building', 'avatar']);
+        $data = $request->validated();
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         // プロフィール画像
         $path = null;
         if (isset($data['avatar'])) {
+            // 古い画像がある場合は削除
+            if ($user->profile?->avatar) {
+                Storage::disk('public')->delete($user->profile->avatar);
+            }
             // 画像変更
             $path = $request->file('avatar')->store('profiles', 'public');
         } elseif ($user->profile?->avatar) {

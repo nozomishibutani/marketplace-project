@@ -19,12 +19,9 @@
                     <img src="{{ asset('storage/' . $item->img) }}" alt="商品画像">
                 </div>
                 <div class="item___information">
-                    @if($itemStatuses['suspended'] == true)
-                        <p class="msg msg--suspended">現在、この商品は出品を停止しています</p>
-                    @endif
                     <!-- 商品名 -->
                     <h1 class="item__ttl">{{ $item->name }}
-                        @if($itemStatuses['sold'] == true)
+                        @if($item->isSold())
                             <span class="item__sold">Sold</span>
                         @endif
                     </h1>
@@ -72,15 +69,15 @@
                     <h2 class="address__ttl">配送先</h2>
                     <!-- 配送先を変更する-->
                     <div class="btn-box">
-                        @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
+                        @if($item->isSold())
+                            <button class="address__btn btn--disabled" disabled>変更する</button>
+                        @else
                             <form method="post" action="{{ route('purchase.edit', $item->id) }}">
                             @csrf
                                 <!-- hidden -->
                                 <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
                                 <button class="address__btn">変更する</button>
                             </form>
-                        @else
-                            <button class="address__btn btn--disabled" disabled>変更する</button>
                         @endif
                     </div>
                 </div>
@@ -138,10 +135,10 @@
                 </span>
             </li>
             <li class="btn-box purchase__btn-box">
-                @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
-                    <button class="btn">購入する</button>
-                @else
+                @if($item->isSold())
                     <button class="btn btn--disabled" disabled>購入する</button>
+                @else
+                    <button class="btn">購入する</button>
                 @endif
             </li>
         </ul><!-- purchase__summary -->

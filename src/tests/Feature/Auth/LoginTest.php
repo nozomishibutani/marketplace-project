@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Common\Common;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Profile;
@@ -20,7 +21,7 @@ class LoginTest extends TestCase
      */
     public function emailIsRequired()
     {
-        $user = $this->createVerifiedUser();
+        $this->createVerifiedUser();
 
         $response = $this->post('/login', [
             'email' => '',
@@ -83,7 +84,7 @@ class LoginTest extends TestCase
 
         // ログインできている
         $this->assertAuthenticatedAs($user);
-        $response->assertRedirect(route('index.items'));
+        $response->assertRedirect(route('items.index', ['tab' => Common::TAB_MYLIST ]));
     }
 
     /**

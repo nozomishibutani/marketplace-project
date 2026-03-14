@@ -17,13 +17,14 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('item_id')->constrained();
-            $table->string('payment_id')->unique();
-            $table->tinyInteger('payment_method')
-                    ->comment('1=コンビニ支払い, 2=カード支払い');
             $table->string('postcode', 20);
             $table->string('address');
             $table->string('building')->nullable();
-            $table->tinyInteger('status')->comment('1=支払い待ち, 2=支払い済み, 3=発送済み, 4=キャンセル');
+            $table->string('payment_id')->unique();
+            $table->tinyInteger('payment_method')
+                    ->comment('1=コンビニ支払い, 2=カード支払い');
+            $table->string('payment_status');
+            $table->timestamp('payment_expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
                 });

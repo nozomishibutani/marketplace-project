@@ -26,11 +26,6 @@ class ItemFactory extends Factory
         'description' =>  $faker->sentence(),
         'price' => rand(100, 99999),
         'condition' => rand(1, 4),
-        // 呼び出し元で値を指定する
-        //1.出品中 2.売り切れ 3.出品停止
-        'status' => null,
-        // フェイク画像は呼び出し元で作成する
-        'img' => now()->format('YmdHis') . '.png',
         ];
     }
 }

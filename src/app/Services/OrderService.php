@@ -7,7 +7,6 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\SoldOutException;
-use App\Exceptions\SuspendedException;
 
 class OrderService
 {
@@ -20,24 +19,20 @@ class OrderService
                 throw new \Exception();
             }
 
-            $itemStatuses = $item->itemStatus();
-            if ($itemStatuses['sold'] == true) {
+            if ($item->isSold() === true) {
                 throw new SoldOutException();
-            }
-
-            if ($itemStatuses['suspended'] == true) {
-                throw new SuspendedException();
             }
 
             Order::create([
                 'user_id' => Auth::id(),
                 'item_id' => $data['item_id'],
-                'payment_id' => $data['payment_id'],
-                'payment_method' => $data['payment_method'],
-                'status' => $data['status'],
                 'postcode' => preg_replace('/[^0-9]/', '', $data['postcode']),
                 'address' => $data['address'],
                 'building' => $data['building'] ?? null,
+                'payment_id' => $data['payment_id'],
+                'payment_method' => $data['payment_method'],
+                'payment_status' => $data['payment_status'],
+                'payment_expires_at' => $data['payment_expires_at'],
             ]);
 
             $item->update(['status' => Item::STATUS_SOLD]);

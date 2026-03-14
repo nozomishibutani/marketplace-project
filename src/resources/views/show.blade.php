@@ -25,11 +25,8 @@
             @endif
             <!-- 商品名 -->
             <div class="item__header">
-                @if($itemStatuses['suspended'] == true)
-                        <span class="msg msg--suspended">現在、この商品は出品を停止しています</span>
-                @endif
                 <h1 class="item__ttl">{{ $item->name }}
-                    @if($itemStatuses['sold'] == true)
+                    @if($item->isSold())
                         <span class="item__sold">Sold</span>
                     @endif
                 </h1>
@@ -77,10 +74,10 @@
 
                 <!-- 購入ボタン-->
                 <div class="link-box item__link-box">
-                    @if($itemStatuses['sold'] == false && $itemStatuses['suspended'] == false)
-                        <a class="link item__link" href="{{ route('purchase.confirm', $item->id) }}">購入手続きへ</a>
-                    @else
+                    @if($item->isSold())
                         <a class="link item__link link--disabled" href="#">購入手続きへ</a>
+                    @else
+                        <a class="link item__link" href="{{ route('purchase.confirm', $item->id) }}">購入手続きへ</a>
                     @endif
                 </div>
 
