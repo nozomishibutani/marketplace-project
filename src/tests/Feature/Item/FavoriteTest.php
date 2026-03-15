@@ -33,12 +33,22 @@ class FavoriteTest extends TestCase
 
         //  いいね数を確認
         $beforeCount = Favorite::count();
-        // いいねする
-        $response = $this->post(route('items.favorite', $item->id));
 
+        // 商品詳細ページを開く
+        $response = $this->get(route('items.show', $item->id));
+        $response->assertStatus(200);
+
+        // いいねアイコンを押下
+        $response = $this->post(route('items.favorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
+
         // いいね数が増えている
         $this->assertEquals($beforeCount + 1, Favorite::count());
+        // DBにも登録がある
+        $this->assertDatabaseHas('favorites', [
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+        ]);
     }
 
     /**
@@ -53,6 +63,7 @@ class FavoriteTest extends TestCase
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD);
 
+        // 商品詳細ページを開く
         $response = $this->get(route('items.show', $item->id));
         $response->assertStatus(200);
 
@@ -63,11 +74,6 @@ class FavoriteTest extends TestCase
         // いいねする
         $this->post(route('items.favorite', $item->id))
             ->assertRedirect(route('items.show', $item->id));
-
-        $this->assertDatabaseHas('favorites', [
-            'user_id' => $user->id,
-            'item_id' => $item->id,
-        ]);
 
         // いいね後
         $this->get(route('items.show', $item->id))
@@ -92,6 +98,10 @@ class FavoriteTest extends TestCase
             'item_id' => $item->id,
         ]);
 
+        // 商品詳細ページを開く
+        $response = $this->get(route('items.show', $item->id));
+        $response->assertStatus(200);
+
         // いいね数を確認
         $beforeCount = Favorite::count();
 
@@ -101,6 +111,10 @@ class FavoriteTest extends TestCase
 
         //  いいね数が減少している
         $this->assertEquals($beforeCount - 1, Favorite::count());
+        $this->assertDatabaseMissing('favorites', [
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+        ]);
     }
 
     /**
