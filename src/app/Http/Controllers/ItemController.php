@@ -111,7 +111,7 @@ class ItemController extends Controller
     }
 
     public function create() {
-        $categories = Category::pluck('name', 'id');
+        $categories = Category::orderBy('id')->pluck('name', 'id');
         return view('sell',compact('categories'));
     }
 
