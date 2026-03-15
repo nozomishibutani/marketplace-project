@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Models\User;
 
 class VerificationController extends Controller
 {
@@ -18,7 +18,6 @@ class VerificationController extends Controller
      * ビューは自由にカスタマイズ可能ですが、ルート名は変更不可です。
      */
 
-    // 未認証ユーザー向けの誘導画面
     public function notice()
     {
         return view('auth.notice');
@@ -29,31 +28,38 @@ class VerificationController extends Controller
      */
     public function verify()
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = User::find(session('unverified_user_id'));
         if (!$user->hasVerifiedEmail()) {
             // email_verified_at に日時セット
             $user->markEmailAsVerified();
+            // ログイン
+            Auth::login($user);
         }
+        session()->forget('unverified_user_id');
 
         return redirect()->route('profile.edit');
     }
 
-    public function resend(Request $request)
+    public function resend()
     {
-        $request->user()->sendEmailVerificationNotification();
+        $user = User::find(session('unverified_user_id'));
+        $user->sendEmailVerificationNotification();
 
         return back()->with('message', '認証メールを再送信しました');
     }
 
+    /**
+     * テスト用メール認証URL作成
+     */
     public function confirm()
     {
+        $user = User::find(session('unverified_user_id'));
         $url = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
             [
-                'id' => auth()->id(),
-                'hash' => sha1(auth()->user()->email),
+                'id' => $user->id,
+                'hash' => sha1($user->email),
             ]
         );
 

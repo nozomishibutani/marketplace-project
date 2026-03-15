@@ -24,17 +24,12 @@
         <div class="main__container">
             <div class="auth">
                 <div class="auth__text-box">
-                    @if(session('email-verification'))
-                    {{-- middleware('verified')内メッセージ --}}
-                        <p class="auth__text">{!! session('email-verification') !!}</p>
-                    @else
-                        <p class="auth__text">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
-                        <div class="auth__link-box">
-                            <a class="auth__link auth__link--btn" href="{{ route('verification.confirm')}}">
-                                認証はこちらから
-                            </a>
-                        </div>
-                    @endif
+                    <p class="auth__text">登録していただいたメールアドレスに認証メールを送付しました。<br>メール認証を完了してください。</p>
+                    <div class="auth__link-box">
+                        <a class="auth__link auth__link--btn" href="{{ route('verification.confirm')}}">
+                            認証はこちらから
+                        </a>
+                    </div>
                 </div>
 
                 <div class="auth__btn-box">

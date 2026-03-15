@@ -21,30 +21,26 @@ Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
 
-Route::middleware(['auth','signed'])->group(function () {
+// メール認証誘導画面
+Route::get('/verify/notice', [VerificationController::class, 'notice'])->name('verification.notice');
+// メール認証画面
+Route::get('/verify/email/confirm', [VerificationController::class, 'confirm'])->name('verification.confirm');
+Route::middleware(['signed'])->group(function () {
     // メール認証
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 });
-
-Route::middleware(['auth', 'throttle:3,1'])->group(function () {
+Route::middleware(['throttle:3,1'])->group(function () {
     // 認証メール再送
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.send');
 });
 
 Route::middleware('auth')->group(function () {
-    // メール認証誘導画面
-    Route::get('/verify/notice', [VerificationController::class, 'notice'])->name('verification.notice');
-    // メール認証画面
-    Route::get('/verify/email/confirm', [VerificationController::class, 'confirm'])->name('verification.confirm');
-
     // プロフィール
     Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
     Route::patch('/mypage/profile/store', [ProfileController::class, 'store'])->name('profile.store');
-    });
 
-Route::middleware('auth','verified')->group(function () {
     // 購入手続き
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');
     Route::post('/purchase/{item_id}', [PurchaseController::class, 'confirm'])->name('purchase.confirm')->whereNumber('item_id');

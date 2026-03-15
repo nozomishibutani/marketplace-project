@@ -9,17 +9,19 @@ class LoginResponse implements LoginResponseContract
 {
     public function toResponse($request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // ログインしていて、メール未認証の場合
+        // メール未認証の場合
         if ($user && !$user->hasVerifiedEmail()) {
-
             // メール再送
             $user->sendEmailVerificationNotification();
+            auth()->logout();
+            session(['unverified_user_id' => $user->id]);
             return redirect()->route('verification.notice');
         }
 
-        // プロフィール未登録なら
+        // プロフィール未登録の場合
         if (!$user->profile) {
             return redirect()->route('profile.edit');
         }
