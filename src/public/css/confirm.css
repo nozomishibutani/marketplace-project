@@ -14,14 +14,20 @@
     padding-bottom: 2.5rem;
 }
 
+.item__ttl {
+    overflow-wrap: anywhere;
+    /* 英数字や連続文字列でも折り返す */
+}
+
 .item__img{
-    width: 300px;
+    width: 40%;
 }
 
 .item__img img{
     width: 100%;
 }
 .item___information{
+    width: 60%;
     margin-left: 4rem;
 }
 
