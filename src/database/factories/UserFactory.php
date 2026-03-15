@@ -21,9 +21,13 @@ class UserFactory extends Factory
         return [
             'username' => $faker->userName(),
             'email' => $faker->unique()->safeEmail(),
+            // メール認証済み
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            // 文字passwordをハッシュ化
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'remember_token' => Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 

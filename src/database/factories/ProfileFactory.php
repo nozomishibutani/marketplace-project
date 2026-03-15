@@ -28,7 +28,8 @@ class ProfileFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
+            // ハイフン削除
+            'postcode' => str_replace('-', '', $faker->postcode()),
             'address' => $faker->streetAddress(),
             'building' => $faker->secondaryAddress(),
             'created_at' => now(),

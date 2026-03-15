@@ -24,8 +24,10 @@ class ItemFactory extends Factory
         'name' =>  $faker->text(5),
         'brand_name' => $faker->text(10),
         'description' =>  $faker->sentence(),
-        'price' => rand(100, 99999),
+        'price' => rand(100, 999999),
         'condition' => rand(1, 4),
+        'created_at' => now(),
+        'updated_at' => now()
         ];
     }
 }

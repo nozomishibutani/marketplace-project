@@ -26,12 +26,16 @@ class OrderFactory extends Factory
         return [
         'user_id' => User::factory(),
         'item_id' => Item::factory(),
-        'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
+        // ハイフン削除
+        'postcode' => str_replace('-', '', $faker->postcode()),
         'address' => $faker->streetAddress(),
         'building' => $faker->secondaryAddress(),
         'payment_id' => $faker->unique()->uuid(),
-        //'payment_method' => Order::PAYMENT_CONVENIENCE,
-        //'status' => '2',
+        // コンビニの場合: requires_action
+        // カードの場合: paid
+        'payment_status' => 'OK',
+        'created_at' => now(),
+        'updated_at' => now()
     ];
     }
 }

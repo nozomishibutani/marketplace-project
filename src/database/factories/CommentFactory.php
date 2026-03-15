@@ -18,6 +18,8 @@ class CommentFactory extends Factory
         $faker = \Faker\Factory::create('ja_JP');
         return [
         'content' => $faker->text(30),
+        'created_at' => now(),
+        'updated_at' => now()
         ];
     }
 }
