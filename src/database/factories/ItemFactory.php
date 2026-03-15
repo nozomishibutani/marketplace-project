@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
-use App\Models\Category;
 use Faker\Generator as Faker;
 
 class ItemFactory extends Factory

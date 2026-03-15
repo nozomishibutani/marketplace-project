@@ -6,10 +6,11 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Favorite;
 use App\Models\Category;
+use App\Models\Profile;
 use Tests\TestCase;
 use App\Common\Common;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 
 class GetMyListTest extends TestCase
 
@@ -23,19 +24,13 @@ class GetMyListTest extends TestCase
      * @test
      * いいねした商品だけが表示される
      */
-    public function onlyFavoriteItemIsDisplayed()
-    {
-        // ユーザーを作成してログイン
+    public function onlyFavoriteItemIsDisplayed() {
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
-        // 商品を作成していいねする
-        $item = Item::factory()->create(['status' =>Item::STATUS_ON_SALE]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+
+        // 商品を作成していいね済みにする
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
         Favorite::factory()->create([
                 'user_id' => $user->id,
                 'item_id' => $item->id,
@@ -52,19 +47,13 @@ class GetMyListTest extends TestCase
      * @test
      * 購入済み商品は「Sold」と表示される
      */
-    public function purchasedItemDisplaysSold()
-    {
-        // ユーザーを作成してログイン
+    public function purchasedItemDisplaysSold() {
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
-        // 商品を作成していいねする
-        $item = Item::factory()->create(['status' => item::STATUS_SOLD]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+
+        // 商品を作成していいね済みにする
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
         Favorite::factory()->create([
                 'user_id' => $user->id,
                 'item_id' => $item->id,
@@ -83,24 +72,48 @@ class GetMyListTest extends TestCase
      * @test
      * 未認証の場合は何も表示されない
      */
-    public function guestUserCannotSeeItem()
-    {
+    public function guestUserCannotSeeItem() {
         // 未ログイン状態
         $this->assertGuest();
         // マイリストに遷移
         $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST]));
         $response->assertStatus(200);
 
-        // 商品を作成していいねする
-        $item = Item::factory()->create(['status' => item::STATUS_ON_SALE]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        // 商品を作成していいね済みにする
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
         Favorite::factory()->create([
                 'user_id' => $item->user_id,
                 'item_id' => $item->id,
             ]);
 
         $response->assertDontSeeText($item->name);
+    }
+
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser() {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create(['user_id' => $user->id]);
+        return $user;
+    }
+
+    /**
+     * @test
+     * 商品作成
+     */
+    protected function createItemWithCategory($status) {
+        $item = Item::factory()->create([
+            'status' => $status,
+        ]);
+
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->id);
+
+        return $item;
     }
 }

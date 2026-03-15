@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
         // Faker 日本語化
         $faker = \Faker\Factory::create('ja_JP');
         return [
-        'name' => $faker->unique(),
+        'name' => $faker->unique()->name(),
         ];
     }
 }

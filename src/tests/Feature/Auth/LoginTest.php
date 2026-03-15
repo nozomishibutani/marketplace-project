@@ -19,8 +19,7 @@ class LoginTest extends TestCase
      * @test
      * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function emailIsRequired()
-    {
+    public function emailIsRequired() {
         $this->createVerifiedUser();
 
         $response = $this->post('/login', [
@@ -37,8 +36,7 @@ class LoginTest extends TestCase
      * @test
      * パスワードが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function passwordIsRequired()
-    {
+    public function passwordIsRequired() {
         $user = $this->createVerifiedUser();
 
         $response = $this->post('/login', [
@@ -55,8 +53,7 @@ class LoginTest extends TestCase
      * @test
      * 入力情報が間違っている場合、バリデーションメッセージが表示される
      */
-    public function loginFailsForNonExistentUser()
-    {
+    public function loginFailsForNonExistentUser() {
         $response = $this->post('/login', [
             'email' => 'notexist@example.com',
             'password' => 'password',
@@ -73,8 +70,7 @@ class LoginTest extends TestCase
      * @test
      * 正しい情報が入力された場合、ログイン処理が実行される
      */
-    public function loginWithCorrectCredentials()
-    {
+    public function loginWithCorrectCredentials() {
         $user = $this->createVerifiedUser();
 
         $response = $this->post('/login', [
@@ -91,8 +87,7 @@ class LoginTest extends TestCase
      * @test
      * ユーザー作成
      */
-    protected function createVerifiedUser()
-    {
+    protected function createVerifiedUser() {
         $user = User::factory()->create([
             'password' => Hash::make('password'),
         ]);

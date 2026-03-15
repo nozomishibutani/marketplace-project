@@ -6,7 +6,6 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,8 +19,7 @@ class RegisterTest extends TestCase
     /** @test
      * 名前が入力されていない場合、バリデーションメッセージが表示される
      */
-    public function usernameIsRequired()
-    {
+    public function usernameIsRequired() {
         $response = $this->post('/register', [
             'username' => '',
             'email' => 'sample@example.com',
@@ -38,8 +36,7 @@ class RegisterTest extends TestCase
      * @test
      * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function emailIsRequired()
-    {
+    public function emailIsRequired() {
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => '',
@@ -56,8 +53,7 @@ class RegisterTest extends TestCase
      * @test
      * パスワードが入力されていない場合、バリデーションメッセージが表示される
      */
-    public function passwordIsRequired()
-    {
+    public function passwordIsRequired() {
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -74,8 +70,7 @@ class RegisterTest extends TestCase
      * @test
      * パスワードが7文字以下の場合、バリデーションメッセージが表示される
      */
-    public function passwordMustBeAtLeast8Characters()
-    {
+    public function passwordMustBeAtLeast8Characters() {
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -92,8 +87,7 @@ class RegisterTest extends TestCase
      * @test
      * パスワードが確認用パスワードと一致しない場合、バリデーションメッセージが表示される
      */
-    public function passwordConfirmationMustMatch()
-    {
+    public function passwordConfirmationMustMatch() {
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -122,8 +116,7 @@ class RegisterTest extends TestCase
      * @test
      * 全ての項目が入力されている場合、会員情報が登録され、プロフィール設定画面に遷移される
      */
-    public function canRegisterAndRedirectToProfile()
-    {
+    public function canRegisterAndRedirectToProfile() {
         Notification::fake();
 
         $response = $this->post('/register', [

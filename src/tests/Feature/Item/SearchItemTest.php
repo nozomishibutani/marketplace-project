@@ -19,16 +19,9 @@ class SearchItemTest extends TestCase
      * @test
      * 「商品名」で部分一致検索ができる
      */
-    public function canSearchItemByPartialName()
-    {
+    public function canSearchItemByPartialName() {
         // 商品を作成
-        $item = Item::factory()->create([
-            'status' => Item::STATUS_ON_SALE,
-            'name' => 'Banana Watch'
-        ]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD,'Banana Watch');
 
         // 部分一致検索
         $response = $this->get(route('search', ['keyword' => 'Banana']));
@@ -36,32 +29,48 @@ class SearchItemTest extends TestCase
 
         // 検索結果に含まれる
         $response->assertSeeText($item->name);
-        }
+    }
 
     /**
      * @test
      * 検索状態がマイリストでも保持されている
      */
-    public function keepKeyWordOnFormOfMyList()
-    {
+    public function keepKeyWordOnFormOfMyList() {
         // 商品を作成
-        $item = Item::factory()->create([
-            'status' => Item::STATUS_SOLD,
-            'name' => 'Apple Mirror'
-        ]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD,'Apple Mirror');
+
+        // ホームページにアクセス
+        $response = $this->get(route('items.index'));
+        $response->assertStatus(200);
 
         // 部分一致検索
         $response = $this->get(route('search', ['keyword' => 'Apple']));
         $response->assertStatus(200);
 
-        // マイリストにアクセス
+        // 検索結果が表示される
+        $response->assertSeeText($item->name);
+
+        // マイリストページに遷移
         $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST, 'keyword' => 'Apple']));
         $response->assertStatus(200);
 
-        // 検索フォームに検索キーワードが保持されている
+        // 検索キーワードが保持されている
         $response->assertSee('value="Apple"', false);
-        }
     }
+
+    /**
+     * @test
+     * 商品作成
+     */
+    protected function createItemWithCategory($status, $name) {
+        $item = Item::factory()->create([
+            'status' => $status,
+            'name' => $name,
+        ]);
+
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->id);
+
+        return $item;
+    }
+}

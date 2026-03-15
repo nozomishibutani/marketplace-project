@@ -11,14 +11,10 @@ class LogoutTest extends TestCase
      * @test
      * ログアウト機能
      */
-    public function canLogout()
-    {
-        // ユーザーを作成してログイン
+    public function canLogout() {
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
         // ログアウト
         $response = $this->post('/logout');
         // リダイレクト確認
