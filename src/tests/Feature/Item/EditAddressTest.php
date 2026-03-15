@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Profile;
 use App\Models\Category;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
@@ -25,19 +26,16 @@ class EditAddressTest extends TestCase
      */
     public function updatedShippingAddressIsReflectedOnPurchasePage()
     {
-        // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        Profile::factory()->create(['user_id' => $user->id]);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
+
         // 商品を作成
-        $item = Item::factory()->create(['status' => Item::STATUS_ON_SALE,]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
+
+        // 購入画面
+        $response = $this->get(route('purchase.confirm', $item->id));
+        $response->assertStatus(200);
 
         // 住所変更
         $response = $this->post(route('purchase.update', $item->id),[
@@ -60,19 +58,16 @@ class EditAddressTest extends TestCase
      */
     public function addressIsStoredWithPurchasedItem()
     {
-        // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        Profile::factory()->create(['user_id' => $user->id]);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
+
         // 商品を作成
-        $item = Item::factory()->create(['status' => Item::STATUS_ON_SALE,]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
+
+        // 購入画面
+        $response = $this->get(route('purchase.confirm', $item->id));
+        $response->assertStatus(200);
 
         // 住所変更
         $response = $this->post(route('purchase.update', $item->id),[
@@ -82,7 +77,7 @@ class EditAddressTest extends TestCase
         ]);
         $response->assertRedirect(route('purchase.confirm', $item->id));
 
-        // セッションに保存される
+        // 変更をセッションで保持している
         $response->assertSessionHasInput([
             'postcode' => '987-9876',
             'address' => '変更先住所',
@@ -93,7 +88,7 @@ class EditAddressTest extends TestCase
         $building = session()->getOldInput('building');
 
         // セッションの内容で購入
-        $this->post(route('purchase.store', $item->id), [
+        $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
             'postcode' => $postcode,
             'address' => $address,
@@ -108,6 +103,34 @@ class EditAddressTest extends TestCase
             'address' => $address,
             'building' => $building,
         ]);
+    }
 
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser() {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create(['user_id' => $user->id]);
+        return $user;
+    }
+
+    /**
+     * @test
+     * 商品作成
+     */
+    protected function createItemWithCategory($status, $price) {
+        $item = Item::factory()->create([
+            'status' => $status,
+            'price' => $price,
+        ]);
+
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->id);
+
+        return $item;
     }
 }

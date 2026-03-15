@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Category;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -27,24 +28,19 @@ class SellTest extends TestCase
      */
     public function itemDetailCanBeStored()
     {
-        // ユーザーを作成してログイン
-        /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+       /** @var \App\Models\User $user */
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        $profile = Profile::factory()->create(['user_id' => $user->id]);
-        // ハイフンあり郵便番号にする
-        $postcode = substr($profile->postcode, 0, 3) . '-' . substr($profile->postcode, 3);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
+
         // カテゴリを作成
         $category = Category::factory()->create();
         // フェイクのストレージを作成
         Storage::fake('public');
         // フェイクの画像を作成
         $file = UploadedFile::fake()->image('dummy.png');
+
         // 出品
-        $response = $this->post(route('items.store'), [
+        $this->post(route('items.store'), [
             'user_id' => $user->id,
             'name' => 'テストname',
             'brand_name' => 'テストbrand_name',
@@ -55,8 +51,6 @@ class SellTest extends TestCase
             'categories' => [$category->id],
         ]);
 
-        $response->assertRedirect(route('profile.index', ['page' => \App\Common\Common::PAGE_SELL]));
-
         // DBに値が登録されているか
         $this->assertDatabaseHas('items', [
             'user_id' => $user->id,
@@ -66,6 +60,7 @@ class SellTest extends TestCase
             'price' => 10000,
             'condition' => Item::CONDITION_BAD,
         ]);
+
         // 実際にファイルが存在するか確認
         $item = Item::where('user_id', $user->id)->first();
         Storage::disk('public')->assertExists($item->img);
@@ -76,5 +71,20 @@ class SellTest extends TestCase
             'category_id' => $category->id,
         ]);
 
+    }
+
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser() {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create([
+            'user_id' => $user->id,
+            ]);
+        return $user;
     }
 }

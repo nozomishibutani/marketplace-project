@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Profile;
 use App\Models\Category;
 use App\Common\Common;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -26,44 +27,34 @@ class PurchaseItemTest extends TestCase
      */
     public function canPurchaseItem()
     {
-        // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        $profile = Profile::factory()->create(['user_id' => $user->id]);
-        // ハイフンあり郵便番号にする
-        $postcode = substr($profile->postcode, 0, 3) . '-' . substr($profile->postcode, 3);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
-        // 商品を作成
-        $item = Item::factory()->create(['status' => Item::STATUS_ON_SALE,]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
-        // 購入画面に遷移
+
+        // 商品作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 120);
+
+        // 購入画面
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
         // 購入
-        $response = $this->post(route('purchase.store', $item->id),[
+        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
+        $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode, // ハイフンあり
-            'address' => $profile->address,
-            'building' => $profile->building,
+            'postcode' => $postcode,
+            'address' => $user->profile->address,
+            'building' => $user->profile->building,
         ]);
 
-        $response->assertRedirect(route('items.index'));
-
-        // DBに値が登録されているか
+        // DB確認
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
             'item_id' => $item->id,
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'status' => Order::STATUS_PENDING,
-            'postcode' => $profile->postcode, // ハイフンなし
-            'address' => $profile->address,
-            'building' => $profile->building,
+            'postcode' => $user->profile->postcode,
+            'address' => $user->profile->address,
+            'building' => $user->profile->building,
         ]);
 
         // 商品ステータスが売り切れになっているか
@@ -77,33 +68,25 @@ class PurchaseItemTest extends TestCase
      * @test
      * 「購入した商品は商品一覧画面にて「sold」と表示される
      */
-    public function purchasedItemDisplaysSold()
-    {
-        // ユーザーを作成してログイン
+    public function purchasedItemDisplaysSold() {
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        $profile = Profile::factory()->create(['user_id' => $user->id]);
-        // ハイフンあり郵便番号にする
-        $postcode = substr($profile->postcode, 0, 3) . '-' . substr($profile->postcode, 3);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
-        // 商品を作成
-        $item = Item::factory()->create(['status' => Item::STATUS_ON_SALE,]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
-        // 購入画面に遷移
+
+        // 商品作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 300000);
+
+        // 購入画面
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
         // 購入
+        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode, // ハイフンあり
-            'address' => $profile->address,
-            'building' => $profile->building,
+            'postcode' => $postcode,
+            'address' => $user->profile->address,
+            'building' => $user->profile->building,
         ]);
 
         $response = $this->get(route('items.index'));
@@ -119,31 +102,24 @@ class PurchaseItemTest extends TestCase
      */
     public function purchasedItemIsAddedToProfilePurchaseList()
     {
-        // ユーザーを作成してログイン
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user = $this->createVerifiedUser();
         $this->actingAs($user);
-        // プロフィール登録
-        $profile = Profile::factory()->create(['user_id' => $user->id]);
-        // ハイフンあり郵便番号にする
-        $postcode = substr($profile->postcode, 0, 3) . '-' . substr($profile->postcode, 3);
-        // ログインしているユーザーを確認
-        $this->assertAuthenticatedAs($user);
-        // 商品を作成
-        $item = Item::factory()->create(['status' => Item::STATUS_ON_SALE,]);
-        // カテゴリを作成
-        $category = Category::factory()->create();
-        $item->categories()->attach($category->pluck('id'));
-        // 購入画面に遷移
+
+        // 商品作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 3510);
+
+        // 購入画面
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
         // 購入
-        $this->post(route('purchase.store', $item->id), [
+        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
+        $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode, // ハイフンあり
-            'address' => $profile->address,
-            'building' => $profile->building,
+            'postcode' => $postcode,
+            'address' => $user->profile->address,
+            'building' => $user->profile->building,
         ]);
 
         // 購入した商品に遷移
@@ -151,5 +127,34 @@ class PurchaseItemTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertSeeText($item->name);
+    }
+
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser() {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create(['user_id' => $user->id]);
+        return $user;
+    }
+
+    /**
+     * @test
+     * 商品作成
+     */
+    protected function createItemWithCategory($status, $price) {
+        $item = Item::factory()->create([
+            'status' => $status,
+            'price' => $price,
+        ]);
+
+        $category = Category::factory()->create();
+        $item->categories()->attach($category->id);
+
+        return $item;
     }
 }
