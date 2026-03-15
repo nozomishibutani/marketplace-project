@@ -9,11 +9,6 @@ class Profile extends Model
 {
     use HasFactory;
 
-    /**
-     * dummy画像
-     */
-    public const DEFAULT_AVATAR = 'profiles/icon_dummy.png';
-
     protected $fillable = [
         'user_id',
         'postcode',

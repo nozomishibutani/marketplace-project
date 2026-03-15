@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Profile;
 use App\Common\Common;
 use App\Http\Requests\ProfileRequest;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +17,7 @@ class ProfileController extends Controller
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         $username = $user->username;
-        $avatar = $user->profile->avatar ?? Profile::DEFAULT_AVATAR;
+        $avatar = $user->profile->avatar;
         $page = $request->query('page');
         $items = array();
 

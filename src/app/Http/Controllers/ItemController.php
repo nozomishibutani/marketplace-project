@@ -8,7 +8,6 @@ use App\Models\Item;
 use App\Models\Comment;
 use App\Models\Favorite;
 use App\Common\Common;
-use App\Models\Profile;
 use App\Models\Category;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\ExhibitionRequest;
@@ -81,7 +80,7 @@ class ItemController extends Controller
         // プロフィール登録がなければダミー画像
         $avatar = array();
         foreach ($item->comments as $comment) {
-            $avatar[$comment->id] = $comment->user->profile->avatar ?? Profile::DEFAULT_AVATAR;
+            $avatar[$comment->id] = $comment->user->profile->avatar;
         }
 
         return view('show',compact('item','isFavorite','favoritesCount','commentsCount','avatar'));

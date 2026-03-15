@@ -14,12 +14,19 @@
     gap: 3rem;
 }
 
-.profile__avatar{
+.profile__img {
     width: 180px;
     height: 180px;
     border-radius: 50%;
     object-fit: cover;
     /* 画像の縦横比を保持 */
+}
+
+.profile__img--placeholder {
+    background-color: #e7e5e5;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
 }
 
 .profile__label {

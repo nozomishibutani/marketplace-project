@@ -162,6 +162,13 @@
     border-radius: 50%;
 }
 
+.comment__avatar--placeholder {
+    background-color: #e7e5e5;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
 .comment__username{
     font-weight: bold;
 }

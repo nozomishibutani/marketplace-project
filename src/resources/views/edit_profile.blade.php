@@ -24,9 +24,14 @@
             @endif
 
             <div class="profile__img-box">
+                <!-- プレースホルダー -->
+                <div id="avatarPlaceholder" class="{{ $profile->avatar ? 'd-none'  : 'profile__img profile__img--placeholder' }} "></div>
+
+                <!-- 画像 -->
                 <img id="avatarPreview"
-                    src="{{ asset('storage/' . ($profile->avatar ?? 'profiles/icon_dummy.png')) }}"
-                    alt="プロフィール画像">
+                    src="{{ $profile->avatar ? asset('storage/' . $profile->avatar) : '' }}"
+                    alt="プロフィール画像"
+                    class="{{ $profile->avatar ? '' : 'd-none' }}">
 
                 <label class="profile__img-btn btn--outline">
                     画像を選択する
@@ -38,6 +43,7 @@
                         accept="image/*">
                 </label>
             </div>
+
             @error('avatar')
                 <div class="msg profile__img-msg">
                     {{ $message }}
@@ -102,7 +108,9 @@
 
             const reader = new FileReader();
             reader.onload = function(event) {
-                $('#avatarPreview').attr('src', event.target.result);
+                $('#avatarPreview').attr('src', event.target.result)
+                                .removeClass('d-none'); // 画像表示
+                $('#avatarPlaceholder').hide(); // プレースホルダー非表示
             };
             reader.readAsDataURL(file);
         });

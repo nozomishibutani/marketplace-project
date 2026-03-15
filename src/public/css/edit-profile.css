@@ -16,6 +16,21 @@
     margin-bottom: 2rem;
 }
 
+.profile__img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile__img--placeholder {
+    background-color: #e7e5e5;
+}
+
+.d-none {
+    display: none;
+}
+
 .profile__img-box img {
     width: 160px;
     height: 160px;

@@ -11,7 +11,11 @@
 @section('profile')
     <div class="profile__container">
         <div class="profile__user">
-            <img class="profile__avatar" src="{{ asset('storage/' . $avatar) }}" alt="プロフィール画像">
+            @if($avatar)
+                <img class="profile__img" src="{{ asset('storage/' . $avatar) }}" alt="プロフィール画像">
+            @else
+                <div class="profile__img profile__img--placeholder"></div>
+            @endif
             <span class="profile__label">{{ $username }}</span>
         </div>
         <div class="link-box profile__link-box">
