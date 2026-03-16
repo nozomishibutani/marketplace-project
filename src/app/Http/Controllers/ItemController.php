@@ -79,6 +79,7 @@ class ItemController extends Controller
         $favoritesCount = $item->favorites->count();
 
         // プロフィール画像取得
+        $avatar = array();
         foreach ($item->comments as $comment) {
             $avatar[$comment->id] = $comment->user->profile?->avatar;
         }
