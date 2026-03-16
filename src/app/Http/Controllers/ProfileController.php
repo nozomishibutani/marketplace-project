@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Profile;
 use App\Common\Common;
 use App\Http\Requests\ProfileRequest;
 use Illuminate\Support\Facades\Storage;
@@ -17,10 +18,10 @@ class ProfileController extends Controller
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         $username = $user->username;
-        $avatar = $user->profile->avatar;
         $page = $request->query('page');
-        $items = array();
+        $avatar = $user->profile?->avatar;
 
+        $items = array();
         switch ($page) {
         case Common::PAGE_BUY:
             $items = Item::join('orders', 'items.id', '=', 'orders.item_id')
@@ -44,13 +45,10 @@ class ProfileController extends Controller
         /** @var \App\Models\User|null $user */
         $user= Auth::user();
         $username = $user->username;
-        $profile = $user->profile;
-        if ($profile) {
-            // 郵便番号にハイフン追加
-            $postcode = $profile->postcode;
-            $profile->postcode = substr($postcode, 0, 3) . '-' . substr($postcode, 3);
-            }
-
+        $profile = $user->profile ?? new Profile();
+        if ($profile->postcode) {
+            $profile->postcode = substr($profile->postcode, 0, 3) . '-' . substr($profile->postcode, 3);
+        }
         return view('edit_profile',compact('username','profile'));
     }
 

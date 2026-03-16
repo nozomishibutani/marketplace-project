@@ -24,7 +24,7 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => ['required', 'string','max:20'],
+            'username' => ['required', 'string','max:255'],
             'postcode' => ['required', 'string','regex:/^\d{3}-\d{4}$/'],
             'address' => ['required', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
@@ -36,7 +36,7 @@ class ProfileRequest extends FormRequest
     {
         return [
             'username.required' => 'お名前を入力してください',
-            'username.max' => 'お名前は20文字以内で入力してください',
+            'username.max' => 'お名前は255文字以内で入力してください',
             'username.string' => 'お名前は文字列で入力してください',
             'postcode.required' => '郵便番号を入力してください',
             'postcode.regex' => '郵便番号は半角数字3桁-4桁の形式（例: 123-4567）で入力してください',

@@ -77,10 +77,10 @@ class ItemController extends Controller
         }
         // いいね数
         $favoritesCount = $item->favorites->count();
-        // プロフィール登録がなければダミー画像
-        $avatar = array();
+
+        // プロフィール画像取得
         foreach ($item->comments as $comment) {
-            $avatar[$comment->id] = $comment->user->profile->avatar;
+            $avatar[$comment->id] = $comment->user->profile?->avatar;
         }
 
         return view('show',compact('item','isFavorite','favoritesCount','commentsCount','avatar'));

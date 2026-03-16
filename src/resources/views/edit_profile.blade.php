@@ -19,7 +19,7 @@
         <h1 class="profile__ttl">プロフィール設定</h1>
         <form action="{{ route('profile.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-            @if($profile)
+            @if($profile->exists)
                 @method('PATCH')
             @endif
 

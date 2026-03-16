@@ -24,7 +24,7 @@ class CreateItemsTable extends Migration
                     ->comment('1=良好, 2=目立った傷や汚れなし, 3=やや傷や汚れあり, 4=状態が悪い');
             $table->tinyInteger('status')->default(1)
                     ->comment('1=出品中, 2=売り切れ');
-            $table->string('img')->nullable();
+            $table->string('img');
             $table->timestamps();
         });
     }
