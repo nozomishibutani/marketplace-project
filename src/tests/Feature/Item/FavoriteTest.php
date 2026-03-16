@@ -24,31 +24,31 @@ class FavoriteTest extends TestCase
      * いいねアイコンを押下することによって、いいねした商品として登録することができる。
      */
     public function favoriteIsRegistered() {
-        /** @var \App\Models\User $user */
-        $user = $this->createVerifiedUser();
-        $this->actingAs($user);
-
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
 
         //  いいね数を確認
         $beforeCount = Favorite::count();
 
-        // 商品詳細ページを開く
+        // 1. ユーザーにログインする
+        /** @var \App\Models\User $user */
+        $user = $this->createVerifiedUser();
+        $this->actingAs($user);
+
+        // 2. 商品詳細ページを開く
         $response = $this->get(route('items.show', $item->id));
         $response->assertStatus(200);
 
-        // いいねアイコンを押下
+        // 3. いいねアイコンを押下
         $response = $this->post(route('items.favorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
 
-        // いいね数が増えている
-        $this->assertEquals($beforeCount + 1, Favorite::count());
-        // DBにも登録がある
+        // いいねした商品として登録され、いいね合計値が増加表示される
         $this->assertDatabaseHas('favorites', [
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
+        $this->assertEquals($beforeCount + 1, Favorite::count());
     }
 
     /**
@@ -56,14 +56,15 @@ class FavoriteTest extends TestCase
      * 追加済みのアイコンは色が変化する
      */
     public function favoriteIconChangesColor() {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
-
-        // 商品詳細ページを開く
+        // 2. 商品詳細ページを開く
         $response = $this->get(route('items.show', $item->id));
         $response->assertStatus(200);
 
@@ -71,11 +72,11 @@ class FavoriteTest extends TestCase
         $response->assertDontSee('heart_pink.png', false);
         $response->assertSee('heart_default.png', false);
 
-        // いいねする
+        // 3. いいねアイコンを押下
         $this->post(route('items.favorite', $item->id))
             ->assertRedirect(route('items.show', $item->id));
 
-        // いいね後
+        // いいねアイコンが押下された状態では色が変化する
         $this->get(route('items.show', $item->id))
             ->assertSee('heart_pink.png', false)
             ->assertDontSee('heart_default.png', false);
@@ -86,35 +87,37 @@ class FavoriteTest extends TestCase
      * 再度いいねアイコンを押下することによって、いいねを解除することができる。
      */
     public function favoriteIsCanceled() {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
         // いいね状態を作る
         Favorite::factory()->create([
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
 
-        // 商品詳細ページを開く
+        // 2. 商品詳細ページを開く
         $response = $this->get(route('items.show', $item->id));
         $response->assertStatus(200);
 
         // いいね数を確認
         $beforeCount = Favorite::count();
 
-        // いいね解除する
+        // 3. いいねアイコンを押下
         $response = $this->delete(route('items.unfavorite', $item->id));
         $response->assertRedirect(route('items.show', $item->id));
 
-        //  いいね数が減少している
-        $this->assertEquals($beforeCount - 1, Favorite::count());
+        // いいねが解除され、いいね合計値が減少表示される
         $this->assertDatabaseMissing('favorites', [
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
+        $this->assertEquals($beforeCount - 1, Favorite::count());
     }
 
     /**

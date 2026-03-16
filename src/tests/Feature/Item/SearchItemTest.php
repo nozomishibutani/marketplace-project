@@ -23,11 +23,12 @@ class SearchItemTest extends TestCase
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD,'Banana Watch');
 
-        // 部分一致検索
+         // 1. 検索欄にキーワードを入力
+         // 2. 検索ボタンを押す
         $response = $this->get(route('search', ['keyword' => 'Banana']));
         $response->assertStatus(200);
 
-        // 検索結果に含まれる
+        // 部分一致する商品が表示される
         $response->assertSeeText($item->name);
     }
 
@@ -39,18 +40,16 @@ class SearchItemTest extends TestCase
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD,'Apple Mirror');
 
-        // ホームページにアクセス
+        // 1. ホームページで商品を検索
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
-
-        // 部分一致検索
         $response = $this->get(route('search', ['keyword' => 'Apple']));
         $response->assertStatus(200);
 
-        // 検索結果が表示される
+        // 2. 検索結果が表示される
         $response->assertSeeText($item->name);
 
-        // マイリストページに遷移
+        // 3. マイリストページに遷移
         $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST, 'keyword' => 'Apple']));
         $response->assertStatus(200);
 

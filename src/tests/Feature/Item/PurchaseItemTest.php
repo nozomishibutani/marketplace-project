@@ -27,6 +27,7 @@ class PurchaseItemTest extends TestCase
      */
     public function canPurchaseItem()
     {
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
@@ -34,20 +35,20 @@ class PurchaseItemTest extends TestCase
         // 商品作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 120);
 
-        // 購入画面
+        // 2. 商品購入画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
-        // 購入
-        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
+        // 3. 商品を選択して「購入する」ボタンを押下
+        //$postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode,
+            'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
 
-        // DB確認
+        // 購入が完了する
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
             'item_id' => $item->id,
@@ -56,8 +57,6 @@ class PurchaseItemTest extends TestCase
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
-
-        // 商品ステータスが売り切れになっているか
         $this->assertDatabaseHas('items', [
                 'id' => $item->id,
                 'status' => Item::STATUS_SOLD,
@@ -69,6 +68,7 @@ class PurchaseItemTest extends TestCase
      * 「購入した商品は商品一覧画面にて「sold」と表示される
      */
     public function purchasedItemDisplaysSold() {
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
@@ -76,22 +76,22 @@ class PurchaseItemTest extends TestCase
         // 商品作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 300000);
 
-        // 購入画面
+        // 2. 商品購入画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
-        // 購入
-        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
+        // 3. 商品を選択して「購入する」ボタンを押下
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode,
+            'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
 
+        // 4. 商品一覧画面を表示する
         $response = $this->get(route('items.index'));
 
-        //売り切れ
+        // 購入した商品が「sold」として表示されている
         $response->assertSeeText($item->name);
         $response->assertSeeText('Sold');
     }

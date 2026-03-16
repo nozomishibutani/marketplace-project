@@ -26,30 +26,26 @@ class EditAddressTest extends TestCase
      */
     public function updatedShippingAddressIsReflectedOnPurchasePage()
     {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
-
-        // 購入画面
-        $response = $this->get(route('purchase.confirm', $item->id));
-        $response->assertStatus(200);
-
-        // 住所変更
+        // 2. 送付先住所変更画面で住所を登録する
         $response = $this->post(route('purchase.update', $item->id),[
                     'postcode' => '123-1234',
-                    'address' => '変更先住所',
-                    'building' => '変更先建物名',
+                    'address' => 'テスト変更先住所',
+                    'building' => 'テスト変更先建物名',
                 ]);
-        $response->assertRedirect(route('purchase.confirm', $item->id));
 
-        // 購入画面にリダイレクト
+        // 3. 商品購入画面を再度開く
         $response = $this->followRedirects($response);
         $response->assertSee('postcode','123-1234', false);
-        $response->assertSee('address','変更先住所', false);
-        $response->assertSee('building','変更先建物名', false);
+        $response->assertSee('address','テスト変更先住所', false);
+        $response->assertSee('building','テスト変更先建物名', false);
     }
 
     /**
@@ -58,36 +54,33 @@ class EditAddressTest extends TestCase
      */
     public function addressIsStoredWithPurchasedItem()
     {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 1000);
-
-        // 購入画面
-        $response = $this->get(route('purchase.confirm', $item->id));
-        $response->assertStatus(200);
-
-        // 住所変更
+        // 2. 送付先住所変更画面で住所を登録する
         $response = $this->post(route('purchase.update', $item->id),[
             'postcode' => '987-9876',
-            'address' => '変更先住所',
-            'building' => '変更先建物名',
+            'address' => 'テスト変更先住所',
+            'building' => 'テスト変更先建物名',
         ]);
         $response->assertRedirect(route('purchase.confirm', $item->id));
 
         // 変更をセッションで保持している
         $response->assertSessionHasInput([
             'postcode' => '987-9876',
-            'address' => '変更先住所',
-            'building' => '変更先建物名',
+            'address' => 'テスト変更先住所',
+            'building' => 'テスト変更先建物名',
         ]);
         $postcode =session()->getOldInput('postcode');
         $address = session()->getOldInput('address');
         $building = session()->getOldInput('building');
 
-        // セッションの内容で購入
+        // 3. 商品を購入する
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
             'postcode' => $postcode,
@@ -95,7 +88,7 @@ class EditAddressTest extends TestCase
             'building' => $building,
         ]);
 
-        // セッションの内容がDBに登録されている
+        // 正しく送付先住所が紐づいている
         $this->assertDatabaseHas('orders', [
             'user_id' => $user->id,
             'item_id' => $item->id,

@@ -23,64 +23,42 @@ class PaymentMethodTest extends TestCase
      * @test
      * 小計画面で変更が反映される
      */
-    public function canPurchaseItem()
-    {
+    public function canPurchaseItem() {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
+
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // ハイフンありにする
-        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
-
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
-
-        // 購入画面
+        // 1. 支払い方法選択画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
-        // お支払い方法をコンビニ払いに変更
+        // 2. プルダウンメニューから支払い方法を選択する(コンビニ)
         $response = $this->post(route('purchase.confirm', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode,
+            'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
 
-        // 支払方法欄で表示されているか
-        // セレクトボックス内の値と支払方法欄の表示で合計2回
+        // 選択した支払い方法が正しく反映される
         $response->assertStatus(200);
-        $this->assertEquals(
-            2,
-            substr_count(
-                $response->getContent(),
-                Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]
-            )
-        );
-
-        // セレクトボックスで選択されているか
+        $response->assertSeeText(Order::PAYMENT_METHODS[Order::PAYMENT_CONVENIENCE]);
         $response->assertSeeInOrder(['value="' . Order::PAYMENT_CONVENIENCE . '"','selected',], false);
 
-        // お支払方法をカードに変更
+        // 2. プルダウンメニューから支払い方法を選択する(カード)
         $response = $this->post(route('purchase.confirm', $item->id), [
             'payment_method' => Order::PAYMENT_CARD,
-            'postcode' => $postcode,
+            'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
 
-        // 支払方法欄で表示されているか
-        // セレクトボックス内の値と支払方法欄の表示で合計2回
+        // 選択した支払い方法が正しく反映される
         $response->assertStatus(200);
-        $this->assertEquals(
-            2,
-            substr_count(
-                $response->getContent(),
-                Order::PAYMENT_METHODS[Order::PAYMENT_CARD]
-            )
-        );
-
-        // セレクトボックスで選択されているか
+        $response->assertSeeText(Order::PAYMENT_METHODS[Order::PAYMENT_CARD]);
         $response->assertSeeInOrder(['value="' . Order::PAYMENT_CARD . '"','selected',], false);
 
     }

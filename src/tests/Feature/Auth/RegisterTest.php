@@ -20,6 +20,11 @@ class RegisterTest extends TestCase
      * 名前が入力されていない場合、バリデーションメッセージが表示される
      */
     public function usernameIsRequired() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // 2. 名前を入力せずに他の必要項目を入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
             'username' => '',
             'email' => 'sample@example.com',
@@ -37,6 +42,11 @@ class RegisterTest extends TestCase
      * メールアドレスが入力されていない場合、バリデーションメッセージが表示される
      */
     public function emailIsRequired() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // 2. メールアドレスを入力せずに他の必要項目を入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => '',
@@ -54,6 +64,11 @@ class RegisterTest extends TestCase
      * パスワードが入力されていない場合、バリデーションメッセージが表示される
      */
     public function passwordIsRequired() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // 2. パスワードを入力せずに他の必要項目を入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -71,6 +86,11 @@ class RegisterTest extends TestCase
      * パスワードが7文字以下の場合、バリデーションメッセージが表示される
      */
     public function passwordMustBeAtLeast8Characters() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // 2. 7文字以下のパスワードと他の必要項目を入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -88,6 +108,11 @@ class RegisterTest extends TestCase
      * パスワードが確認用パスワードと一致しない場合、バリデーションメッセージが表示される
      */
     public function passwordConfirmationMustMatch() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // 2. 確認用パスワードと異なるパスワードを入力し、他の必要項目も入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -117,27 +142,33 @@ class RegisterTest extends TestCase
      * 全ての項目が入力されている場合、会員情報が登録され、プロフィール設定画面に遷移される
      */
     public function canRegisterAndRedirectToProfile() {
+        // 1. 会員登録ページを開く
+        $this->get('/register');
+
+        // NotificationをFakeにする
         Notification::fake();
 
+        // 2. 全ての必要項目を正しく入力する
+        // 3. 登録ボタンを押す
         $response = $this->post('/register', [
         'username' => 'sampleuser',
         'email' => 'sample@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
         ]);
-        // 登録ユーザー取得
+
+        // 会員情報が登録され、プロフィール設定画面に遷移する
         $user = User::where([
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
         ])->first();
 
-        // 会員情報が登録されている
         $this->assertDatabaseHas('users', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
         ]);
 
-        // メール認証
+        // メール認証済みにする
         $verifyUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
@@ -145,7 +176,6 @@ class RegisterTest extends TestCase
         );
         $response = $this->get($verifyUrl);
 
-        // 認証完了したのでプロフィール設定画面に遷移している
         $response->assertRedirect(route('profile.edit'));
     }
 }

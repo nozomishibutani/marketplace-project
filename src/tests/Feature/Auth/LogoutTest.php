@@ -12,15 +12,17 @@ class LogoutTest extends TestCase
      * ログアウト機能
      */
     public function canLogout() {
+        // 1. ユーザーにログインをする
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
-        // ログアウト
+
+        // 2. ログアウトボタンを押す
         $response = $this->post('/logout');
-        // リダイレクト確認
-        $response->assertRedirect(route('items.index'));
-        // 現在のユーザーが認証されていない状態であること
+
+        // ログアウト処理が実行される
         $this->assertGuest();
+        $response->assertRedirect(route('items.index'));
     }
 
 }

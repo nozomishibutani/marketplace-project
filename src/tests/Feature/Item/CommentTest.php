@@ -23,29 +23,30 @@ class CommentTest extends TestCase
      * ログイン済みのユーザーはコメントを送信できる
      */
     public function loginUserCanPostComment() {
-        /** @var \App\Models\User $user */
-        $user = $this->createVerifiedUser();
-        $this->actingAs($user);
-
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
 
         // コメント数を確認
         $beforeCount = Comment::count();
-        // コメントする
+
+        // 1. ユーザーにログインする
+        /** @var \App\Models\User $user */
+        $user = $this->createVerifiedUser();
+        $this->actingAs($user);
+
+        // 2. コメントを入力する
+        // 3. コメントボタンを押す
         $response = $this->post(route('items.comment', $item->id), [
             'content' => 'テストコメント',
         ]);
         $response->assertRedirect(route('items.show', $item->id));
 
-        // コメントが保存されているか
+        // コメントが保存され、コメント数が増加する
         $this->assertDatabaseHas('comments', [
             'user_id' => $user->id,
             'item_id' => $item->id,
             'content' => 'テストコメント',
         ]);
-
-        // コメント数が増えている
         $this->assertEquals($beforeCount + 1, Comment::count());
     }
 
@@ -54,23 +55,23 @@ class CommentTest extends TestCase
      * ログイン前のユーザーはコメントを送信できない
      */
     public function gestUserCannotPostComment() {
-        // 未ログイン状態
-        $this->assertGuest();
-
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD);
 
         // コメント数を確認
         $this->assertDatabaseCount('comments', 0);
-        // コメントする
+
+        // 未ログイン状態
+        $this->assertGuest();
+
+        // 1. コメントを入力する
+        // 2. コメントボタンを押す
         $response = $this->post(route('items.comment', $item->id), [
             'content' => 'テストコメント',
         ]);
 
-        // ログイン画面リダイレクト
+        // コメントが送信されない
         $response->assertRedirect(route('login'));
-
-        // コメントが保存されていない
         $this->assertDatabaseCount('comments', 0);
     }
 
@@ -79,14 +80,15 @@ class CommentTest extends TestCase
      * コメントが入力されていない場合、バリデーションメッセージが表示される
      */
     public function commentIsRequired() {
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
-
-        // コメントする
+        // 2. コメントボタンを押す
         $response = $this->post(route('items.comment', $item->id), [
             'content' => '',
         ]);
@@ -104,14 +106,16 @@ class CommentTest extends TestCase
      * 255文字を超える入力（256文字以上）でエラーになることを確認する
      */
     public function commentCannotExceed255Characters(){
+        // 商品を作成
+        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
+
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
-        // 商品を作成
-        $item = $this->createItemWithCategory(Item::STATUS_SOLD);
-
-        // コメントする
+        // 2. 256文字以上のコメントを入力する
+        // 3. コメントボタンを押す
         $response = $this->post(route('items.comment', $item->id), [
             'content' => str_repeat('a', 256),
         ]);

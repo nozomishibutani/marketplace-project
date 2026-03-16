@@ -22,6 +22,11 @@ class LoginTest extends TestCase
     public function emailIsRequired() {
         $this->createVerifiedUser();
 
+        // 1. ログインページを開く
+        $this->get('/login');
+
+        // 2. メールアドレスを入力せずに他の必要項目を入力する
+        // 3. ログインボタンを押す
         $response = $this->post('/login', [
             'email' => '',
             'password' => 'password',
@@ -39,6 +44,11 @@ class LoginTest extends TestCase
     public function passwordIsRequired() {
         $user = $this->createVerifiedUser();
 
+        // 1. ログインページを開く
+        $this->get('/login');
+
+        // 2. メールアドレスを入力せずに他の必要項目を入力する
+        // 3. ログインボタンを押す
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => '',
@@ -54,6 +64,11 @@ class LoginTest extends TestCase
      * 入力情報が間違っている場合、バリデーションメッセージが表示される
      */
     public function loginFailsForNonExistentUser() {
+        // 1. ログインページを開く
+        $this->get('/login');
+
+        // 2. 必要項目を登録されていない情報を入力する
+        // 3. ログインボタンを押す
         $response = $this->post('/login', [
             'email' => 'notexist@example.com',
             'password' => 'password',
@@ -73,12 +88,17 @@ class LoginTest extends TestCase
     public function loginWithCorrectCredentials() {
         $user = $this->createVerifiedUser();
 
+        // 1. ログインページを開く
+        $this->get('/login');
+
+        // 2. 全ての必要項目を入力する
+        // 3. ログインボタンを押す
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
-        // ログインできている
+        // ログイン処理が実行される
         $this->assertAuthenticatedAs($user);
         $response->assertRedirect(route('items.index', ['tab' => Common::TAB_MYLIST ]));
     }

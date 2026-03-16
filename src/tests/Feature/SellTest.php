@@ -28,10 +28,6 @@ class SellTest extends TestCase
      */
     public function itemDetailCanBeStored()
     {
-       /** @var \App\Models\User $user */
-        $user = $this->createVerifiedUser();
-        $this->actingAs($user);
-
         // カテゴリを作成
         $category = Category::factory()->create();
         // フェイクのストレージを作成
@@ -39,7 +35,16 @@ class SellTest extends TestCase
         // フェイクの画像を作成
         $file = UploadedFile::fake()->image('dummy.png');
 
-        // 出品
+        // 1. ユーザーにログインする
+        /** @var \App\Models\User $user */
+        $user = $this->createVerifiedUser();
+        $this->actingAs($user);
+
+        // 2. 商品出品画面を開く
+        $response = $this->get(route('items.create'));
+        $response->assertStatus(200);
+
+        // 3 . 各項目に適切な情報を入力して保存する
         $this->post(route('items.store'), [
             'user_id' => $user->id,
             'name' => 'テストname',
@@ -51,7 +56,7 @@ class SellTest extends TestCase
             'categories' => [$category->id],
         ]);
 
-        // DBに値が登録されているか
+        // 各項目が正しく保存されている
         $this->assertDatabaseHas('items', [
             'user_id' => $user->id,
             'name' => 'テストname',
@@ -61,11 +66,11 @@ class SellTest extends TestCase
             'condition' => Item::CONDITION_BAD,
         ]);
 
-        // 実際にファイルが存在するか確認
+        // 画像ファイル
         $item = Item::where('user_id', $user->id)->first();
         Storage::disk('public')->assertExists($item->img);
 
-        // 商品カテゴリーが登録されているか
+        // 商品カテゴリー
         $this->assertDatabaseHas('category_item', [
             'item_id' => $item->id,
             'category_id' => $category->id,

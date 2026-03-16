@@ -6,7 +6,6 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,11 +19,12 @@ class EmailVerificationTest extends TestCase
     /** @test
      * 会員登録後、認証メールが送信される
      */
-    public function sendVerificationEmailAfterRegistration()
-    {
+    public function sendVerificationEmailAfterRegistration() {
         // NotificationをFakeにする
         Notification::fake();
 
+        // 1. 会員登録をする
+        // 2. 認証メールを送信する
         $this->post('/register', [
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -32,7 +32,7 @@ class EmailVerificationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        // 送信されたか検証
+        // 登録したメールアドレス宛に認証メールが送信されている
         $user = User::where([
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -45,8 +45,7 @@ class EmailVerificationTest extends TestCase
      * @test
      * メール認証誘導画面で「認証はこちらから」ボタンを押下するとメール認証サイトに遷移する
      */
-    public function redirectToVerificationSite()
-    {
+    public function redirectToVerificationSite() {
         // NotificationをFakeにする
         Notification::fake();
 
@@ -57,12 +56,13 @@ class EmailVerificationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        // メール認証誘導画面にリダイレクト
+        // 1. メール認証導線画面を表示する
         $response->assertRedirect(route('verification.notice'));
 
-        // 「認証はこちらから」ボタンを押下
+        // 2. 「認証はこちらから」ボタンを押下
         $response = $this->get(route('verification.confirm'));
-        // メール認証サイトに遷移
+
+        // 3. メール認証サイトを表示する
         $response->assertStatus(200)
             ->assertViewIs('auth.confirm')
             ->assertSee('Please click the button below to verify your email address.');
@@ -72,8 +72,8 @@ class EmailVerificationTest extends TestCase
      * @test
      * メール認証サイトのメール認証を完了すると、プロフィール設定画面に遷移する
      */
-    public function redirectToProfileSetupAfterVerification()
-    {
+    public function redirectToProfileSetupAfterVerification() {
+        // NotificationをFakeにする
         Notification::fake();
 
         $response = $this->post('/register', [
@@ -83,7 +83,6 @@ class EmailVerificationTest extends TestCase
         'password_confirmation' => 'password',
         ]);
 
-        // 登録ユーザー取得
         $user = User::where([
             'username' => 'sampleuser',
             'email' => 'sample@example.com',
@@ -95,13 +94,12 @@ class EmailVerificationTest extends TestCase
             now()->addMinutes(60),
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
-        // 認証リンクにアクセス
-        $response = $this->actingAs($user)->get($verifyUrl);
 
-        // メール認証完了
+        // 1. メール認証を完了する
+        $response = $this->actingAs($user)->get($verifyUrl);
         $this->assertNotNull($user->fresh()->email_verified_at);
 
-        // 認証完了したのでプロフィール設定画面に遷移
+        // 2. プロフィール設定画面を表示する
         $response->assertRedirect(route('profile.edit'));
     }
 }

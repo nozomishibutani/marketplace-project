@@ -37,6 +37,7 @@ class ProfileTest extends TestCase
         $sellItemImgPath = $sellItemImg->store('items', 'public');
         $buyItemImgPath = $buyItemImg->store('items', 'public');
 
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser($avatarPath);
         $this->actingAs($user);
@@ -53,10 +54,11 @@ class ProfileTest extends TestCase
             'payment_method' => Order::PAYMENT_CARD
         ]);
 
-        // マイページに遷移
+        // 2. プロフィールページを開く
         $response = $this->get(route('profile.index'));
         $response->assertStatus(200);
 
+        // プロフィール画像、ユーザー名、出品した商品一覧、購入した商品一覧が正しく表示される
         // プロフィール画像
         $response->assertSee($user->profile->avatar, false);
         // ユーザー名
@@ -91,15 +93,16 @@ class ProfileTest extends TestCase
         $avatar = UploadedFile::fake()->image('avatar_dummy.png');
         $avatarPath = $avatar->store('profiles', 'public');
 
+        // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser($avatarPath);
         $this->actingAs($user);
 
-        // プロフィール編集画面に遷移
+        // 2. プロフィールページを開く
         $response = $this->get(route('profile.edit'));
         $response->assertStatus(200);
 
-        // 初期値として過去設定されている
+        // 各項目の初期値が正しく表示されている
         $response->assertSee($user->profile->avatar, false);
         $response->assertSee($user->username, false);
         $response->assertSee($user->profile->postcode, false);

@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'username' => ['required', 'string','max:20'],
-            // 未入力時に required と形式エラーの2つを表示するため email ではなく regex を使用
+            // 未入力時に required と形式エラーの2つのエラーを表示するため email ではなく regex を使用
             'email' => ['required', 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/', 'max:255','unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed',],
         ];

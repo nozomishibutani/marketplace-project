@@ -25,17 +25,17 @@ class GetItemListTest extends TestCase
         $item[Item::STATUS_ON_SALE] = $this->createItemWithCategory(Item::STATUS_ON_SALE);
         $item[Item::STATUS_SOLD] = $this->createItemWithCategory(Item::STATUS_SOLD);
 
-        // 期待する表示件数
+        // 1. 商品ページを開く
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
+
+        // すべての商品が表示される
+        $response->assertSeeText($item[Item::STATUS_ON_SALE]->name);
+        $response->assertSeeText($item[Item::STATUS_SOLD]->name);
         $this->assertEquals(
             2,
             Item::all()->count()
         );
-
-        // 表示されている商品
-        $response->assertSeeText($item[Item::STATUS_ON_SALE]->name);
-        $response->assertSeeText($item[Item::STATUS_SOLD]->name);
     }
 
     /**
@@ -46,9 +46,10 @@ class GetItemListTest extends TestCase
         // 購入済み商品を作成する
         $item = $this->createItemWithCategory(Item::STATUS_SOLD);
 
-        // Sold表示
+        // 1. 商品ページを開く
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
+        // 2. 購入済み商品を表示する
         $response->assertSeeText($item->name);
         $response->assertSeeText('Sold');
     }
@@ -58,13 +59,13 @@ class GetItemListTest extends TestCase
      * 自分が出品した商品は表示されない
      */
     public function ownItemIsNotDisplayed() {
-
+        // 1. ユーザーにログインをする
         /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
+        // 自分が出品した商品を作成
         $items = array();
-
         foreach (Item::STATUSES as $status) {
             $items[$status] = Item::factory()->create([
                 'user_id' => $user->id,
@@ -74,9 +75,11 @@ class GetItemListTest extends TestCase
             $items[$status]->categories()->attach($category->id);
         }
 
+        // 2. 商品ページを開く
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
-        // 表示されない
+
+        // 自分が出品した商品が一覧に表示されない
         foreach ($items as $item) {
             $response->assertDontSeeText($item->name);
         }
