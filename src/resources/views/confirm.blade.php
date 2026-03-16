@@ -20,11 +20,7 @@
                 </div>
                 <div class="item___information">
                     <!-- 商品名 -->
-                    <h1 class="item__ttl">{{ $item->name }}
-                        @if($item->isSold())
-                            <span class="item__sold">Sold</span>
-                        @endif
-                    </h1>
+                    <h1 class="item__ttl">{{ $item->name }}</h1>
                     <!-- 価格 -->
                     <p class="item__price">
                         <span class="item__price-symbol">¥</span>
@@ -69,16 +65,12 @@
                     <h2 class="address__ttl">配送先</h2>
                     <!-- 配送先を変更する-->
                     <div class="btn-box">
-                        @if($item->isSold())
-                            <button class="address__btn btn--disabled" disabled>変更する</button>
-                        @else
-                            <form method="post" action="{{ route('purchase.edit', $item->id) }}">
-                            @csrf
-                                <!-- hidden -->
-                                <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
-                                <button class="address__btn">変更する</button>
-                            </form>
-                        @endif
+                        <form method="post" action="{{ route('purchase.edit', $item->id) }}">
+                        @csrf
+                            <!-- hidden -->
+                            <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
+                            <button class="address__btn">変更する</button>
+                        </form>
                     </div>
                 </div>
 
@@ -87,7 +79,7 @@
                 @csrf
                 <!-- hidden -->
                 <input type="hidden" name="payment_method" value="{{ old('payment_method', $paymentMethod) }}">
-                <!-- inputでは長い住所が折り返せないため、表示用はspan、送信用はhiddenに分けている -->
+                {{-- inputでは長い住所が折り返せないため、表示用はspan、送信用はhiddenに分けている --}}
                 <input type="hidden" name="address" value="{{ old('address', $address['address']) }}">
                 <input type="hidden" name="building" value="{{ old('building', $address['building']) }}">
 
@@ -135,11 +127,7 @@
                 </span>
             </li>
             <li class="btn-box purchase__btn-box">
-                @if($item->isSold())
-                    <button class="btn btn--disabled" disabled>購入する</button>
-                @else
-                    <button class="btn">購入する</button>
-                @endif
+                <button class="btn">購入する</button>
             </li>
         </ul><!-- purchase__summary -->
         </form>

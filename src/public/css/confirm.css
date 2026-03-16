@@ -31,20 +31,6 @@
     margin-left: 4rem;
 }
 
-.item__sold {
-    display: inline-block;
-    padding: 0.2rem 1rem;
-    background-color: rgb(86, 135, 241);
-    color: #fff;
-    font-weight: bold;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    text-align: center;
-    /* 横中央 */
-    vertical-align: middle;
-    /* 行の中央に揃える */
-}
-
 .item__price {
     font-size: 1.6rem;
 }
