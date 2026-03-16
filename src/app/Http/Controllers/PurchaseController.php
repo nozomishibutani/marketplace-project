@@ -33,11 +33,6 @@ class PurchaseController extends Controller
         if (!$item) {
             return $this->redirectItemNotAvailable();
         }
-        if ($item->user_id === Auth::id()) {
-            return redirect()->route('items.show', $item_id)
-                ->with('alert', '自分の商品は購入できません')
-                ->with('alert-type', 'alert-error');
-        }
         // お支払方法
         $paymentMethod = $request->input('payment_method');
         // 値段にコンマ追加
