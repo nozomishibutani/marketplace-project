@@ -28,7 +28,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [1],
+                'categories' => [1,5],
             ],
             [
                 'item' => [
@@ -64,7 +64,7 @@ class ItemsTableSeeder extends Seeder
                 'item' => [
                     'user_id' => 3,
                     'name' => '革靴',
-                    'brand_name' => 'なし',
+                    'brand_name' => '',
                     'description' => 'クラシックなデザインの革靴',
                     'price' => 4000,
                     'condition' => Item::CONDITION_BAD,
@@ -73,7 +73,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [5],
+                'categories' => [1,5],
             ],
             [
                 'item' => [
@@ -118,7 +118,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [4],
+                'categories' => [1,4,11],
             ],
             [
                 'item' => [
@@ -133,7 +133,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [11],
+                'categories' => [1,10],
             ],
             [
                 'item' => [
@@ -148,7 +148,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [2],
+                'categories' => [10],
             ],
             [
                 'item' => [
@@ -163,7 +163,7 @@ class ItemsTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
-                'categories' => [6],
+                'categories' => [4,6],
             ],
         ];
 

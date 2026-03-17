@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('item_id')->constrained();
+            $table->foreignId('item_id')->unique()->constrained();
             $table->string('postcode', 20);
             $table->string('address');
             $table->string('building')->nullable();
