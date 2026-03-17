@@ -16,18 +16,16 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('category_id')->constrained();
             $table->string('name');
             $table->string('brand_name')->nullable();
-            $table->text('description');
+            $table->string('description');
             $table->integer('price');
             $table->tinyInteger('condition')
                     ->comment('1=良好, 2=目立った傷や汚れなし, 3=やや傷や汚れあり, 4=状態が悪い');
             $table->tinyInteger('status')->default(1)
-                    ->comment('1=出品中, 2=売り切れ, 3=出品停止');
-            $table->string('img')->nullable();
+                    ->comment('1=出品中, 2=売り切れ');
+            $table->string('img');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

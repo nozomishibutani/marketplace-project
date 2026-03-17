@@ -1,0 +1,81 @@
+.profile{
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+}
+
+.profile__ttl{
+    text-align: center;
+    margin: 2rem 0px;
+}
+
+.profile__img-box {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.profile__img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile__img--placeholder {
+    background-color: #e7e5e5;
+}
+
+.d-none {
+    display: none;
+}
+
+.profile__img-box img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile__img-input {
+    display: none;
+}
+
+.profile__img-btn {
+    border: 2px solid rgb(245, 110, 95);
+    color: rgb(245, 110, 95);
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+.profile__img-msg{
+    margin-bottom: 2rem;
+}
+
+.profile__item{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 1rem;
+}
+
+.profile__label{
+    font-weight: 600;
+}
+
+.profile__form-input{
+    height: 50px;
+    border: solid 1px rgb(195, 195, 199);
+    color: rgb(122, 120, 120);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.profile__btn-box{
+    margin-top: 3rem;
+}

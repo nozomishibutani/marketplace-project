@@ -1,0 +1,217 @@
+/* ===============================
+    Base Layout
+================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+section {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ===============================
+    header
+================================ */
+header {
+    background-color: black;
+    /* 背景色は画面いっぱいに */
+}
+
+.header__container {
+    max-width: 1540px;
+    /* PC (1400-1540px) で崩れない */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+}
+
+.header__logo,
+.header__search,
+.header__list {
+    margin: 1rem ;
+    flex: 3;
+}
+
+.header__logo{
+    margin-left: 1.5rem;
+}
+
+.header__logo img {
+    width: 400px;
+    /* 画面サイズが変わっても固定 */
+    height: auto;
+}
+
+.header__search-input {
+    width: 80%;
+    height: 40px;
+    border-radius: 5px;
+    padding-left: 1.5rem;
+    /* プレースホルダーの表示位置 */
+}
+
+.header__search-input::placeholder {
+    color: black;
+}
+
+.header__list {
+    list-style: none;
+    display: flex;
+    margin-right: 1.5rem;
+    gap: 1rem;
+}
+
+.header__item {
+    display: flex;
+    align-items: center;
+}
+
+.header__btn{
+    background: black;
+    color: white;
+    font-size: 1rem;
+    border: none;
+}
+
+.header__link{
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.header__link--sell{
+    color: black;
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+/* ===============================
+    main
+================================ */
+
+.main__container{
+    max-width: 1540px;
+    /* PC (1400-1540px) で崩れない */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+.btn {
+    background: rgb(245, 110, 95);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    /* カーソルがリンクにだけあたるように */
+    height: 50px;
+    width: 100%;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background-color: rgb(230, 95, 80);
+}
+
+.btn--outline:hover,
+.link--outline:hover {
+    background-color: rgb(245, 110, 95);
+    color: white;
+}
+
+.link {
+    background: rgb(245, 110, 95);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    /* カーソルがリンクにだけあたるように */
+    height: 50px;
+    width: 100%;
+    transition: 0.2s;
+}
+
+.link:hover {
+    background-color: rgb(230, 95, 80);
+}
+
+.btn-box {
+    cursor: not-allowed;
+    /* 禁止マークに変更 */
+    margin: 1rem 0;
+}
+
+.link-box {
+    cursor: not-allowed;
+    /* 禁止マークに変更 */
+}
+
+input,
+textarea,
+select {
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.msg {
+    color: #fa2323;
+}
+
+.alert {
+    padding-top: 1rem;
+    margin: 2rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

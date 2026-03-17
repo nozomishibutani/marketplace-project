@@ -1,0 +1,35 @@
+.address{
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 3.5rem;
+}
+
+.address-ttl{
+    text-align: center;
+    margin: 2rem 0;
+}
+
+/* .address__list{
+    padding-left: 0px;
+} */
+.address__item{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 1rem;
+}
+
+.address__label{
+    font-weight: 600;
+    margin-top: 1.5rem;
+}
+
+.address__form-input{
+    height: 40px;
+    border: solid 1px rgb(195, 195, 199);
+}
+
+.address__btn-box{
+    margin-top: 4rem;
+}

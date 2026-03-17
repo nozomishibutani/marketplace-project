@@ -1,0 +1,159 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Item;
+use App\Models\Comment;
+use App\Common\Common;
+use App\Models\Category;
+use App\Http\Requests\CommentRequest;
+use App\Http\Requests\ExhibitionRequest;
+use App\Http\Controllers\Controller;
+
+class ItemController extends Controller
+{
+    public function index(Request $request) {
+        $items = array();
+        $tab = $request->query('tab');
+        $keyword = $request->query('keyword');
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+
+        // 未ログイン
+        if (!$user) {
+            if ($tab === Common::TAB_MYLIST) {
+                // マイリストを押下
+                $items= array();
+                return view('index', compact('items','tab'));
+            }
+            // 全商品
+            $items = Item::latest()->get(['id', 'name', 'status', 'img']);
+
+            return view('index', compact('items','tab'));
+        }
+
+        // ログイン済み
+        if ($tab === Common::TAB_MYLIST) {
+            // 検索状態をマイリストでも保持
+            if (str_contains(url()->previous(), route('search', [], false) . '?keyword=')) {
+                return $this->search($request);
+            }
+
+            $items = $user->favorites()
+                ->orderBy('favorites.created_at', 'desc')
+                ->get(['id', 'name', 'status', 'img']);
+
+            return view('index', compact('items','tab'));
+        }
+
+        // 自分が出品した商品以外
+        $items = Item::where('user_id', '!=', $user->id)
+            ->latest()
+            ->get(['id', 'name', 'status', 'img']);
+
+        return view('index', compact('items','tab'));
+    }
+
+    public function show($item_id) {
+        $item = Item::with(['categories', 'comments.user.profile'])->find($item_id);
+        if (!$item) {
+            return $this->redirectItemNotAvailable();
+        }
+        // 値段にコンマ追加
+        $item->price = number_format($item->price);
+        // コメント数
+        $commentsCount = $item->comments()->count();
+        // いいね取得
+        $isFavorite = false;
+        if(Auth::check() === true) {
+            // 自分がいいねしているか
+            $isFavorite = $item->favorites()->where('favorites.user_id', Auth::id())->exists();
+        }
+        // いいね数
+        $favoritesCount = $item->favorites()->count();
+
+        // プロフィール画像取得
+        $avatar = array();
+        foreach ($item->comments as $comment) {
+            $avatar[$comment->id] = $comment->user->profile?->avatar;
+        }
+
+        return view('show',compact('item','isFavorite','favoritesCount','commentsCount','avatar'));
+    }
+
+    public function comment(CommentRequest $request, $item_id) {
+        $data = $request->validated();
+        Comment::create([
+            'user_id' => Auth::id(),
+            'item_id' => $item_id,
+            'content' => $data['content'],
+        ]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
+    }
+
+    public function favorite($item_id) {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $user->favorites()->attach($item_id);
+
+        return redirect()->route('items.show', ['item_id' => $item_id]);
+    }
+
+    public function unfavorite($item_id) {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $user->favorites()->detach($item_id);
+
+        return redirect()->route('items.show', ['item_id' => $item_id]);
+    }
+
+    public function create() {
+        $categories = Category::orderBy('id')->pluck('name', 'id');
+        return view('sell',compact('categories'));
+    }
+
+    public function store(ExhibitionRequest $request) {
+        $data = $request->validated();
+
+        // 画像保存
+        $path = $request->file('img')->store('items', 'public');
+        $item = Item::create([
+                    'user_id' => Auth::id(),
+                    'name' => $data['name'],
+                    'brand_name' => $data['brand_name'],
+                    'description' => $data['description'],
+                    'price' => $data['price'],
+                    'condition' => $data['condition'],
+                    'img' => $path,
+                    ]);
+        // 選択カテゴリーをcategory_itemテーブルに登録
+        $item->categories()->attach($data['categories']);
+
+        return redirect()->route('profile.index', ['page' => Common::PAGE_SELL]);
+    }
+
+    public function search(Request $request) {
+        $keyword = $request->query('keyword');
+        $tab = $request->input('tab');
+
+        $query = Item::query();
+
+        // マイリスト内の検索（自分がいいねしたもの）
+        if ($tab === Common::TAB_MYLIST) {
+            $query->whereHas('favorites', function ($q) {
+                $q->where('favorites.user_id', Auth::id());
+            });
+        }
+
+        // キーワード
+        if (!empty($keyword)) {
+            $query->where('name', 'LIKE', "%{$keyword}%");
+        }
+
+        $items = $query->latest()->get(['id', 'name', 'status', 'img']);
+
+        return view('index',compact('items', 'tab'));
+    }
+}

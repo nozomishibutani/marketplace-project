@@ -1,0 +1,106 @@
+.menu__nav {
+    border-bottom: 2px solid #817e7e;
+}
+
+.menu__container {
+    max-width: 1540px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 10rem;
+}
+
+.menu__list{
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    margin: 3rem 0 0;
+    gap: 1rem;
+}
+
+.menu__item{
+    width: 160px;
+}
+
+.menu__link{
+    font-size: 1.3rem;
+    font-weight: 650;
+    color: rgb(104, 102, 102);
+    text-decoration: none;
+}
+
+.menu__link--active,
+.menu__link:hover {
+    color: rgb(247, 89, 72);
+}
+
+.item {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4列固定 */
+    gap: 64px;
+    margin: 6rem 5.5rem;
+    align-items: start;
+}
+
+.item__link {
+    display: block;
+    position: relative;
+    text-decoration: none;
+}
+
+.item__img {
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+    /* 画像がはみ出さないように */
+    display: flex;
+}
+
+.item__img img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 枠いっぱいに表示 */
+}
+
+.item__ttl {
+    margin: 1rem 0 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+    /* 行数制限 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: calc(1.5em * 2);
+    /* 単語途中でも折り返す */
+    word-break: break-word;
+    /* 単語途中でも折り返す */
+    overflow-wrap: anywhere;
+    /* 英数字や連続文字列でも折り返す */
+    text-decoration: none;
+    color: black;
+}
+
+.item__sold {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    /* 中央＋少し傾ける */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    border: 4px solid red;
+    border-radius: 50%;
+    color: red;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: rgba(235, 233, 233, 0.3);
+    text-align: center;
+    pointer-events: none;
+    /* クリックを邪魔しない */
+}

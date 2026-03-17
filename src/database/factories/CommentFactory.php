@@ -1,0 +1,25 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Faker\Generator as Faker;
+
+class CommentFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        // Faker 日本語化
+        $faker = \Faker\Factory::create('ja_JP');
+        return [
+        'content' => $faker->text(30),
+        'created_at' => now(),
+        'updated_at' => now()
+        ];
+    }
+}

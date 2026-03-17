@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth/base.css') }}">
+    <title>会員登録</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__container">
+                <div class="header__logo">
+                    <a href="{{ route('items.index') }}">
+                        <img src="{{ asset('/images/header_logo.png') }}" alt="ヘッダーロゴ画像">
+                    </a>
+                </div>
+            </div>
+    </header>
+
+    <main>
+        <div class="main__container">
+            <div class="auth">
+                <h1 class="auth-ttl">会員登録</h1>
+                <form class="form" action="/register" method="post" novalidate>
+                @csrf
+                    <ul class="auth__list">
+                        <li class="auth__item">
+                            <label class="auth__label" for="email">ユーザー名</label>
+                            <input class="auth__form-input" type="text" name="username" value="{{ old('username') }}" />
+                            @error('username')
+                            <div class="msg auth__msg">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="email">メールアドレス</label>
+                            <input class="auth__form-input" type="email" name="email" id="email" value="{{ old('email') }}" />
+                            @if ($errors->has('email'))
+                                @foreach ($errors->get('email') as $message)
+                                    <div class="msg auth__msg">
+                                        {{ $message }}
+                                    </div>
+                                @endforeach
+                            @endif
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="password">パスワード</label>
+                            <input class="auth__form-input" type="password" name="password" id="password" />
+                            @error('password')
+                                @if ($message !== 'password_confirmed')
+                                    <div class="msg auth__msg">
+                                        {{ $message }}
+                                    </div>
+                                @endif
+                            @enderror
+                        </li>
+
+                        <li class="auth__item">
+                            <label class="auth__label" for="password_confirmation">確認用パスワード</label>
+                            <input class="auth__form-input" type="password" name="password_confirmation" id="password_confirmation" />
+                            @error('password')
+                                @if ($message === 'password_confirmed')
+                                    <div class="msg auth__msg">
+                                        パスワードと一致しません
+                                    </div>
+                                @endif
+                            @enderror
+                        </li>
+                    </ul>
+
+                    <div class="btn-box">
+                        <button class="btn">登録</button>
+                    </div>
+                </form>
+
+            <div class="auth__link-box">
+                <a class="auth__link" href="/login">ログインはこちら</a>
+            </div>
+
+            </div><!-- auth -->
+        </div><!-- main__container -->
+    </main>
+</body>
+</html>

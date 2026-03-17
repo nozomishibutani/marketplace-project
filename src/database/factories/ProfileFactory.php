@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Profile;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 class ProfileFactory extends Factory
@@ -26,11 +27,11 @@ class ProfileFactory extends Factory
         $faker = \Faker\Factory::create('ja_JP');
 
         return [
-            'user_id' => null, // ここでは値を入れない
-            'postcode' => str_replace('-', '', $faker->postcode()), // ハイフン削除
+            'user_id' => User::factory(),
+            // ハイフン削除
+            'postcode' => str_replace('-', '', $faker->postcode()),
             'address' => $faker->streetAddress(),
             'building' => $faker->secondaryAddress(),
-            'avatar' => $faker->imageUrl(200, 200, 'people'), // 200x200 px のランダムな人物画像
             'created_at' => now(),
             'updated_at' => now()
         ];

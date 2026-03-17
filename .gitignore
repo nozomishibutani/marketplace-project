@@ -6,6 +6,7 @@
 /src/vendor
 .env
 .env.backup
+.env.testing
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
@@ -19,5 +20,10 @@ docker/mysql/data/*
 *.bk
 .DS_Store
 Thumbs.db
-storage/*.key
 storage/debugbar/
+*.php-cs-fixer.dist.php
+*.Identifier
+
+*.jpeg
+*.jpg
+*.png

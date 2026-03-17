@@ -1,0 +1,164 @@
+.item {
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+    /* 画面下部に余白を持たせる*/
+}
+
+.item__ttl{
+    text-align: center;
+    margin: 3rem 0px;
+}
+
+/* 画像選択前 */
+.item__img-upload {
+    width: 100%;
+}
+
+.item__img-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed gray;
+    width: 100%;
+    height: 180px;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.item__img-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+.item__img-input {
+    display: none;
+}
+
+.item__img-btn {
+    border: 2px solid rgb(245, 110, 95);
+    color: rgb(245, 110, 95);
+    padding: 0.7rem 1.8rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+/* 画像選択後 */
+.item__img-box.has-image {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.item__img-box.has-image .item__img-preview {
+    display: block;
+    max-height: 110px;
+}
+/* 画像 ここまで */
+
+.detail__ttl,
+.description__ttl{
+    border-bottom: solid 1px rgb(151, 151, 151);
+    color: rgb(151, 151, 151);
+    margin: 1.5rem 0;
+    padding-bottom: 0;
+}
+
+.detail__label{
+    margin-bottom: 1.3rem;
+}
+
+.detail__label--status{
+    margin-top: 2rem;
+}
+
+/* ラベル */
+.detail__tag {
+    display: flex;
+    flex-wrap: wrap;
+    /* 折り返しする */
+    gap: 1rem;
+}
+
+.detail__checkbox[type="checkbox"]:checked+label {
+    background-color: rgb(245, 110, 95);
+    color: white;
+}
+
+.detail__checkbox[type="checkbox"] {
+    display: none;
+}
+
+.detail__tag-name {
+    padding: 0.1rem 1.3rem;
+    border-radius: 40px;
+    border: solid 2px rgb(245, 110, 95);
+    color: rgb(245, 110, 95);
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+    font-size: 0.9rem;
+}
+
+.detail__btn--outline:hover{
+    background-color: rgba(233, 133, 122, 0.589);
+}
+/* ラベル ここまで*/
+
+.detail__select-box{
+    width: 100%;
+    height: 40px;
+    color: rgb(122, 120, 120);
+}
+
+.description__item {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 1.2rem;
+}
+
+.description__label {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.description__form-input {
+    height: 50px;
+    border: solid 1px rgb(195, 195, 199);
+    color: rgb(122, 120, 120);
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.description__form-textarea{
+    height: 160px;
+    width: 100%;
+    border: solid 1px rgb(195, 195, 199);
+}
+
+.description__price-box {
+    position: relative;
+    width: 100%;
+}
+
+.description__price-symbol {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgb(122, 120, 120);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.description__form-input--price {
+    padding-left: 20px;
+    /* \の後に続いて金額入力する*/
+    width: 100%;
+}

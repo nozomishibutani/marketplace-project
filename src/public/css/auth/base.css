@@ -1,0 +1,86 @@
+.auth {
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 3.5rem;
+    text-align: center;
+}
+
+.auth-ttl {
+    margin: 2rem 0;
+}
+
+.auth__list {
+    margin-bottom: 3rem;
+}
+
+.auth__item {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    /* 縦に並べる */
+    margin-bottom: 2.5px;
+}
+
+.auth__label {
+    font-weight: 600;
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.auth__form-input {
+    height: 40px;
+    border: solid 1px rgb(195, 195, 199);
+}
+
+.auth__msg{
+    text-align: left;
+}
+
+.auth__link-box,
+.auth__btn-box {
+    margin: 2.5rem 0;
+}
+
+.auth__link,
+.auth__btn {
+    color: rgb(3, 105, 238);
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.auth__link--btn {
+    display: inline-flex;
+    /* テキスト中央を維持 */
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 50px;
+    background-color: rgb(215, 217, 219);
+    border: solid 1px black;
+    padding: 0 2rem;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: black;
+}
+
+.auth__link--btn:hover {
+    background-color: rgb(194, 191, 191);
+}
+
+.auth__btn {
+    background: none;
+    border: none;
+}
+
+.auth__text-box{
+    margin: 0 auto;
+}
+
+.auth__text{
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 10rem;
+}
