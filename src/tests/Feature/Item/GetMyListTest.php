@@ -4,7 +4,6 @@ namespace Tests\Feature\Item;
 
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Favorite;
 use App\Models\Category;
 use App\Models\Profile;
 use Tests\TestCase;
@@ -32,10 +31,7 @@ class GetMyListTest extends TestCase
 
         // いいねした商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD);
-        Favorite::factory()->create([
-                'user_id' => $user->id,
-                'item_id' => $item->id,
-            ]);
+        $user->favorites()->attach($item->id);
 
         // 2. マイリストページを開く
         $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST]));
@@ -57,10 +53,7 @@ class GetMyListTest extends TestCase
 
         // いいねした購入済み商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD);
-        Favorite::factory()->create([
-                'user_id' => $user->id,
-                'item_id' => $item->id,
-            ]);
+        $user->favorites()->attach($item->id);
 
         // 2. マイリストページを開く
         $response = $this->get(route('items.index', ['tab' => Common::TAB_MYLIST]));
@@ -81,10 +74,7 @@ class GetMyListTest extends TestCase
 
         // いいねした商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
-        Favorite::factory()->create([
-                'user_id' => $user->id,
-                'item_id' => $item->id,
-            ]);
+        $user->favorites()->attach($item->id);
 
         // 未認証状態
         $this->assertGuest();

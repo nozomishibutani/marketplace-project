@@ -5,7 +5,6 @@ namespace Tests\Feature\Item;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Comment;
-use App\Models\Favorite;
 use App\Models\Category;
 use App\Models\Profile;
 use Tests\TestCase;
@@ -39,7 +38,7 @@ class ItemDetailTest extends TestCase
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, $file);
 
         // いいね数
-        $expectedFavoriteCount = Favorite::where('item_id', $item->id)->count(); // 0
+        $expectedFavoriteCount = $item->favorites()->count(); // 0
 
         // コメントする
         Comment::factory(1)->create([

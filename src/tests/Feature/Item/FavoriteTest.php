@@ -2,12 +2,10 @@
 
 namespace Tests\Feature\Item;
 
-
 use Tests\TestCase;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Category;
-use App\Models\Favorite;
 use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,7 +26,7 @@ class FavoriteTest extends TestCase
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
 
         //  いいね数を確認
-        $beforeCount = Favorite::count();
+        $beforeCount = $item->favorites()->count();
 
         // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
@@ -48,7 +46,7 @@ class FavoriteTest extends TestCase
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
-        $this->assertEquals($beforeCount + 1, Favorite::count());
+        $this->assertEquals($beforeCount + 1, $item->favorites()->count());
     }
 
     /**
@@ -96,17 +94,14 @@ class FavoriteTest extends TestCase
         $this->actingAs($user);
 
         // いいね状態を作る
-        Favorite::factory()->create([
-            'user_id' => $user->id,
-            'item_id' => $item->id,
-        ]);
+        $user->favorites()->attach($item->id);
 
         // 2. 商品詳細ページを開く
         $response = $this->get(route('items.show', $item->id));
         $response->assertStatus(200);
 
         // いいね数を確認
-        $beforeCount = Favorite::count();
+        $beforeCount = $item->favorites()->count();
 
         // 3. いいねアイコンを押下
         $response = $this->delete(route('items.unfavorite', $item->id));
@@ -117,7 +112,7 @@ class FavoriteTest extends TestCase
             'user_id' => $user->id,
             'item_id' => $item->id,
         ]);
-        $this->assertEquals($beforeCount - 1, Favorite::count());
+        $this->assertEquals($beforeCount - 1, $item->favorites()->count());
     }
 
     /**

@@ -55,12 +55,12 @@ class Item extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class)->withTimestamps();
+        return $this->belongsToMany(Category::class, 'category_item')->withTimestamps();
     }
 
     public function favorites()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsToMany(Item::class, 'favorites')->withTimestamps();
     }
 
     public function comments()

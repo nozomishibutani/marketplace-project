@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Comment;
-use App\Models\Favorite;
 use App\Common\Common;
 use App\Models\Category;
 use App\Http\Requests\CommentRequest;
@@ -19,6 +18,7 @@ class ItemController extends Controller
         $items = array();
         $tab = $request->query('tab');
         $keyword = $request->query('keyword');
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
 
         // 未ログイン
@@ -41,10 +41,8 @@ class ItemController extends Controller
                 return $this->search($request);
             }
 
-            $items = Item::whereHas('favorites', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-                })
-                ->latest()
+            $items = $user->favorites()
+                ->orderBy('favorites.created_at', 'desc')
                 ->get(['id', 'name', 'status', 'img']);
 
             return view('index', compact('items','tab'));
@@ -59,24 +57,22 @@ class ItemController extends Controller
     }
 
     public function show($item_id) {
-        $item = Item::with(['categories', 'favorites', 'comments.user.profile'])->find($item_id);
+        $item = Item::with(['categories', 'comments.user.profile'])->find($item_id);
         if (!$item) {
             return $this->redirectItemNotAvailable();
         }
         // 値段にコンマ追加
         $item->price = number_format($item->price);
         // コメント数
-        $commentsCount = $item->comments->count();
+        $commentsCount = $item->comments()->count();
         // いいね取得
         $isFavorite = false;
         if(Auth::check() === true) {
             // 自分がいいねしているか
-            $isFavorite = Favorite::where('item_id', $item_id)
-                            ->where('user_id', Auth::id())
-                            ->exists();
+            $isFavorite = $item->favorites()->where('favorites.user_id', Auth::id())->exists();
         }
         // いいね数
-        $favoritesCount = $item->favorites->count();
+        $favoritesCount = $item->favorites()->count();
 
         // プロフィール画像取得
         $avatar = array();
@@ -98,15 +94,17 @@ class ItemController extends Controller
     }
 
     public function favorite($item_id) {
-        Favorite::create([
-            'user_id' => Auth::id(),
-            'item_id' => $item_id,
-        ]);
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $user->favorites()->attach($item_id);
+
         return redirect()->route('items.show', ['item_id' => $item_id]);
     }
 
     public function unfavorite($item_id) {
-        Favorite::where('user_id', Auth::id())->where('item_id', $item_id)->delete();
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $user->favorites()->detach($item_id);
 
         return redirect()->route('items.show', ['item_id' => $item_id]);
     }
@@ -142,10 +140,10 @@ class ItemController extends Controller
 
         $query = Item::query();
 
-        // マイリスト内の検索
+        // マイリスト内の検索（自分がいいねしたもの）
         if ($tab === Common::TAB_MYLIST) {
             $query->whereHas('favorites', function ($q) {
-                $q->where('user_id', Auth::id());
+                $q->where('favorites.user_id', Auth::id());
             });
         }
 
