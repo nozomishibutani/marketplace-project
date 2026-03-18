@@ -13,7 +13,6 @@ use App\Http\Responses\LoginResponse as CustomLoginResponse;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Http\Responses\RegisterResponse as CustomRegisterResponse;
 
-
 class FortifyServiceProvider extends ServiceProvider
 {
     /**

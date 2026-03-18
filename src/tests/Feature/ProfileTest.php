@@ -43,10 +43,10 @@ class ProfileTest extends TestCase
         $this->actingAs($user);
 
         // 出品商品を作成
-        $otherUser = User::factory()->create();
         $sellItem = $this->createItemWithCategory(Item::STATUS_ON_SALE, $user->id, $sellItemImgPath);
 
         // 購入商品を作成
+        $otherUser = User::factory()->create();
         $buyItem = $this->createItemWithCategory(Item::STATUS_ON_SALE, $otherUser->id, $buyItemImgPath);
         Order::factory()->create([
             'user_id' => $user->id,

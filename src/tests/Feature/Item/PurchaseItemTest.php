@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-
 class PurchaseItemTest extends TestCase
 {
     /**
@@ -27,20 +26,19 @@ class PurchaseItemTest extends TestCase
      */
     public function canPurchaseItem()
     {
+        // 商品作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 120);
+
         // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
-
-        // 商品作成
-        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 120);
 
         // 2. 商品購入画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
         // 3. 商品を選択して「購入する」ボタンを押下
-        //$postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
             'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
@@ -68,13 +66,13 @@ class PurchaseItemTest extends TestCase
      * 「購入した商品は商品一覧画面にて「sold」と表示される
      */
     public function purchasedItemDisplaysSold() {
+        // 商品作成
+        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 300000);
+
         // 1. ユーザーにログインする
         /** @var \App\Models\User $user */
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
-
-        // 商品作成
-        $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 300000);
 
         // 2. 商品購入画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
@@ -100,32 +98,32 @@ class PurchaseItemTest extends TestCase
      * @test
      * 「プロフィール/購入した商品一覧」に追加されている
      */
-    public function purchasedItemIsAddedToProfilePurchaseList()
-    {
+    public function purchasedItemIsAddedToProfilePurchaseList() {
         /** @var \App\Models\User $user */
+        // 1. ユーザーにログインする
         $user = $this->createVerifiedUser();
         $this->actingAs($user);
 
         // 商品作成
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE, 3510);
 
-        // 購入画面
+        // 2. 商品購入画面を開く
         $response = $this->get(route('purchase.confirm', $item->id));
         $response->assertStatus(200);
 
-        // 購入
-        $postcode = substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3);
+        // 3. 商品を選択して「購入する」ボタンを押下
         $response = $this->post(route('purchase.store', $item->id), [
             'payment_method' => Order::PAYMENT_CONVENIENCE,
-            'postcode' => $postcode,
+            'postcode' => substr($user->profile->postcode, 0, 3) . '-' . substr($user->profile->postcode, 3),
             'address' => $user->profile->address,
             'building' => $user->profile->building,
         ]);
 
-        // 購入した商品に遷移
+        // 4. プロフィール画面を表示する
         $response = $this->get(route('profile.index', ['page' => Common::PAGE_BUY]));
         $response->assertStatus(200);
 
+        // 購入した商品がプロフィールの購入した商品一覧に追加されている
         $response->assertSeeText($item->name);
     }
 

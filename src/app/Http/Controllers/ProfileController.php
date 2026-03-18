@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
         $username = $user->username;
@@ -24,6 +23,7 @@ class ProfileController extends Controller
         $items = array();
         switch ($page) {
         case Common::PAGE_BUY:
+            // 購入した商品
             $items = Item::join('orders', 'items.id', '=', 'orders.item_id')
                 ->where('orders.user_id', Auth::id())
                 ->orderBy('orders.created_at', 'desc')
@@ -40,8 +40,7 @@ class ProfileController extends Controller
         return view('profile', compact('username','avatar','items'));
     }
 
-    public function edit()
-    {
+    public function edit() {
         /** @var \App\Models\User|null $user */
         $user= Auth::user();
         $username = $user->username;
@@ -52,8 +51,7 @@ class ProfileController extends Controller
         return view('edit_profile',compact('username','profile'));
     }
 
-    public function store(ProfileRequest $request)
-    {
+    public function store(ProfileRequest $request) {
         $data = $request->validated();
         /** @var \App\Models\User|null $user */
         $user = Auth::user();

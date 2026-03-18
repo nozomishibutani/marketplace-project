@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RegisterResponse implements RegisterResponseContract
 {
-    public function toResponse($request)
-    {
+    public function toResponse($request) {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 

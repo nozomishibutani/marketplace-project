@@ -169,14 +169,7 @@ header {
 }
 
 .btn-box {
-    cursor: not-allowed;
-    /* 禁止マークに変更 */
     margin: 1rem 0;
-}
-
-.link-box {
-    cursor: not-allowed;
-    /* 禁止マークに変更 */
 }
 
 .msg {

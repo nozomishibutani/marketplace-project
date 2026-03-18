@@ -9,9 +9,6 @@
     margin: 2rem 0;
 }
 
-/* .address__list{
-    padding-left: 0px;
-} */
 .address__item{
     list-style: none;
     display: flex;
