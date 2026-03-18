@@ -74,6 +74,9 @@
     color: rgb(122, 120, 120);
     font-weight: bold;
     font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 .profile__btn-box{

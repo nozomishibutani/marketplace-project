@@ -29,6 +29,9 @@ class VerificationController extends Controller
     public function verify()
     {
         $user = User::find(session('unverified_user_id'));
+        if(!$user) {
+            return redirect('/login');
+        }
         if (!$user->hasVerifiedEmail()) {
             // email_verified_at に日時セット
             $user->markEmailAsVerified();
@@ -54,6 +57,12 @@ class VerificationController extends Controller
     public function confirm()
     {
         $user = User::find(session('unverified_user_id'));
+        if(!$user) {
+            // 会員登録とメール認証のブラウザが異なるとセッションがないのでエラー
+            return redirect('/login')
+                ->with('alert', 'システムエラーが発生しました。再度ログインしてメール認証を行ってください。')
+                ->with('alert-type', 'alert-error');
+        }
         $url = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),

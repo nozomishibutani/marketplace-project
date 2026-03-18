@@ -131,15 +131,23 @@
 .description__form-input {
     height: 50px;
     border: solid 1px rgb(195, 195, 199);
-    color: rgb(122, 120, 120);
-    font-weight: bold;
     font-size: 1rem;
 }
 
-.description__form-textarea{
+.description__form-textarea {
     height: 160px;
     width: 100%;
     border: solid 1px rgb(195, 195, 199);
+    font-size: 1rem;
+}
+
+.detail__select-box,
+.description__form-input,
+.description__form-textarea {
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
 }
 
 .description__price-box {
@@ -152,7 +160,6 @@
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgb(122, 120, 120);
     font-size: 1rem;
     font-weight: bold;
 }
