@@ -23,6 +23,12 @@
     <main>
         <div class="main__container">
             <div class="auth">
+                @if(session('alert'))
+                <div class="alert {{ session('alert-type', 'alert-success') }}">
+                    <p>{{ session('alert') }}</p>
+                </div>
+                @endif
+
                 <h1 class="auth-ttl">ログイン</h1>
                 <form class="form" action="/login" method="post" novalidate>
                 @csrf

@@ -1,12 +1,10 @@
 # フリマアプリ（Flea Market App）
 
-### 概要
+**概要**
+*  本アプリは、ユーザー同士で商品を売買できるフリマアプリです。
+* ユーザーは商品の出品・購入・コメント・お気に入り登録を行うことができます。
 
-本アプリは、ユーザー同士で商品を売買できるフリマアプリです。
-ユーザーは商品の出品・購入・コメント・お気に入り登録を行うことができます。
-
-### 主な機能
-
+**主な機能**
 * ユーザー登録・ログイン機能(メール認証付き)
 * 商品の出品
 * 商品一覧表示・キーワード検索
@@ -15,13 +13,149 @@
 * 商品購入機能（Stripe決済連携）
 * プロフィール登録・編集
 
-### 特徴
-
+**特徴**
 * メール認証機能の実装によるユーザー認証の安全性向上
 * 中間テーブルを用いたお気に入り機能、カテゴリー機能の実装
 * 決済APIとの連携による購入フローの実現
 
-### 使用技術
+**外部サービス**
+* 本アプリでは以下を使用しています（⚠️各自でアカウント設定する必要があります）
+*  [Stripe（決済）](https://stripe.com/jp)
+*  [Mailtrap（メール認証）](https://mailtrap.io/signin)
+
+**設定方法**
+* .env、.env.testingファイルに環境変数を設定してください。
+* 詳細は各公式ドキュメントを参照してください。
+
+## 環境構築
+**Dockerビルド**
+1. `git clone git@github.com:nozomishibutani/marketplace-project.git`
+2. DockerDesktopアプリを立ち上げる
+3. プロジェクトのルートディレクトリ（docker-compose.yml がある場所）に移動
+4. `docker-compose up -d --build`
+
+**Laravel環境構築**
+1. `docker-compose exec php bash`
+2. `composer install`
+3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成
+4. .envに以下の環境変数を追加
+``` text
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+
+# Mailtrap（メール認証）
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=xxxx
+MAIL_PASSWORD=xxxx
+MAIL_FROM_ADDRESS=test@example.com　# 値は自由です
+MAIL_FROM_NAME="Test App"　# 値は自由です
+
+# Stripe（決済）
+STRIPE_KEY=pk_test_xxxx
+STRIPE_SECRET=sk_test_xxxx
+```
+
+> *⚠️ Windows + WSL 環境で開発する場合*<br>
+プロジェクト内のファイルで権限エラーが出ることがあります。
+必要に応じて各自で権限を調整してください。
+``` bash
+sudo chmod -R 777 src/*`
+```
+
+5. アプリケーションキーの作成
+``` bash
+php artisan key:generate
+```
+6. マイグレーションの実行
+``` bash
+php artisan migrate
+```
+7. シーディングの実行
+``` bash
+php artisan db:seed
+```
+
+**Laravel PHPUnitテスト 環境構築**
+
+1. テスト用データベースの作成
+``` text
+docker-compose exec mysql bash
+mysql -u root -p
+```
+- パスワードは、docker-compose.ymlファイルのMYSQL_ROOT_PASSWORD:に設定されているrootを入力
+``` text
+CREATE DATABASE demo_test;
+```
+2. 「.env.example」ファイルを 「.env.testing」ファイルに命名を変更。または、新しく.env.testingファイルを作成
+``` text
+APP_ENV=test
+
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=demo_test
+DB_USERNAME=root
+DB_PASSWORD=root
+
+# Stripe（決済）
+# .envと同じ内容でOK
+STRIPE_KEY=pk_test_xxxx
+STRIPE_SECRET=sk_test_xxxx
+```
+5. アプリケーションキーの作成
+``` bash
+php artisan key:generate --env=testing
+```
+6. マイグレーションの実行
+``` bash
+php artisan migrate --env=testing
+```
+7. シーディングの実行
+``` bash
+php artisan db:seed --env=testing
+```
+
+## ⚠️ 注意事項
+###  Mailtrap（メール認証）
+- フリープランでは **50通以上のメール送信ができません**
+- 制限を回避する場合は、`.env` に以下を設定してください：
+
+MAIL_MAILER=log
+
+- 上記設定により、メールは送信されず `laravel.log` に出力されます
+
+---
+
+### Stripe（決済）
+#### コンビニ支払い
+- テストモードでは、コンビニ決済を無効にしていても動作します
+- 万一動かない場合は、Stripeダッシュボードの
+  設定 > Payments > 決済手段 からコンビニを有効にしてください
+- 取引額：120円 ～ 300,000円
+- この範囲外の金額はエラーになります
+- 参考：[Stripe コンビニ決済](https://docs.stripe.com/payments/konbini)
+
+#### カード支払い
+- 下限：50円
+- 推奨上限（公式ドキュメント）：99,999,999円
+- 推奨上限を超えた場合でも、技術的には Stripe の API 上で決済可能ですが、カード会社やアクワイアラーによっては制限される場合があります
+- 参考：[Stripe 通貨と最小/最大決済額](https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts)
+
+#### テストカード
+- カード番号（テスト用）：`4242 4242 4242 4242`
+- CVC：任意（例：123）
+- 有効期限：任意（例：12/34）
+
+> このカードは Stripe のテストモード専用です。実際の請求は発生しません。
+
+
+## 使用技術(実行環境)
 <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white">
 <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white">
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
@@ -35,101 +169,109 @@
 - docker 29.2.0
 - Docker Compose 5.0.2
 
-
-
-## 環境構築
-## Dockerビルド
-
-```bash
-- git clone git@github.com:nozomishibutani/marketplace-project.git
-- DockerDesktopアプリを立ち上げる
-- docker-compose up -d --build
-# docker-compose up を実行する前に、プロジェクトのルートディレクトリ（docker-compose.yml がある場所）に移動してください。
-```
-
-## Laravel環境構築
-
-```bash
-1. docker-compose exec php bash
-2. composer install
-3. 「.env.example」ファイルを 「.env」に名称変更。または、新しく.envファイルを作成
-4. envに参考(1)の環境変数を追加 
-5. php artisan key:generate
-6. php artisan migrate
-7. php artisan db:seed
-
-#  テスト用も同様に
-8. テスト用に「.env.example」ファイルを 「.env.testing」に名称変更。または、新しく.env.testingファイルを作成
-9. .env.testingに参考(2)の環境変数を追加
-10. php artisan key:generate --env=testing
-11. php artisan migrate --env=testing
-12. php artisan db:seed --env=testing
-
-⚠ Windows + WSL 環境で開発する場合
-- プロジェクト内のファイルで権限エラーが出ることがあります
-- 必要に応じて各自で権限を調整してください
-- sudo chmod -R 777 src/*
-
-# 参考(1)
-⚠.envを書き換える際に権限エラーが出る場合は、適宜権限を変更してください。
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=laravel_db
-DB_USERNAME=laravel_user
-DB_PASSWORD=laravel_pass
-
-Mailtrap（メール認証用）
-MAIL_MAILER=smtp
-MAIL_HOST=sandbox.smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=xxxx
-MAIL_PASSWORD=xxxx
-
-# 適宜設定
-# 50通以上メール送信するとフリープランでは送信できなくなります、　MAIL_MAILER=log　を設定するとメール送信はされずlaravel.logに出力されます。
-MAIL_MAILER=log
-
-Stripe
-STRIPE_KEY=pk_test_xxxx
-STRIPE_SECRET=sk_test_xxxx
-
-# 参考(2)
-⚠.env.testingを書き換える際に権限エラーが出る場合は、適宜権限を変更してください。
-APP_ENV=test
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=demo_test
-DB_USERNAME=root
-DB_PASSWORD=root
-
-Mailtrap（メール認証用）
-MAIL_MAILER=smtp
-MAIL_HOST=sandbox.smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=xxxx
-MAIL_PASSWORD=xxxx
-
-Stripe
-# .envの内容でOK
-STRIPE_KEY=pk_test_xxxx
-STRIPE_SECRET=sk_test_xxxx
-```
-
-
-## その他ツール
-```md id="tip01"
-※ MailtrapおよびStripeのアカウントは各自で作成してください。
-```
-
-## 開発環境
-- お問い合わせ画面：http://localhost/
-- ユーザー登録：http://localhost/register
-- 管理画面：http://localhost/admin
-- phpMyAdmin：http://localhost:8080/
-
-
+## URL
+- 開発環境：http://localhost/
+- phpMyAdmin:：http://localhost:8080/
 
 ## ER図
-[erd.md](erd.md)
+```mermaid
+
+erDiagram
+%%{init: {'theme': 'default'}}%%
+    users ||--o| profiles : ""
+
+    users {
+        bigint id PK "ID"
+        varchar(20) username
+        varchar(255) email UK
+        varchar(255) password
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    profiles {
+        bigint id PK "ID"
+        bigint user_id FK,UK "users.id"
+        varchar(20) postcode
+        varchar(255) address
+        varchar(255) building
+        varchar(255) avatar
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    users ||--o{ items : "出品"
+
+    items {
+        bigint id PK "ID"
+        bigint user_id FK "users.id"
+        varchar(255) name
+        varchar(255) brand_name
+        varchar(255) description
+        integer price
+        tinyInteger condition "1:良好 2:目立った傷や汚れなし 3:やや傷や汚れあり 4:状態が悪い"
+        tinyInteger status "1:出品中 2:売り切れ"
+        varchar(255) img
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    users ||--o{ comments : ""
+
+    comments {
+        bigint id PK "ID"
+        bigint user_id FK "users.id"
+        bigint item_id FK "items.id"
+        varchar(255) content
+        timestamp created_at
+        timestamp updated_at
+    }
+
+     items ||--o{ comments : ""
+
+    users ||--o{ favorites : ""
+    items ||--o{ favorites : ""
+
+    favorites {
+        bigint user_id FK "users.id"
+        bigint item_id FK "items.id"
+        string constraint "UNIQUE(user_id, item_id)"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    users ||--o{ orders : "購入"
+
+    orders {
+        bigint id PK "ID"
+        bigint user_id FK "users.id"
+        bigint item_id FK,UK "items.id"
+        varchar(20) postcode
+        varchar(255) address
+        varchar(255) building
+        varchar(255) payment_id "Stripeの決済ID"
+        tinyInteger payment_method "1:コンビニ支払い 2:カード支払い"
+        varchar(255) payment_status "Stripe APIからの戻り値"
+        timestamp payment_expires_at "コンビニ支払い時の支払期限"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    categories ||--o{ category_item : ""
+    items ||--o{ category_item : ""
+
+    categories {
+        bigint id PK "ID"
+        varchar(255) name UK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    category_item {
+        bigint item_id FK "items.id"
+        bigint category_id FK "categories.id"
+        string constraint "UNIQUE(item_id, categories_id)"
+        timestamp created_at
+        timestamp updated_at
+    }
+```
