@@ -56,17 +56,6 @@ STRIPE_KEY=pk_test_xxxx
 STRIPE_SECRET=sk_test_xxxx
 ```
 
-### 権限エラーについて（Windows環境）
-Windows + Docker 環境では、以下のような権限エラーが発生する場合があります。
-> The stream or file "/var/www/storage/logs/laravel.log" could not be opened in append mode: Failed to open stream: Permission denied The exception occurred while attempting to log
-
-#### 対処方法
-以下のコマンドで権限を変更してください。
-※ 本来は必要なディレクトリのみに権限付与するのが望ましいです。
-```bash
-chmod -R 777 src/*
-```
-
 5. アプリケーションキーの作成
 ``` bash
 php artisan key:generate
@@ -87,7 +76,9 @@ php artisan db:seed
 docker-compose exec mysql bash
 mysql -u root -p
 ```
-- パスワードは、docker-compose.ymlファイルの MYSQL_ROOT_PASSWORD に設定されているrootを入力
+- パスワードは docker-compose.yml の MYSQL_ROOT_PASSWORD に設定されている値を使用してください。
+- デフォルトでは root が設定されています
+
 ``` text
 CREATE DATABASE demo_test;
 ```
@@ -119,11 +110,21 @@ php artisan migrate --env=testing
 ``` bash
 php artisan db:seed --env=testing
 ```
-
 ## ⚠️ 注意事項
+### 権限エラーについて（Windows環境）
+Windows + Docker 環境では、以下のような権限エラーが発生する場合があります。
+> The stream or file "/var/www/storage/logs/laravel.log" could not be opened in append mode: Failed to open stream: Permission denied The exception occurred while attempting to log
+
+#### 対処方法
+以下のコマンドで権限を変更してください。
+※ 本来は必要なディレクトリのみに権限付与するのが望ましいです。
+```bash
+sudo chmod -R 777 src/*
+```
 ###  Mailtrap（メール認証）
-- フリープランでは **50通以上のメール送信ができません**
-- 制限を回避する場合は、`.env` に以下を設定してください：
+- フリープランでは **送信数（最大50通）および送信頻度に制限**があります
+- 短時間にメールを送信しすぎる、または送信数の上限に達すると、エラーが発生します
+- 制限を回避する場合は、`.env` に以下を設定してください
 
 MAIL_MAILER=log
 
