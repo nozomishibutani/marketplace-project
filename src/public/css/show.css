@@ -31,6 +31,13 @@
     /* 長い英数字や記号も折り返す */
 }
 
+.item__brand-name {
+    word-break: break-word;
+    /* 単語途中でも折り返す */
+    overflow-wrap: anywhere;
+    /* 長い英数字や記号も折り返す */
+}
+
 .item__content {
     width: 50%;
     display: flex;
