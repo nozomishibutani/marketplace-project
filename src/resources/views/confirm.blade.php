@@ -25,7 +25,6 @@
                     <p class="item__price">
                         <span class="item__price-symbol">¥</span>
                         {{ $item->price }}
-                        <span class="item__price-tax">(税込)</span>
                     </p>
                 </div>
             </div>

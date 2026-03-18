@@ -14,6 +14,7 @@
         <form method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
         @csrf
         <!-- 商品画像 -->
+        <h3 class="item__img-label">商品画像</h3>
         <div class="item__img-upload">
             <div class="item__img-box">
                 <img id="imgPreview" class="item__img-preview"

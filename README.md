@@ -13,11 +13,6 @@
 * 商品購入機能（Stripe決済連携）
 * プロフィール登録・編集
 
-**特徴**
-* メール認証機能の実装によるユーザー認証の安全性向上
-* 中間テーブルを用いたお気に入り機能、カテゴリー機能の実装
-* 決済APIとの連携による購入フローの実現
-
 **外部サービス**
 * 本アプリでは以下を使用しています（⚠️各自でアカウント設定する必要があります）
 *  [Stripe（決済）](https://stripe.com/jp)
@@ -53,19 +48,23 @@ MAIL_HOST=sandbox.smtp.mailtrap.io
 MAIL_PORT=2525
 MAIL_USERNAME=xxxx
 MAIL_PASSWORD=xxxx
-MAIL_FROM_ADDRESS=test@example.com　# 値は自由です
-MAIL_FROM_NAME="Test App"　# 値は自由です
+MAIL_FROM_ADDRESS=test@example.com # 値は自由です
+MAIL_FROM_NAME="Test App" # 値は自由です
 
 # Stripe（決済）
 STRIPE_KEY=pk_test_xxxx
 STRIPE_SECRET=sk_test_xxxx
 ```
 
-> *⚠️ Windows + WSL 環境で開発する場合*<br>
-プロジェクト内のファイルで権限エラーが出ることがあります。
-必要に応じて各自で権限を調整してください。
-``` bash
-sudo chmod -R 777 src/*`
+### 権限エラーについて（Windows環境）
+Windows + Docker 環境では、以下のような権限エラーが発生する場合があります。
+> The stream or file "/var/www/storage/logs/laravel.log" could not be opened in append mode: Failed to open stream: Permission denied The exception occurred while attempting to log
+
+#### 対処方法
+以下のコマンドで権限を変更してください。
+※ 本来は必要なディレクトリのみに権限付与するのが望ましいです。
+```bash
+chmod -R 777 src/*
 ```
 
 5. アプリケーションキーの作成
@@ -88,7 +87,7 @@ php artisan db:seed
 docker-compose exec mysql bash
 mysql -u root -p
 ```
-- パスワードは、docker-compose.ymlファイルのMYSQL_ROOT_PASSWORD:に設定されているrootを入力
+- パスワードは、docker-compose.ymlファイルの MYSQL_ROOT_PASSWORD に設定されているrootを入力
 ``` text
 CREATE DATABASE demo_test;
 ```
@@ -153,6 +152,33 @@ MAIL_MAILER=log
 
 > このカードは Stripe のテストモード専用です。実際の請求は発生しません。
 
+#### 決済後の画面遷移について
+コンビニ決済はオフライン決済のため、決済完了後にアプリへリダイレクトされません。<br>
+そのため、カード決済とは異なり、商品一覧画面への自動遷移は行われません。<br>
+
+### PHPUnit テスト実行手順
+本アプリでは、PHPUnit を用いたテストを実装しています。
+
+#### 前提
+- 上記記載の Laravel PHPUnitテスト 環境構築 が完了していること
+
+#### 実行方法
+全てのテストを実行する場合：
+
+```bash
+docker-compose exec php bash
+vendor/bin/phpunit
+```
+特定のテストのみ実行する場合
+
+- 会員登録
+```bash
+vendor/bin/phpunit tests/Feature/Auth/RegisterTest.php
+```
+- 商品一覧取得
+```bash
+vendor/bin/phpunit tests/Feature/Item/GetItemListTest.php
+```
 
 ## 使用技術(実行環境)
 <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white">

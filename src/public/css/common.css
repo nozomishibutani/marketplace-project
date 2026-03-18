@@ -76,6 +76,9 @@ header {
     border-radius: 5px;
     padding-left: 1.5rem;
     /* プレースホルダーの表示位置 */
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 .header__search-input::placeholder {
