@@ -133,8 +133,6 @@ header {
     border: none;
     font-size: 1.3rem;
     font-weight: 600;
-    margin: 0;
-    /* カーソルがリンクにだけあたるように */
     height: 50px;
     width: 100%;
     transition: 0.2s;
@@ -161,8 +159,6 @@ header {
     align-items: center;
     font-size: 1.4rem;
     font-weight: 700;
-    margin: 0;
-    /* カーソルがリンクにだけあたるように */
     height: 50px;
     width: 100%;
     transition: 0.2s;
@@ -181,14 +177,6 @@ header {
 .link-box {
     cursor: not-allowed;
     /* 禁止マークに変更 */
-}
-
-input,
-textarea,
-select {
-    outline: none;
-    cursor: pointer;
-    border-radius: 4px;
 }
 
 .msg {
