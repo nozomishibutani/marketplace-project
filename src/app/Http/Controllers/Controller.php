@@ -15,8 +15,7 @@ class Controller extends BaseController
     /**
      * 商品が存在しない場合の共通リダイレクト処理
      */
-    protected function redirectItemNotAvailable(): RedirectResponse
-    {
+    protected function redirectItemNotAvailable(): RedirectResponse {
         return redirect()->route('items.index')
             ->with('alert','この商品は削除されたか、現在表示できません。')
             ->with('alert-type','alert-error');

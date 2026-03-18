@@ -39,7 +39,7 @@
             </div>
             <h2 class="item__ttl">{{ $item->name }}</h2>
             @if($item->isSold())
-                <span class="item__sold">Sold</span>
+                <span class="item-status--sold">Sold</span>
             @endif
         </a>
         @endforeach

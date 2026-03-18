@@ -94,26 +94,28 @@
             <div class="btn-box profile__btn-box">
                 <button class="btn">更新する</button>
             </div>
-        </div><!-- profile-->
-    </form>
+        </form>
+    </div><!-- profile-->
 @endsection
 
 @section('js')
+    <!-- jQuery 読み込み -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- プレビュー用JS -->
     <script>
-    $(function() {
-        $('#avatarInput').on('change', function(e){
-            const file = e.target.files[0];
-            if (!file) return;
+        $(function() {
+            $('#avatarInput').on('change', function(e){
+                const file = e.target.files[0];
+                if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                $('#avatarPreview').attr('src', event.target.result)
-                                .removeClass('d-none'); // 画像表示
-                $('#avatarPlaceholder').hide(); // プレースホルダー非表示
-            };
-            reader.readAsDataURL(file);
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    $('#avatarPreview').attr('src', event.target.result)
+                                    .removeClass('d-none');
+                    $('#avatarPlaceholder').hide();
+                };
+                reader.readAsDataURL(file);
+            });
         });
-    });
     </script>
 @endsection

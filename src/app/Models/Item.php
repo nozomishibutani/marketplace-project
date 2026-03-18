@@ -48,37 +48,31 @@ class Item extends Model
         'img',
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function categories()
-    {
+    public function categories() {
         return $this->belongsToMany(Category::class, 'category_item')->withTimestamps();
     }
 
-    public function favorites()
-    {
+    public function favorites() {
         return $this->belongsToMany(Item::class, 'favorites')->withTimestamps();
     }
 
-    public function comments()
-    {
+    public function comments() {
         return $this->hasMany(Comment::class)->latest();
     }
 
-    public function orders()
-    {
+    public function orders() {
         return $this->hasMany(Order::class);
     }
 
     /**
      * 売り切れ判定
      */
-    public function isSold(): bool
-{
-    return $this->status === self::STATUS_SOLD;
-}
+    public function isSold(): bool {
+        return $this->status === self::STATUS_SOLD;
+    }
 
 }

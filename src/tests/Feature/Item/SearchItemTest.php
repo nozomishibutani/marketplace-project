@@ -6,6 +6,9 @@ use App\Models\Item;
 use Tests\TestCase;
 use App\Models\Category;
 use App\Common\Common;
+use App\Models\User;
+use App\Models\Profile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SearchItemTest extends TestCase
@@ -40,6 +43,13 @@ class SearchItemTest extends TestCase
         // 商品を作成
         $item = $this->createItemWithCategory(Item::STATUS_SOLD,'Apple Mirror');
 
+        /** @var \App\Models\User $user */
+        $user = $this->createVerifiedUser();
+        $this->actingAs($user);
+
+        // いいね状態を作る
+        $user->favorites()->attach($item->id);
+
         // 1. ホームページで商品を検索
         $response = $this->get(route('items.index'));
         $response->assertStatus(200);
@@ -55,6 +65,22 @@ class SearchItemTest extends TestCase
 
         // 検索キーワードが保持されている
         $response->assertSee('value="Apple"', false);
+
+        // 検索状態がマイリストでも保持されている
+        $response->assertSeeText($item->name);
+    }
+
+    /**
+     * @test
+     * ユーザー作成
+     */
+    protected function createVerifiedUser() {
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+        $user->markEmailAsVerified();
+        Profile::factory()->create(['user_id' => $user->id]);
+        return $user;
     }
 
     /**

@@ -47,7 +47,7 @@ class LoginTest extends TestCase
         // 1. ログインページを開く
         $this->get('/login');
 
-        // 2. メールアドレスを入力せずに他の必要項目を入力する
+        // 2. パスワードを入力せずに他の必要項目を入力する
         // 3. ログインボタンを押す
         $response = $this->post('/login', [
             'email' => $user->email,

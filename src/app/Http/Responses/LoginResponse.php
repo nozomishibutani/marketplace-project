@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginResponse implements LoginResponseContract
 {
-    public function toResponse($request)
-    {
+    public function toResponse($request) {
         /** @var \App\Models\User $user */
         $user = Auth::user();
 

@@ -18,16 +18,14 @@ class VerificationController extends Controller
      * ビューは自由にカスタマイズ可能ですが、ルート名は変更不可です。
      */
 
-    public function notice()
-    {
+    public function notice() {
         return view('auth.notice');
     }
 
     /**
      * テスト用メール認証処理
      */
-    public function verify()
-    {
+    public function verify() {
         $user = User::find(session('unverified_user_id'));
         if(!$user) {
             return redirect('/login');
@@ -43,8 +41,7 @@ class VerificationController extends Controller
         return redirect()->route('profile.edit');
     }
 
-    public function resend()
-    {
+    public function resend() {
         $user = User::find(session('unverified_user_id'));
         $user->sendEmailVerificationNotification();
 
@@ -54,8 +51,7 @@ class VerificationController extends Controller
     /**
      * テスト用メール認証URL作成
      */
-    public function confirm()
-    {
+    public function confirm() {
         $user = User::find(session('unverified_user_id'));
         if(!$user) {
             // 会員登録とメール認証のブラウザが異なるとセッションがないのでエラー

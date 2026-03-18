@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-
 class SellTest extends TestCase
 {
     /**
@@ -68,7 +67,7 @@ class SellTest extends TestCase
 
         // 画像ファイル
         $item = Item::where('user_id', $user->id)->first();
-        Storage::disk('public')->assertExists($item->img);
+        $this->assertTrue(Storage::disk('public')->exists($item->img));
 
         // 商品カテゴリー
         $this->assertDatabaseHas('category_item', [

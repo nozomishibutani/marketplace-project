@@ -59,9 +59,6 @@
             @yield('content')
         </div>
     </main>
-    <!-- jQuery 読み込み -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- 個別JS -->
     @yield('js')
 </body>
 </html>

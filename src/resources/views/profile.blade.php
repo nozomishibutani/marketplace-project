@@ -18,7 +18,7 @@
             @endif
             <span class="profile__label">{{ $username }}</span>
         </div>
-        <div class="link-box profile__link-box">
+        <div class="profile__link-box">
             <a class="link profile__link link--outline" href="{{ route('profile.edit') }}">プロフィールを編集</a>
         </div>
     </div>
@@ -61,7 +61,7 @@
             </div>
             <h2 class="item__ttl">{{ $item->name }}</h2>
                 @if($item->isSold())
-                    <span class="item__sold">Sold</span>
+                    <span class="item-status--sold">Sold</span>
                 @endif
         </a>
     @endforeach

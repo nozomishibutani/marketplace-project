@@ -76,6 +76,9 @@ class GetMyListTest extends TestCase
         $item = $this->createItemWithCategory(Item::STATUS_ON_SALE);
         $user->favorites()->attach($item->id);
 
+        // ログアウトする
+        $this->post(route('logout'));
+
         // 未認証状態
         $this->assertGuest();
 
