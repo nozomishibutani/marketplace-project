@@ -35,7 +35,6 @@
 3. 「.env.example」ファイルを 「.env」ファイルに命名を変更。または、新しく.envファイルを作成
 4. .envに以下の環境変数を追加
 ``` text
-DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
 DB_DATABASE=laravel_db
@@ -86,7 +85,6 @@ CREATE DATABASE demo_test;
 ``` text
 APP_ENV=test
 
-DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
 DB_DATABASE=demo_test
@@ -200,10 +198,13 @@ vendor/bin/phpunit tests/Feature/Item/GetItemListTest.php
 - phpMyAdmin:：http://localhost:8080/
 
 ## ER図
+GitHub上で表示されない場合は、以下から確認してください
+[ER図はこちら](erd.md)
+
 ```mermaid
 
 erDiagram
-%%{init: {'theme': 'default'}}%%
+
     users ||--o| profiles : ""
 
     users {
