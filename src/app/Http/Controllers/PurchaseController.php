@@ -134,15 +134,15 @@ class PurchaseController extends Controller
 
             $this->purchaseService->handleSuccess($request->session_id);
 
-            return redirect()->route('items.index')
+            return redirect()
+                    ->route('items.index')
                     ->with('alert', 'ご購入ありがとうございました。')
                     ->with('alert-type', 'alert-success');
 
         } catch (SoldOutException) {
-            /** @var \Stripe\Checkout\Session $session */
             return redirect()
-                ->route('items.show', $session->metadata->item_id)
-                ->with('alert', 'この商品は売り切れのため、現在購入できません。<br>返金処理しました')
+                ->route('items.index')
+                ->with('alert', '商品は売り切れのため、購入できませんでした。返金処理しました。')
                 ->with('alert-type', 'alert-error');
         } catch (\Exception $e) {
             Log::error($e);

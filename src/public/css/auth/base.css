@@ -30,6 +30,9 @@
 .auth__form-input {
     height: 40px;
     border: solid 1px rgb(195, 195, 199);
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
 .auth__msg{

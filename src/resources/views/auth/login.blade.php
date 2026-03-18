@@ -60,7 +60,7 @@
                 </form>
 
             <div class="auth__link-box">
-                <a class="auth__link" href="/register">会員登録の方はこちら</a>
+                <a class="auth__link" href="/register">会員登録はこちら</a>
             </div>
 
             </div><!-- auth -->

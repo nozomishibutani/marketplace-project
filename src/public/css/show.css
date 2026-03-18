@@ -90,6 +90,10 @@
 .description__content{
     white-space: pre-line;
     /* 改行も表示する */
+    word-break: break-word;
+    /* 折り返す */
+    overflow-wrap: break-word;
+    /* 折り返す */
 }
 
 .information__row {
