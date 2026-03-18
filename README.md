@@ -14,7 +14,8 @@
 * プロフィール登録・編集
 
 **外部サービス**
-* 本アプリでは以下を使用しています（⚠️各自でアカウント設定する必要があります）
+* 本アプリでは以下を使用しています<br>
+⚠️利用するために、各自でアカウント作成およびセットアップを行ってください
 *  [Stripe（決済）](https://stripe.com/jp)
 *  [Mailtrap（メール認証）](https://mailtrap.io/signin)
 
@@ -127,7 +128,11 @@ sudo chmod -R 777 src/*
 MAIL_MAILER=log
 
 - 上記設定により、メールは送信されず `laravel.log` に出力されます
-
+- ※ .env を変更した場合は、以下コマンドでキャッシュをクリアしてください。
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
 ---
 
 ### Stripe（決済）
